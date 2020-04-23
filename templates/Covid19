@@ -1,0 +1,21 @@
+
+cd $job_results
+$run_prefix
+
+if [ -z "$flee_covid19_location" ]
+then
+	echo "Please set $$flee_covid19_location in your deploy/machines_user.yml file."
+else
+	export PYTHONPATH=$flee_covid19_location:$$PYTHONPATH
+fi
+
+/usr/bin/env > env.log
+
+start_time="$$(date -u +%s.%N)"
+
+python3 run.py --location=$location --transition_scenario=$transition_scenario --transition_mode=$transition_mode --output_dir=$output_dir
+
+end_time="$$(date -u +%s.%N)"
+elapsed="$$(bc <<<"$$end_time-$$start_time")"
+echo "Total Executing Time = $$elapsed seconds"
+
