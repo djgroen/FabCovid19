@@ -34,7 +34,7 @@ Once you have installed the required dependencies, you will need to take a few s
 
 2. To run the ensemble, you can type, simply type:
 	>``` sh
-	> fab localhost covid19_ensemble:location=<area_name>[,TS=transition scenario list][,TM=transition mode list]
+	> fab <localhost/remote machine> covid19_ensemble:location=<area_name>[,TS=transition scenario list][,TM=transition mode list]
 	> ```   
 	> _NOTE:_
 	> 	-  By default, all _Acceptable_ Transition Scenario and Mode will be executed if these **TS** and **TM**  parameters did not passed
@@ -44,4 +44,16 @@ Once you have installed the required dependencies, you will need to take a few s
 	> 	-  `fab localhost covid19_ensemble:location='brent;harrow;hillingdon'`
 	> 	-  `fab localhost covid19_ensemble:location='harrow;hillingdon',TS='open-schools;open-shopping;open-leisure',TM='2;3'`	
 	> 	
-
+3. If you ran an ensemble jobs, you may need to do averaging across runs on the output `csv` files before plotting, in that case you can type:
+   >``` sh
+	> fab <localhost/remote machine> cal_avg_csv:<location_scenario>,<TS=transition scenario>,<TM=transition mode>
+	> ```   
+	> _Examples:_
+	> 	- submit an ensambe jobs
+	>       `fab  eagle_hidalgo covid19_ensemble:location='brent',TS='extend-lockdown;dynamic-lockdown',TM='1',cores=1,PilotJob=true,replicas=25`
+	>    - fetching results 
+	> 	 `fab eagle_hidalgo fetch_results'`
+	>   -  Averaging across runs 
+	> 	-  `fab eagle_hidalgo cal_avg_csv:brent,TS='extend-lockdown',TM=1,cores=1`
+	> 	-  `fab eagle_hidalgo cal_avg_csv:brent,TS='dynamic-lockdown',TM=1,cores=1`		
+	> 	
