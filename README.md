@@ -7,7 +7,7 @@ This is a FabSim3 plugin for Covid-19 simulation
 
 [FabSim3](https://github.com/djgroen/FabSim3.git) : `git clone https://github.com/djgroen/FabSim3.git`
 
-[Flee - covid19 branch](https://github.com/djgroen/flee/tree/covid19) : `git clone -b covid19 https://github.com/djgroen/flee.git` 
+[FACS: Flu And Coronavirus Simulator](https://github.com/djgroen/facs) : `git clone  https://github.com/djgroen/facs.git` 
 
 
 ## Installation
@@ -18,8 +18,8 @@ Once you have installed the required dependencies, you will need to take a few s
 1. Go to `(FabSim Home)/deploy`
 2. Open `machines_user.yml`
 3. Under the section `default:`, please add the following lines:
-   <br/> a. `  flee_covid19_location=(Flee-covid19 PATH)`
-   <br/> _NOTE: Please replace `Flee-covid19 PATH` with your actual install directory._
+   <br/> a. `  facs_location=(facs PATH)`
+   <br/> _NOTE: Please replace `facs PATH` with your actual install directory._
   
 ## Testing
 1. To run a single job, simply type:
@@ -28,8 +28,8 @@ Once you have installed the required dependencies, you will need to take a few s
 	> ```   
 	> _NOTE:_
 	> 	- **location_scenario** : _Currently 4 location scenario are available_ : `brent`, `ealing`, `harrow`, _and_ `hillingdon`.
-	> 	- **TS** : _Acceptable Transition Scenario :._ `no-measures`,`extend-lockdown`,`open-all`,`open-schools`,`open-shopping`,`open-leisure`,`work50`,`work75`, and `work100`.
-	> 	- **TM** : _Acceptable Transition Mode :._ `1`,`2`,and `3`.	
+	> 	- **TS** : _Acceptable Transition Scenario :._ `no-measures`,`extend-lockdown`,`open-all`,`open-schools`,`open-shopping`,`open-leisure`,`work50`,`work75`,  `work100`, and `dynamic-lockdown`.
+	> 	- **TM** : _Acceptable Transition Mode :._ `1`,`2`,`3`,and `4`.	
 	> 	
 
 2. To run the ensemble, you can type, simply type:
