@@ -37,7 +37,6 @@ def covid19(location,
                               "transition_mode": TM,
                               "output_dir": outdir
                               })
-
     with_config(location)
     execute(put_configs, location)
     job(dict(script='Covid19', wall_time='0:15:0', memory='2G'), **args)
@@ -62,12 +61,13 @@ def covid19_ensemble(location,
         TS = TS.split(';')
     else:
         TS = ['no-measures', 'extend-lockdown', 'open-all', 'open-schools',
-              'open-shopping', 'open-leisure', 'work50', 'work75', 'work100']
+              'open-shopping', 'open-leisure', 'work50', 'work75', 'work100',
+              'dynamic-lockdown']
 
     if not (TM is None):
         TM = [int(s) if s.isdigit() else -1 for s in TM.split(';')]
     else:
-        TM = [1, 2, 3]
+        TM = [1, 2, 3, 4]
 
     count = 0
     for loc in location:
