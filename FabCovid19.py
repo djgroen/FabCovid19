@@ -62,7 +62,7 @@ def covid19_ensemble(location,
     else:
         TS = ['no-measures', 'extend-lockdown', 'open-all', 'open-schools',
               'open-shopping', 'open-leisure', 'work50', 'work75', 'work100',
-              'dynamic-lockdown']
+              'dynamic-lockdown', 'periodic-lockdown']
 
     if not (TM is None):
         TM = [int(s) if s.isdigit() else -1 for s in TM.split(';')]
@@ -102,3 +102,18 @@ def covid19_ensemble(location,
 
         env.script = script
         run_ensemble(loc, sweep_dir, **args)
+
+@task
+def sync_facs():
+    """
+    Synchronize the Flee version, so that the remote machine has the latest 
+    version from localhost.
+    """
+    update_environment()
+    facs_location_local = user_config["localhost"].get("facs_location", user_config["default"].get("facs_location"))
+
+    rsync_project(
+                  local_dir=facs_location_local + '/',
+                  remote_dir=env.facs_location
+    )
+
