@@ -13,7 +13,7 @@ fi
 
 start_time="$$(date -u +%s.%N)"
 
-python3 $facs_location/run.py --location=$location --transition_scenario=$transition_scenario --transition_mode=$transition_mode --output_dir=$output_dir
+python3 $facs_location/run.py --location=$location --ci_multiplier=$ci_multiplier --transition_scenario=$transition_scenario --transition_mode=$transition_mode --output_dir=$output_dir
 
 end_time="$$(date -u +%s.%N)"
 elapsed="$$(bc <<<"$$end_time-$$start_time")"

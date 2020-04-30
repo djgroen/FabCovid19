@@ -22,6 +22,7 @@ add_local_paths("FabCovid19")
 def covid19(location,
             TS,
             TM,
+            ci_multiplier="0.475",
             outdir=".",
             **args):
     """
@@ -36,12 +37,13 @@ def covid19(location,
     update_environment(args, {"location": location,
                               "transition_scenario": TS,
                               "transition_mode": TM,
+                              "ci_multiplier": ci_multiplier,
                               "output_dir": outdir
                               })
     with_config(location)
     execute(put_configs, location)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G'), args)
+    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}".format(TS,TM,ci_multiplier)), args)
 
 
 @task
@@ -108,6 +110,7 @@ def cal_avg_csv(location, TS, TM, **args):
 def covid19_ensemble(location,
                      TS=None,
                      TM=None,
+                     ci_multiplier=0.475,
                      outdir=".",
                      script='Covid19',
                      ** args):
@@ -135,6 +138,7 @@ def covid19_ensemble(location,
     for loc in location:
 
         update_environment(args, {"location": loc,
+                                  "ci_multiplier": ci_multiplier,
                                   "transition_scenario": '',
                                   "transition_mode": '-1',
                                   "output_dir": outdir
@@ -153,7 +157,7 @@ def covid19_ensemble(location,
                         and transition_mode != 1:
                     continue
                 count = count + 1
-                base_csv_folder = os.path.join(sweep_dir, "{}-{:d}".format(transition_scenario,
+                base_csv_folder = os.path.join(sweep_dir, "{}-{:d}-{}".format(transition_scenario,
                                                                            transition_mode))
                 makedirs(base_csv_folder)
                 with open(os.path.join(base_csv_folder, 'simsetting.csv'), 'w') as f:
