@@ -43,67 +43,7 @@ def covid19(location,
     with_config(location)
     execute(put_configs, location)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}".format(TS,TM,ci_multiplier)), args)
-
-
-@task
-def cal_avg_csv(location, TS, TM, **args):
-
-    update_environment(args)
-    with_config(location)
-    work_dir = path.join(env.local_results,
-                         template(env.job_name_template))
-
-    result_PATH = "{}/{}".format(env.local_results,
-                                 template(env.job_name_template))
-
-    if not path.exists(result_PATH):
-        print('Error : Please check the input parameters')
-        print('PATH = %s \t could not be found!!!' % (result_PATH))
-        exit()
-
-    # set TD (transition day) based on TM (transition mode)
-    TM = int(TM)
-    if TM == 1:
-        TD = 77  # 15th of April
-    if TM == 2:
-        TD = 93  # 31st of May
-    if TM == 3:
-        TD = 108  # 15th of June
-    if TM == 4:
-        TD = 123  # 30th of June
-    if TM > 10:
-        TD = TM
-    # find all out.csv files from input directory
-    csv_file_address = []
-    target_csv_name = "{}-{}-{:d}.csv".format(location, TS, TD)
-    # r=root, d=directories, f = files
-    # search for out.csv in all subdirectories
-    li = []
-    for r, d, f in walk(result_PATH):
-        for file in f:
-            if file == target_csv_name:
-                #csv_file_address.append(path.join(r, file))
-                df = pd.read_csv(path.join(r, file),
-                                 index_col=None,
-                                 header=0,
-                                 sep=',',
-                                 encoding='latin1')
-                li.append(df)
-
-    # csv_file_address.sort()
-    results = pd.concat(li, axis=0, ignore_index=True)
-    avg_results = results.groupby(['#time']).mean().round(0).astype(int)
-
-    result_avg_PATH = "{}/{}/{}-{}-avg".format(env.local_results,
-                                               template(env.job_name_template),
-                                               TS, env.cores)
-    avg_csv_name = "{}-{}-{:d}.csv".format(location, TS, TD)
-    if not os.path.exists(result_avg_PATH):
-        makedirs(result_avg_PATH)
-
-    avg_results.to_csv(path.join(result_avg_PATH, avg_csv_name),
-                       sep=',')
+    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}{}".format(TS,TM,ci_multiplier,env.label)), args)
 
 
 @task
@@ -134,6 +74,12 @@ def covid19_ensemble(location,
     else:
         TM = [1, 2, 3, 4]
 
+
+    print("TS set to: ",TS)
+    print("TM set to: ",TM)
+    print("ci_multiplier set to: ",ci_multiplier)
+
+
     count = 0
     for loc in location:
 
@@ -158,7 +104,7 @@ def covid19_ensemble(location,
                     continue
                 count = count + 1
                 base_csv_folder = os.path.join(sweep_dir, "{}-{:d}-{}".format(transition_scenario,
-                                                                           transition_mode))
+                                                                           transition_mode, ci_multiplier))
                 makedirs(base_csv_folder)
                 with open(os.path.join(base_csv_folder, 'simsetting.csv'), 'w') as f:
                     f.write('"transition_scenario","%s"\n' %
@@ -182,4 +128,10 @@ def sync_facs():
                   local_dir=facs_location_local + '/',
                   remote_dir=env.facs_location
     )
+
+try:
+    from plugins.FabCovid19.postprocess import *
+except ImportError:
+    pass
+
 
