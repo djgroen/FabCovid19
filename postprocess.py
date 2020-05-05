@@ -63,13 +63,16 @@ def cal_avg_csv(location, TS, TM, **args):
 
 
 @task
-def c19_avg(results_dir):
+def c19_avg_validate(results_dir, icu_fname="", adm_fname="", sim_out_fname="brent-periodic-lockdown-77.csv"):
   update_environment()
   results_dir = "{}/{}".format(env.local_results,results_dir)
   script_dir = env.home_path + "/covid19-postprocess/validation"
   icu_csv_fname = "{}/validation_data/NPH_ICU_occupancy.csv".format(env.covid_postproc_location)
+  if len(icu_fname)>0:
+      icu_csv_fname = icu_fname
   adm_csv_fname = "{}/validation_data/NPH_admissions.csv".format(env.covid_postproc_location)
-  sim_out_fname = "brent-periodic-lockdown-77.csv"
+  if len(adm_fname)>0:
+      adm_csv_fname = adm_fname
 
   local("python3 {}/ValidationAvg.py {} {} {} {}".format(script_dir, results_dir, adm_csv_fname, icu_csv_fname, sim_out_fname))
 
