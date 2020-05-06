@@ -66,7 +66,7 @@ def cal_avg_csv(location, TS, TM, **args):
 def c19_avg_validate(results_dir, icu_fname="", adm_fname="", sim_out_fname="brent-periodic-lockdown-77.csv"):
   update_environment()
   results_dir = "{}/{}".format(env.local_results,results_dir)
-  script_dir = env.home_path + "/covid19-postprocess/validation"
+  script_dir = env.localhome + "/covid19-postprocess/validation"
   icu_csv_fname = "{}/validation_data/NPH_ICU_occupancy.csv".format(env.covid_postproc_location)
   if len(icu_fname)>0:
       icu_csv_fname = icu_fname
