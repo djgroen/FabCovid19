@@ -99,9 +99,6 @@ def covid19_ensemble(location,
 
         for transition_scenario in TS:
             for transition_mode in TM:
-                if transition_scenario in ['no-measures', 'extend-lockdown'] \
-                        and transition_mode != 1:
-                    continue
                 count = count + 1
                 base_csv_folder = os.path.join(sweep_dir, "{}-{:d}-{}".format(transition_scenario,
                                                                            transition_mode, ci_multiplier))
