@@ -5,8 +5,7 @@ FabCovid19 is a FabSim3 plugin for Flu And Coronavirus Simulator (FACS).
 ### Dependencies:
 
 1. [FabSim3](https://github.com/djgroen/FabSim3.git)
-To install the Fabsim3 automation toolkit, see https://fabsim3.readthedocs.io/en/latest/installation.html#installing-fabsim3
-
+To install the Fabsim3 automation toolkit, see the [installation](https://fabsim3.readthedocs.io/en/latest/installation.html#installing-fabsim3) documentation. 
 2. [FACS: Flu And Coronavirus Simulator](https://github.com/djgroen/facs) 
 To install FACS in your working directory, simply type:
 ```
