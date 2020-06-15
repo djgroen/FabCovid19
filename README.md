@@ -18,7 +18,7 @@ To install FabCovid19, simply go to the FabSim3 directory and type
 fab localhost install_plugin:FabCovid19
 ```
 
-### FabSim3 Configuration
+#### FabSim3 Configuration
 Once you have installed the required dependencies, you will need to take a few small configuration steps:
 1. Go to `(FabSim3 Home)/deploy`
 2. Open `machines_user.yml`
