@@ -1,6 +1,13 @@
 
 # FabCovid19
 FabCovid19 is a FabSim3 plugin for Flu And Coronavirus Simulator (FACS). 
+### A step-by-step guide for Execution of FACS Simulation at sub-national level using local and HPC resources.
+
+## Preface
+
+In this tutorial, you will get step-by-step guidance on the usage of FabCovid19 components to simulate FACS simulations within a local and HPC execution environment. In this tutorial you will learn about the following FabCovid19 software components and how these components are used in COVID-19 prediction application as shown in the Tube Map below:
+
+![Graphical depiction of the FabCovid19 components used in the FACS Simulation tutorial](https://raw.githubusercontent.com/djgroen/FabFlee/master/doc/FabFleeMap.png)
 
 ### Dependencies:
 
