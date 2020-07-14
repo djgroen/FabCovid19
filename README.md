@@ -17,13 +17,8 @@ In this tutorial, you will get step-by-step guidance on the usage of FabCovid19 
   * [Infectious Disease simulations](#infectious-disease-simulations)
   * [Dependencies](#Dependencies)
   * [Installation of required software packages](#installation)
-  * [Execution of migration simulations](#execution-of-migration-simulations)
-    + [Execution of single-model migration simulations](#execution-of-single-model-migration-simulations)
-    + [Ensemble execution of migration simulations](#ensemble-execution-of-migration-simulations)
-    + [Execution of the Flee simulations or ensembles with replicated instances](#executiion-of-the-flee-simuations-or-ensembles-with-replicated-instances)
-    + [Execution of coupled migration simulations](#execution-of-coupled-migration-simulations)
-  * [Execution on a supercomputer](#execution-on-a-supercomputer)
-  * [Sensitivity analysis of parameters using EasyVVUQ](#sensitivity-analysis-of-parameters-using-easyvvuq)
+  * [FabSim3 Configuration](#fabSim3-configuration)
+  * [Execution](#execution)
   * [Acknowledgements](#acknowledgements)
   
 ## Infectious Disease simulations
@@ -91,3 +86,7 @@ Once you have installed the required dependencies, you will need to take a few s
 	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,TS='extend-lockdown',TM=1,cores=1`
 	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,TS='dynamic-lockdown',TM=1,cores=1`		
 	> 	
+
+## Acknowledgements
+
+This work was supported by the HiDALGO and VECMA projects, which has received funding from the European Union Horizon 2020 research and innovation programme under grant agreement No 824115 and 800925.
