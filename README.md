@@ -9,6 +9,11 @@ In this tutorial, you will get step-by-step guidance on the usage of FabCovid19 
 
 ![Graphical depiction of the FabCovid19 components used in the FACS Simulation tutorial](https://raw.githubusercontent.com/djgroen/FabCovid19/master/FabCovid19Map.png)
 
+-   [FabSim3](https://fabsim3.readthedocs.io/) - an automation toolkit that features an integrated test infrastructure and a flexible plugin system. 
+-   [FACS](https://github.com/djgroen/facs) - an agent based simulation framework that models the viral spread at the sub-national level, incorporating geospatial data sources to extract buildings and residential areas within a predefined region.
+-   [QCG Pilot Job](https://wiki.vecma.eu/qcg-pilotjobs) - a Pilot Job system that allows to execute many subordinate jobs in a single scheduling system allocation,
+
+
 ### Dependencies:
 
 1. [FabSim3](https://github.com/djgroen/FabSim3.git)
