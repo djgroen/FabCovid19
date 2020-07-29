@@ -125,8 +125,11 @@ def covid19_init_SC(location,
                                     )
     '''
 
+    # polynomial_order=6 -> 4865 runs
+    # polynomial_order=7 -> 15121 runs
+    # polynomial_order=8 -> 44689 runs
     sampler = uq.sampling.SCSampler(vary=vary,
-                                    polynomial_order=1,
+                                    polynomial_order=7,
                                     quadrature_rule="C",
                                     sparse=True,
                                     growth=True,
