@@ -1,0 +1,30 @@
+name: Covid-19
+infection_rate: $infection_rate #infection_rate: 0.28
+mortality: # Verity et al., Lancet, 2020. Median age, (probability)
+ - [4.5,0.000026]
+ - [14.5,0.000148]
+ - [24.5,0.000600]
+ - [34.5,0.00146]
+ - [44.5,0.00295]
+ - [54.5,0.0125]
+ - [64.5,0.0399]
+ - [74.5,0.0861]
+ - [84.5,0.134]
+hospitalised:
+ - [4.5,0.0000]
+ - [14.5,0.000408]
+ - [24.5,0.0104]
+ - [34.5,0.0343]
+ - [44.5,0.0425]
+ - [54.5,0.0816]
+ - [64.5,0.118]
+ - [74.5,0.166]
+ - [84.5,0.184]
+mortality_period: $mortality_period # from day of hospitalisation (ICU)
+recovery_period: $recovery_period # from day of hospitalisation (ICU)
+mild_recovery_period: $mild_recovery_period # (7-10 days) https://www.ams.edu.sg/view-pdf.aspx?file=media%5c5558_fi_168.pdf&ofile=Period+of+Infectivity+Position+Statement+(final)+23-5-20.pdf
+incubation_period: $incubation_period # https://www.ams.edu.sg/view-pdf.aspx?file=media%5c5558_fi_168.pdf&ofile=Period+of+Infectivity+Position+Statement+(final)+23-5-20.pdf
+# 5 days of incubation, infectiousness starts 36 hours before the end of incubation.
+# Clinical course and risk factors for mortality of adult inpatients with Covid-19 in Wuhan, China: a retrospective cohort study
+# Fei Zhou et al. The Lancet vol. 395.
+period_to_hospitalisation: $period_to_hospitalisation #this is period to ICU.
