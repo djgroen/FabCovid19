@@ -33,7 +33,6 @@ def covid19(location,
                                     work50, work75, work100]
       - TM (transition Mode) : [1,2,3]
     """
-
     update_environment(args, {"location": location,
                               "transition_scenario": TS,
                               "transition_mode": TM,
@@ -43,7 +42,8 @@ def covid19(location,
     with_config(location)
     execute(put_configs, location)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}{}".format(TS,TM,ci_multiplier,env.label)), args)
+    job(dict(script='Covid19', wall_time='0:15:0', memory='2G',
+             label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
 
 
 @task
@@ -74,11 +74,9 @@ def covid19_ensemble(location,
     else:
         TM = [1, 2, 3, 4]
 
-
-    print("TS set to: ",TS)
-    print("TM set to: ",TM)
-    print("ci_multiplier set to: ",ci_multiplier)
-
+    print("TS set to: ", TS)
+    print("TM set to: ", TM)
+    print("ci_multiplier set to: ", ci_multiplier)
 
     count = 0
     for loc in location:
@@ -101,7 +99,7 @@ def covid19_ensemble(location,
             for transition_mode in TM:
                 count = count + 1
                 base_csv_folder = os.path.join(sweep_dir, "{}-{:d}-{}".format(transition_scenario,
-                                                                           transition_mode, ci_multiplier))
+                                                                              transition_mode, ci_multiplier))
                 makedirs(base_csv_folder)
                 with open(os.path.join(base_csv_folder, 'simsetting.csv'), 'w') as f:
                     f.write('"transition_scenario","%s"\n' %
@@ -112,6 +110,7 @@ def covid19_ensemble(location,
         env.script = script
         run_ensemble(loc, sweep_dir, **args)
 
+
 @task
 def sync_facs():
     """
@@ -119,16 +118,17 @@ def sync_facs():
     version from localhost.
     """
     update_environment()
-    facs_location_local = user_config["localhost"].get("facs_location", user_config["default"].get("facs_location"))
+    facs_location_local = user_config["localhost"].get(
+        "facs_location", user_config["default"].get("facs_location"))
 
     rsync_project(
-                  local_dir=facs_location_local + '/',
-                  remote_dir=env.facs_location
+        local_dir=facs_location_local + '/',
+        remote_dir=env.facs_location
     )
 
 try:
     from plugins.FabCovid19.postprocess import *
+    from plugins.FabCovid19.Covid19_easyvvuq_SCSampler import covid19_init_SC
+    from plugins.FabCovid19.Covid19_easyvvuq_SCSampler import covid19_analyse_SC
 except ImportError:
     pass
-
-
