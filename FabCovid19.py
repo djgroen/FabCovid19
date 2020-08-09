@@ -43,7 +43,7 @@ def covid19(location,
     with_config(location)
     execute(put_configs, location)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}{}".format(TS,TM,ci_multiplier,env.label)), args)
+    job(dict(script='Covid19', wall_time='0:15:0', memory='2G', label="{}-{}-{}".format(TS,TM,ci_multiplier)), args)
 
 
 @task
