@@ -4,11 +4,30 @@
 # Here, you can find some examples for pre-defined remote machines
 # All env variable can be modified here and will overwrite setting in machines.yml and machines_user.yml
 
+facs_args : &FACS_ARGS
+  #possible input flags : ["--quicktest" , "--quicktest", "--dbg"]
+  flags: ["--generic_outfile"]
+  
+  # default values are extracted from facs/run.py
+  location: "brent"
+  transition_scenario: "extend-lockdown"
+  transition_mode: "1"
+  ci_multiplier: "0.625"
+  output_dir: "."
+  data_dir: "covid_data"
+  starting_infections: "500"
+  start_date: "3/1/2020"
+
+
 localhost:
+  facs_args: *FACS_ARGS
+
   # location of FACS in your local PC
   facs_location: "<...>"
 
 eagle_vecma:
+  facs_args: *FACS_ARGS
+
   # location of FACS in the remote machine
   facs_location: "<...>"
 
