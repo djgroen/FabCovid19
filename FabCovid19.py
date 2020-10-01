@@ -32,7 +32,7 @@ def covid19(location,
                                     work50, work75, work100]
       - TM (transition Mode) : [1,2,3]
     """
-
+    load_plugin_machine_vars(config)
     update_environment(args)
     with_config(location)
 
@@ -80,7 +80,7 @@ def covid19_ensemble(location,
 
     count = 0
     for loc in location:
-
+        load_plugin_machine_vars(config)
         update_environment(args)
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
@@ -118,6 +118,7 @@ def sync_facs():
     Synchronize the Flee version, so that the remote machine has the latest 
     version from localhost.
     """
+    load_plugin_machine_vars(config)
     update_environment()
     facs_location_local = user_config["localhost"].get(
         "facs_location", user_config["default"].get("facs_location"))
