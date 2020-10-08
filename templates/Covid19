@@ -13,7 +13,7 @@ fi
 
 start_time="$$(date -u +%s.%N)"
 
-python3 $facs_location/run.py $facs_args_list
+python3 $facs_location/$facs_script $facs_args_list
 
 
 end_time="$$(date -u +%s.%N)"

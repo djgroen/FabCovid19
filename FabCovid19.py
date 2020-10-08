@@ -19,10 +19,11 @@ add_local_paths("FabCovid19")
 
 
 @task
-def covid19(location,
+def covid19(config,
             TS,
             TM,
             ci_multiplier="0.475",
+            facs_script="run.py",
             **args):
     """
     parameters:
@@ -33,26 +34,35 @@ def covid19(location,
       - TM (transition Mode) : [1,2,3]
     """
     load_plugin_machine_vars(config)
-    update_environment(args)
-    with_config(location)
+    update_environment(args, {"facs_script": facs_script})
+    with_config(config)
 
-    set_facs_args_list(args, {"location": location,
+    set_facs_args_list(args, {"location": config,
                               "transition_scenario": TS,
                               "transition_mode": TM,
                               "ci_multiplier": ci_multiplier,
                               })
 
-    execute(put_configs, location)
+    execute(put_configs, config)
     print(args)
     job(dict(script='Covid19', wall_time='0:15:0', memory='2G',
              label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
 
+@task
+def covid19_campus(config,
+                   TS,
+                   TM,
+                   ci_multiplier="0.475",
+                   **args):
+    covid19(config, TS, TM, ci_multiplier=ci_multiplier, facs_script="run_campus.py", **args)
+
 
 @task
-def covid19_ensemble(location,
+def covid19_ensemble(config,
                      TS=None,
                      TM=None,
                      ci_multiplier=0.475,
+                     facs_script="run.py",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -60,7 +70,7 @@ def covid19_ensemble(location,
       fab <machine> covid19_ensemble:location='brent;harrow;hillingdon'
 
     '''
-    location = location.split(';')
+    locations = locations.split(';')
 
     if not (TS is None):
         TS = TS.split(';')
@@ -81,7 +91,7 @@ def covid19_ensemble(location,
     count = 0
     for loc in location:
         load_plugin_machine_vars(config)
-        update_environment(args)
+        update_environment(args, {"facs_script": facs_script})
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
                                   "transition_scenario": '',
@@ -110,6 +120,15 @@ def covid19_ensemble(location,
 
         env.script = 'Covid19'
         run_ensemble(loc, sweep_dir, **args)
+
+@task
+def covid19_campus_ensemble(config,
+                            TS=None,
+                            TM=None,
+                            ci_multiplier=0.475,
+                            ** args):
+    covid19_ensemble(config, TS, TM, **args, ci_multiplier=ci_multiplier, facs_script="run_campus.py")
+
 
 
 @task
