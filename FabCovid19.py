@@ -27,7 +27,7 @@ def covid19(config,
             **args):
     """
     parameters:
-      - location : [brent,harrow,ealing,hillingdon]
+      - config : [brent,harrow,ealing,hillingdon]
       - TS (Transition Scenario) : [no-measures, extend-lockdown, open-all,
                                     open-schools, open-shopping, open-leisure,
                                     work50, work75, work100]
@@ -48,17 +48,23 @@ def covid19(config,
     job(dict(script='Covid19', wall_time='0:15:0', memory='2G',
              label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
 
+
 @task
 def covid19_campus(config,
                    TS,
                    TM,
                    ci_multiplier="0.475",
                    **args):
-    covid19(config, TS, TM, ci_multiplier=ci_multiplier, facs_script="run_campus.py", **args)
+    covid19(config,
+            TS=TS,
+            TM=TM,
+            ci_multiplier=ci_multiplier,
+            facs_script="run_campus.py",
+            **args)
 
 
 @task
-def covid19_ensemble(config,
+def covid19_ensemble(configs,
                      TS=None,
                      TM=None,
                      ci_multiplier=0.475,
@@ -66,11 +72,11 @@ def covid19_ensemble(config,
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
-      fab <machine> covid19_ensemble:location='brent;harrow;hillingdon'
-      fab <machine> covid19_ensemble:location='brent;harrow;hillingdon'
+      fab <machine> covid19_ensemble:configs='brent;harrow;hillingdon'
+      fab <machine> covid19_ensemble:configs='brent;harrow;hillingdon'
 
     '''
-    locations = locations.split(';')
+    configs = configs.split(';')
 
     if not (TS is None):
         TS = TS.split(';')
@@ -89,8 +95,8 @@ def covid19_ensemble(config,
     print("ci_multiplier set to: ", ci_multiplier)
 
     count = 0
-    for loc in location:
-        load_plugin_machine_vars(config)
+    for loc in configs:
+        load_plugin_machine_vars(loc)
         update_environment(args, {"facs_script": facs_script})
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
@@ -121,14 +127,19 @@ def covid19_ensemble(config,
         env.script = 'Covid19'
         run_ensemble(loc, sweep_dir, **args)
 
+
 @task
-def covid19_campus_ensemble(config,
+def covid19_campus_ensemble(configs,
                             TS=None,
                             TM=None,
                             ci_multiplier=0.475,
                             ** args):
-    covid19_ensemble(config, TS, TM, **args, ci_multiplier=ci_multiplier, facs_script="run_campus.py")
-
+    covid19_ensemble(configs,
+                     TS=TS,
+                     TM=TM,
+                     ci_multiplier=ci_multiplier,
+                     facs_script="run_campus.py",
+                     **args)
 
 
 @task
@@ -137,7 +148,6 @@ def sync_facs():
     Synchronize the Flee version, so that the remote machine has the latest 
     version from localhost.
     """
-    load_plugin_machine_vars(config)
     update_environment()
     facs_location_local = user_config["localhost"].get(
         "facs_location", user_config["default"].get("facs_location"))
