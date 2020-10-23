@@ -19,6 +19,7 @@ add_local_paths("FabCovid19")
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19(config,
             TS,
             TM,
@@ -33,7 +34,6 @@ def covid19(config,
                                     work50, work75, work100]
       - TM (transition Mode) : [1,2,3]
     """
-    load_plugin_machine_vars(config)
     update_environment(args, {"facs_script": facs_script})
     with_config(config)
 
@@ -64,6 +64,7 @@ def covid19_campus(config,
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_ensemble(configs,
                      TS=None,
                      TM=None,
@@ -96,7 +97,6 @@ def covid19_ensemble(configs,
 
     count = 0
     for loc in configs:
-        load_plugin_machine_vars(loc)
         update_environment(args, {"facs_script": facs_script})
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
@@ -143,6 +143,7 @@ def covid19_campus_ensemble(configs,
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def sync_facs():
     """
     Synchronize the Flee version, so that the remote machine has the latest 
