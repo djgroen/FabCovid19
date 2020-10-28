@@ -64,7 +64,6 @@ def covid19_campus(config,
 
 
 @task
-@load_plugin_env_vars("FabCovid19")
 def covid19_ensemble(configs,
                      TS=None,
                      TM=None,
@@ -97,6 +96,7 @@ def covid19_ensemble(configs,
 
     count = 0
     for loc in configs:
+        add_plugin_environment_variable("FabCovid19")
         update_environment(args, {"facs_script": facs_script})
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
