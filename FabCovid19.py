@@ -158,11 +158,6 @@ def sync_facs():
         remote_dir=env.facs_location
     )
 
-try:
-    from plugins.FabCovid19.postprocess import *
-except ImportError:
-    pass
-
 
 def set_facs_args_list(*dicts):
     # update facs args from input arguments
@@ -178,3 +173,11 @@ def set_facs_args_list(*dicts):
             env.facs_args_list += '  '.join(value)
         else:
             env.facs_args_list += " --%s=%s " % (key, value)
+
+
+try:
+    from plugins.FabCovid19.postprocess import *
+    from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_init_SC
+    from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_analyse_SC
+except ImportError:
+    pass
