@@ -1,0 +1,58 @@
+{
+  "infection_rate": {
+    "type": "float",
+    "min": 0.0035,
+    "max": 0.14,
+    "default": 0.07
+  },
+  "mortality_period": {
+    "type": "float",
+    "min": 4.0,
+    "max": 16.0,
+    "default": 8.0
+  },
+  "recovery_period": {
+    "type": "float",
+    "min": 4.0,
+    "max": 16.0,
+    "default": 8.0
+  },
+  "mild_recovery_period": {
+    "type": "float",
+    "min": 4.5,
+    "max": 12.5,
+    "default": 8.5
+  },
+  "incubation_period": {
+    "type": "float",
+    "min": 2.0,
+    "max": 6.0,
+    "default": 3.0
+  },
+  "period_to_hospitalisation": {
+    "type": "float",
+    "min": 8.0,
+    "max": 16.0,
+    "default": 12.0
+  },
+  "transition_mode": {
+    "type": "float",
+    "min": 1,
+    "max": 4,
+    "default": 1
+  },
+  "transition_scenario_index": {
+    "type": "float",
+    "min": 0,
+    "max": 11,
+    "default": 1
+  },
+  "transition_scenario": {
+    "default": "extend-lockdown",
+    "type": "string"
+  },
+  "out_file": {
+    "type": "string",
+    "default": "out.csv"
+  }
+}
