@@ -25,7 +25,7 @@ def covid19(config,
             TM,
             ci_multiplier="0.475",
             facs_script="run.py",
-            quicktest=False,
+            quicktest="false",
             **args):
     """
     parameters:
@@ -56,7 +56,7 @@ def covid19_campus(config,
                    TS,
                    TM,
                    ci_multiplier="0.475",
-                   quicktest=False,
+                   quicktest="false",
                    **args):
     covid19(config,
             TS=TS,
@@ -73,7 +73,7 @@ def covid19_ensemble(configs,
                      TM=None,
                      ci_multiplier=0.475,
                      facs_script="run.py",
-                     quicktest=False,
+                     quicktest="false",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -139,7 +139,7 @@ def covid19_campus_ensemble(configs,
                             TS=None,
                             TM=None,
                             ci_multiplier=0.475,
-                            quicktest=False,
+                            quicktest="false",
                             ** args):
     covid19_ensemble(configs,
                      TS=TS,
