@@ -25,6 +25,7 @@ def covid19(config,
             TM,
             ci_multiplier="0.475",
             facs_script="run.py",
+            quicktest=False,
             **args):
     """
     parameters:
@@ -41,6 +42,7 @@ def covid19(config,
                               "transition_scenario": TS,
                               "transition_mode": TM,
                               "ci_multiplier": ci_multiplier,
+                              "quicktest": quicktest
                               })
 
     execute(put_configs, config)
@@ -54,12 +56,14 @@ def covid19_campus(config,
                    TS,
                    TM,
                    ci_multiplier="0.475",
+                   quicktest=False,
                    **args):
     covid19(config,
             TS=TS,
             TM=TM,
             ci_multiplier=ci_multiplier,
             facs_script="run_campus.py",
+            quicktest=quicktest,
             **args)
 
 
@@ -69,6 +73,7 @@ def covid19_ensemble(configs,
                      TM=None,
                      ci_multiplier=0.475,
                      facs_script="run.py",
+                     quicktest=False,
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -103,6 +108,7 @@ def covid19_ensemble(configs,
                                   "transition_scenario": '',
                                   "transition_mode": '-1',
                                   "ci_multiplier": ci_multiplier,
+                                  "quicktest": quicktest
                                   })
 
         path_to_config = find_config_file_path(loc)
@@ -133,12 +139,14 @@ def covid19_campus_ensemble(configs,
                             TS=None,
                             TM=None,
                             ci_multiplier=0.475,
+                            quicktest=False,
                             ** args):
     covid19_ensemble(configs,
                      TS=TS,
                      TM=TM,
                      ci_multiplier=ci_multiplier,
                      facs_script="run_campus.py",
+                     quicktest=quicktest,
                      **args)
 
 
@@ -166,6 +174,13 @@ def set_facs_args_list(*dicts):
             if key in adict:
                 env.facs_args[key] = adict[key]
 
+    # check for quicktest option
+    for adict in dicts:
+        if 'quicktest' in adict and \
+            adict['quicktest'].lower() == 'true' and \
+                '--quicktest' not in env.facs_args['flags']:
+            env.facs_args['flags'].append('--quicktest')
+
     # create the facs input argument list
     env.facs_args_list = ""
     for key, value in env.facs_args.items():
@@ -173,7 +188,6 @@ def set_facs_args_list(*dicts):
             env.facs_args_list += '  '.join(value)
         else:
             env.facs_args_list += " --%s=%s " % (key, value)
-
 
 try:
     from plugins.FabCovid19.postprocess import *
