@@ -1,0 +1,25 @@
+parameters:
+    # <parameter_name:>
+    #   cp_uniform: [<lower value>,<upper value>] 
+    infection_rate:
+        cp_uniform: [0.0035, 0.14]
+    mortality_period:
+        cp_uniform: [4.0, 16.0]
+    recovery_period:
+        cp_uniform: [4.0, 16.0]
+    mild_recovery_period:
+        cp_uniform: [4.5, 12.5]
+    incubation_period:
+        cp_uniform: [2.0, 6.0]
+    period_to_hospitalisation:
+        cp_uniform: [8.0, 16.0]
+
+
+
+selected_parameters: ["infection_rate",
+                      "incubation_period"
+                    ]
+
+polynomial_order: 2
+        
+
