@@ -9,6 +9,7 @@ from shutil import rmtree
 from pprint import pprint
 import json
 import time
+import yaml
 from plugins.FabCovid19.FabCovid19 import *
 
 
@@ -107,23 +108,27 @@ def covid19_init_SC(location,
                           decoder=decoder,
                           collater=collater)
 
-    # parameters to vary
-    vary = {
-        "infection_rate": cp.Uniform(0.0035, 0.14),
-        "mortality_period": cp.Uniform(4.0, 16.0),
-        "recovery_period": cp.Uniform(4.0, 16.0),
-        "mild_recovery_period": cp.Uniform(4.5, 12.5),
-        "incubation_period": cp.Uniform(2.0, 6.0),
-        "period_to_hospitalisation": cp.Uniform(8.0, 16.0),
-    }
+    # loading user input sampler yaml file
+    user_sampler_yaml_file = os.path.join(os.path.dirname(__file__),
+                                          "vary_parameters.yml")
+    sampler_args = yaml.load(open(user_sampler_yaml_file),
+                             Loader=yaml.SafeLoader
+                             )
+
+    vary = {}
+    for param in sampler_args['selected_parameters']:
+        lower_value = sampler_args['parameters'][param]['cp_uniform'][0]
+        upper_value = sampler_args['parameters'][param]['cp_uniform'][1]
+        vary.update({param: cp.Uniform(lower_value, upper_value)})
+
+    user_polynomial_order = sampler_args['polynomial_order']
 
     # create SCSampler
-
     # polynomial_order=6 -> 4865 runs
     # polynomial_order=7 -> 15121 runs
     # polynomial_order=8 -> 44689 runs
     sampler = uq.sampling.SCSampler(vary=vary,
-                                    polynomial_order=2,
+                                    polynomial_order=user_polynomial_order,
                                     quadrature_rule="C",
                                     sparse=True,
                                     growth=True,
@@ -172,8 +177,6 @@ def covid19_init_SC(location,
                               "output_dir": outdir,
                               "ci_multiplier": ci_multiplier,
                               })
-
-    # env.partition_name = 'covid'
 
     # logging for scalability test
     log_submission_csv_file = os.path.join(
@@ -331,8 +334,8 @@ def covid19_analyse_SC(location, ** args):
         # ---------------------------------------------------------------------
         #                   Plotting
         # ---------------------------------------------------------------------
-        fig = plt.figure(figsize=(7, 6))
-        # fig = plt.figure()
+        #fig = plt.figure(figsize=(7, 6))
+        fig = plt.figure()
         ax = fig.add_subplot(111,
                              xlabel="days",
                              ylabel=output_column,
@@ -355,14 +358,16 @@ def covid19_analyse_SC(location, ** args):
         print(output_file_name)
         plt.savefig(output_file_name, dpi=400)
 
-        fig = plt.figure(figsize=(7, 6))
+        # fig = plt.figure(figsize=(7, 6))
+        fig = plt.figure()
         ax = fig.add_subplot(111,
                              xlabel="days",
                              ylabel="First order Sobol index"
                              )
 
-        ax.set_title("First order Sobol index ",
-                     fontsize=14, fontweight='bold', loc='right')
+        ax.set_title("First order Sobol index output column = %s"
+                     % (output_column),
+                     fontsize=10, fontweight='bold', loc='center')
 
         param_i = 0
         for v in sobols_first:
@@ -376,11 +381,11 @@ def covid19_analyse_SC(location, ** args):
 
             param_i = param_i + 1
 
-        x1, x2, y1, y2 = plt.axis()
-        plt.axis((x1, x2, -0.1, 1.0))
+        # x1, x2, y1, y2 = plt.axis()
+        # plt.axis((x1, x2, -0.1, 1.0))
         ax.set_ylim([-0.1, 1.0])
 
-        ax.legend(bbox_to_anchor=(0.0, 1.40),
+        ax.legend(bbox_to_anchor=(0.0, 1.00),
                   loc="upper left",
                   borderaxespad=0.
                   )
