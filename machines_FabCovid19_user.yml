@@ -18,6 +18,7 @@ default:
     data_dir: "covid_data"
     starting_infections: "500"
     start_date: "3/1/2020"
+    simulation_period: "-1" # -1 for full simulation
 
 # required modules for FACS
 facs_modules: &FACS_MODULES
