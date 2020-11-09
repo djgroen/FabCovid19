@@ -365,7 +365,7 @@ def covid19_analyse_SC(location, ** args):
                              ylabel="First order Sobol index"
                              )
 
-        ax.set_title("First order Sobol index output column = %s"
+        ax.set_title("First order Sobol index [output column = %s]"
                      % (output_column),
                      fontsize=10, fontweight='bold', loc='center')
 
@@ -383,7 +383,8 @@ def covid19_analyse_SC(location, ** args):
 
         # x1, x2, y1, y2 = plt.axis()
         # plt.axis((x1, x2, -0.1, 1.0))
-        ax.set_ylim([-0.1, 1.0])
+        # ax.set_ylim([-0.1, 1.0])
+        ax.axhline(0, color='lightgray', linestyle='dashed', lw=0.5, zorder=1)
 
         ax.legend(bbox_to_anchor=(0.0, 1.00),
                   loc="upper left",
