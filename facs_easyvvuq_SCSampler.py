@@ -108,22 +108,28 @@ def covid19_init_SC(location,
                           decoder=decoder,
                           collater=collater)
 
-    # parameters to vary
-    vary = {
-        "infection_rate": cp.Uniform(0.0035, 0.14),
-        #"mortality_period": cp.Uniform(4.0, 16.0),
-        #"recovery_period": cp.Uniform(4.0, 16.0),
-        #"mild_recovery_period": cp.Uniform(4.5, 12.5),
-        "incubation_period": cp.Uniform(2.0, 6.0),
-        #"period_to_hospitalisation": cp.Uniform(8.0, 16.0),
-    }
+    # loading user input sampler yaml file
+    user_sampler_yaml_file = os.path.join(os.path.dirname(__file__),
+                                          "vary_parameters.yml")
+    sampler_args = yaml.load(open(user_sampler_yaml_file),
+                             Loader=yaml.SafeLoader
+                             )
 
-    # create SCSampler (stochastic collocation)
+    # parameters to vary
+    vary = {}
+    for param in sampler_args['selected_parameters']:
+        lower_value = sampler_args['parameters'][param]['cp_uniform'][0]
+        upper_value = sampler_args['parameters'][param]['cp_uniform'][1]
+        vary.update({param: cp.Uniform(lower_value, upper_value)})
+
+    user_polynomial_order = sampler_args['polynomial_order']
+
+    # create SCSampler
     # polynomial_order=6 -> 4865 runs
     # polynomial_order=7 -> 15121 runs
     # polynomial_order=8 -> 44689 runs
     sampler = uq.sampling.SCSampler(vary=vary,
-                                    polynomial_order=4,
+                                    polynomial_order=user_polynomial_order,
                                     quadrature_rule="C",
                                     sparse=True,
                                     growth=True,
