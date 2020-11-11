@@ -193,5 +193,6 @@ try:
     from plugins.FabCovid19.postprocess import *
     from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_init_SC
     from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_analyse_SC
-except ImportError:
+except ImportError as exc:
+    print("Error: failed to import settings module ({})".format(exc))
     pass
