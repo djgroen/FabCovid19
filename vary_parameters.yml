@@ -17,7 +17,8 @@ parameters:
 
 
 selected_parameters: ["infection_rate",
-                      "incubation_period"
+                      "incubation_period",
+                      "period_to_hospitalisation"
                     ]
 
 polynomial_order: 3
