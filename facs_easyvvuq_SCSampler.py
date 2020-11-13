@@ -130,10 +130,10 @@ def covid19_init_SC(location,
     # polynomial_order=8 -> 44689 runs
     sampler = uq.sampling.SCSampler(vary=vary,
                                     polynomial_order=user_polynomial_order,
-                                    quadrature_rule="C",
-                                    sparse=True,
-                                    growth=True,
-                                    midpoint_level1=True
+                                    # quadrature_rule="C",
+                                    # sparse=True,
+                                    # growth=True,
+                                    # midpoint_level1=True
                                     )
 
     # Associate the sampler with the campaign
@@ -344,13 +344,11 @@ def covid19_analyse_SC(location, ** args):
         ax.set_title("statistical moments for [%s]" %
                      (output_column), fontsize=14, fontweight='bold')
 
-        mean = results["statistical_moments"][output_column]["mean"]
-        std = results["statistical_moments"][output_column]["std"]
+        mean = results.raw_data["statistical_moments"][output_column]["mean"]
+        std = results.raw_data["statistical_moments"][output_column]["std"]
         ax.plot(mean)
         ax.plot(mean + std, '--r')
         ax.plot(mean - std, '--r')
-
-        sobols_first = results["sobols_first"][output_column]
 
         output_file_name = os.path.join(
             work_dir_SCSampler,
@@ -370,6 +368,7 @@ def covid19_analyse_SC(location, ** args):
                      % (output_column),
                      fontsize=10, fontweight='bold', loc='center')
 
+        sobols_first = results.raw_data["sobols_first"][output_column]
         param_i = 0
         for v in sobols_first:
             y = sobols_first[v]
