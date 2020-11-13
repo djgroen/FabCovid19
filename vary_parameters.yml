@@ -21,6 +21,36 @@ selected_parameters: ["infection_rate",
                       "period_to_hospitalisation"
                     ]
 
-polynomial_order: 3
-        
+polynomial_order: 2
 
+# quadrature_rule : char
+#     The quadrature method, default is Gaussian "G".
+#     "G" -> Gaussian , "C" -> Clenshaw_Curtis
+quadrature_rule: "G"
+
+# sparse : bool
+#             If True use sparse grid instead of normal tensor product grid,
+#             default is False
+sparse: False
+
+# growth: bool
+#     Sets the growth rule to exponential for Clenshaw Curtis quadrature,
+#     which makes it nested, and therefore more efficient for sparse grids.
+#     Default is False.
+growth: False
+
+# midpoint_level1: bool
+#     determines how many points the 1st level of a sparse grid will have.
+#     If midpoint_level1 = True, order 0 quadrature will be generated
+midpoint_level1: False
+
+# dimension_adaptive: bool
+#     determines wether to use an insotropic sparse grid, or to adapt
+#     the levels in the sparse grid based on a hierachical error measure
+dimension_adaptive: False
+
+# ------- NOTE ------------
+# if you set quadrature_rule="C", then you need to make sure
+#     sparse=True
+#     growth=True
+#     midpoint_level1=True

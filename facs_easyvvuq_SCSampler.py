@@ -122,19 +122,21 @@ def covid19_init_SC(location,
         upper_value = sampler_args['parameters'][param]['cp_uniform'][1]
         vary.update({param: cp.Uniform(lower_value, upper_value)})
 
-    user_polynomial_order = sampler_args['polynomial_order']
-
-    # create SCSampler
+    # if quadrature_rule="C"
     # polynomial_order=6 -> 4865 runs
     # polynomial_order=7 -> 15121 runs
     # polynomial_order=8 -> 44689 runs
-    sampler = uq.sampling.SCSampler(vary=vary,
-                                    polynomial_order=user_polynomial_order,
-                                    # quadrature_rule="C",
-                                    # sparse=True,
-                                    # growth=True,
-                                    # midpoint_level1=True
-                                    )
+
+    # create SCSampler
+    sampler = uq.sampling.SCSampler(
+        vary=vary,
+        polynomial_order=sampler_args['polynomial_order'],
+        quadrature_rule=sampler_args['quadrature_rule'],
+        sparse=sampler_args['sparse'],
+        growth=sampler_args['growth'],
+        midpoint_level1=sampler_args['midpoint_level1'],
+        dimension_adaptive=sampler_args['dimension_adaptive']
+    )
 
     # Associate the sampler with the campaign
     campaign.set_sampler(sampler)
