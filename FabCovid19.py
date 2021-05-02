@@ -189,10 +189,17 @@ def set_facs_args_list(*dicts):
         else:
             env.facs_args_list += " --%s=%s " % (key, value)
 
+
 try:
     from plugins.FabCovid19.postprocess import *
-    from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_init_SC
-    from plugins.FabCovid19.facs_easyvvuq_SCSampler import covid19_analyse_SC
+
+    from plugins.FabCovid19.SA.facs_SA import facs_init_SA
+    from plugins.FabCovid19.SA.facs_SA import facs_analyse_SA
+
+    from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
+    from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
+
+
 except ImportError as exc:
     print("Error: failed to import settings module ({})".format(exc))
     pass

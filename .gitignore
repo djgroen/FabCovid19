@@ -132,3 +132,5 @@ dmypy.json
 **/SWEEP/*
 # ignore generated folder by facs_easyvvuq_SCSampler.py
 *_easyvvuq_*/*
+*facs_SA_*/
+*facs_vvp_LoR*/
