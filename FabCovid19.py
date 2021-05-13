@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# This source file is part of the FabSim software toolkit, which is distributed under the BSD 3-Clause license.
+# This source file is part of the FabSim software toolkit,
+# which is distributed under the BSD 3-Clause license.
 # Please refer to LICENSE for detailed information regarding the licensing.
 #
 # This file contains FabSim definitions specific to FabCovid19.
@@ -121,10 +122,15 @@ def covid19_ensemble(configs,
         for transition_scenario in TS:
             for transition_mode in TM:
                 count = count + 1
-                base_csv_folder = os.path.join(sweep_dir, "{}-{:d}-{}".format(transition_scenario,
-                                                                              transition_mode, ci_multiplier))
+                base_csv_folder = os.path.join(
+                    sweep_dir,
+                    "{}-{:d}-{}".format(transition_scenario,
+                                        transition_mode,
+                                        ci_multiplier)
+                )
                 makedirs(base_csv_folder)
-                with open(os.path.join(base_csv_folder, 'simsetting.csv'), 'w') as f:
+                with open(os.path.join(base_csv_folder, 'simsetting.csv'),
+                          'w') as f:
                     f.write('"transition_scenario","%s"\n' %
                             (transition_scenario))
                     f.write('"transition_mode",%d' %
@@ -154,7 +160,7 @@ def covid19_campus_ensemble(configs,
 @load_plugin_env_vars("FabCovid19")
 def sync_facs():
     """
-    Synchronize the Flee version, so that the remote machine has the latest 
+    Synchronize the Flee version, so that the remote machine has the latest
     version from localhost.
     """
     update_environment()
@@ -199,6 +205,7 @@ try:
     from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
     from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
 
+    from plugins.FabCovid19.validation.ValidateAvg import covid19_postprocessing
 
 except ImportError as exc:
     print("Error: failed to import settings module ({})".format(exc))
