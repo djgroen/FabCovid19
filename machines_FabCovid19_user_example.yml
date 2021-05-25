@@ -1,0 +1,96 @@
+# This is the user personal configuration for job submission and execution for FabCovid19 plugin
+# All given variable here will be override machine settings loaded from (a) FabSim3/deploy/machines.yml and (b) FabSim3/deploy/machines_user.yml 
+# 
+# Here, you can find some examples for pre-defined remote machines
+# All env variable can be modified here and will overwrite setting in machines.yml and machines_user.yml
+
+default:
+  facs_args :
+    #possible input flags : ["--quicktest" , "--quicktest", "--dbg"]
+    flags: ["--generic_outfile"]
+    
+    # default values are extracted from facs/run.py
+    location: "brent"
+    transition_scenario: "extend-lockdown"
+    transition_mode: "1"
+    ci_multiplier: "0.625"
+    output_dir: "."
+    data_dir: "covid_data"
+    starting_infections: "500"
+    start_date: "3/1/2020"
+    simulation_period: "-1" # -1 for full simulation
+
+  facs_validation:
+    validation_PATH: "/home/csstddg/covid19-postprocess/validation"
+    validation_files:
+      brent: "NPH_admissions.csv"
+      camden: "<INPUT csv>"
+      ealing: "<INPUT csv>"
+      hammersmith_fulham: "<INPUT csv>"
+      hillingdon: "Hillingdon_CCG_admissions.csv"
+      kensington_chelsea: "<INPUT csv>"
+      westminster: "<INPUT csv>"
+
+    Start_Date: "2020-03-01"
+    End_Date: "2020-12-30"
+    Run_Date: "08-12-2020"
+
+# required modules for FACS
+facs_modules: &FACS_MODULES
+  # list of modules to be loaded on remote machine
+  loaded: ["python/3.7.3"]
+  # list of modules to be unloaded on remote machine
+  unloaded: ["python"]
+
+localhost:
+
+  # location of FACS in your local PC
+  facs_location: "/home/csstddg/facs"
+
+eagle_vecma:
+  # location of FACS in the remote machine
+  facs_location: "<..>"
+
+  cores: 1
+  # format days-hours:minutes:seconds
+  job_wall_time : "0-1:00:00"
+
+  # list of available partitions : sinfo --Format=partition
+  partition_name: "fast"
+
+  # for submitting job with PilotJob
+  PJ_size : "3"
+  PJ_wall_time : "0-3:00:00"
+
+  # required modules for FACS
+  modules: *FACS_MODULES
+
+eagle_hidalgo:
+  # location of FACS in the remote machine
+  facs_location: "/home/users/derek/facs"
+
+  cores: 1
+  # format days-hours:minutes:seconds
+  job_wall_time : "0-1:00:00"
+
+  # list of available partitions : sinfo --Format=partition
+  partition_name: "fast"
+
+  # for submitting job with PilotJob
+  PJ_size : "3"
+  PJ_wall_time : "0-3:00:00"
+
+  # required modules for FACS
+  modules: *FACS_MODULES
+
+training_hidalgo:
+  # location of FACS in the remote machine
+  facs_location: "/work/hamid/facs"
+  cores: 1
+  job_wall_time : "0-1:00:00"
+  partition_name: "hidalgo"
+  # for submitting job with PilotJob
+  PJ_size : "1"
+  PJ_wall_time : "0-2:00:00"
+  modules: *FACS_MODULES
+

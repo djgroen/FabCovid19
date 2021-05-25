@@ -134,3 +134,6 @@ dmypy.json
 *_easyvvuq_*/*
 *facs_SA_*/
 *facs_vvp_LoR*/
+
+# User-defined machines file
+machines_FabCovid19_user.yml
