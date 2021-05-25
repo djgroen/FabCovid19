@@ -8,7 +8,11 @@
 #
 # authors: Hamid Arabnejad, Derek Groen
 
-from base.fab import *
+try:
+    from fabsim.base.fab import *
+except ImportError:
+    from base.fab import *
+
 import shutil
 import pandas as pd
 from os import makedirs, path, walk

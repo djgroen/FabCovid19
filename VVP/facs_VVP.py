@@ -7,7 +7,16 @@
 #
 # author: Hamid Arabnejad
 #
-from base.fab import *
+try:
+    from fabsim.base.fab import *
+except ImportError:
+    from base.fab import *
+
+try:
+    from fabsim.VVP.vvp import ensemble_vvp_LoR
+except ImportError:
+    from VVP.vvp import ensemble_vvp_LoR
+
 from pprint import pprint
 import yaml
 import ruamel.yaml
@@ -22,7 +31,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats.mstats import gmean
 from plugins.FabCovid19.FabCovid19 import *
-from VVP.vvp import ensemble_vvp_LoR
 
 
 @task
