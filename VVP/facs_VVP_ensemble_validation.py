@@ -83,7 +83,7 @@ def validate_facs(cores=1, skip_runs=False, label="", **args):
         mode = "parallel"
 
     if not skip_runs:
-        facs_ensemble("validation", cores=1, **args)
+        covid19_ensemble("validation", cores=1, **args)
 
     # if not run locally, wait for runs to complete
     update_environment()
