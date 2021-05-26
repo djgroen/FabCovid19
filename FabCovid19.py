@@ -208,10 +208,11 @@ try:
 
     from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
     from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
-    from plugins.FabCovid19.VVP.facs_VVP_ensemble_validation import facs_vvp_validate_results
+    from plugins.FabCovid19.VVP.facs_VVP_ensemble_validation import *
 
     from plugins.FabCovid19.validation.ValidateAvg import covid19_postprocessing
 
 except ImportError as exc:
     print("Error: failed to import settings module ({})".format(exc))
     pass
+
