@@ -21,7 +21,11 @@ default:
     simulation_period: "-1" # -1 for full simulation
 
   facs_validation:
+<<<<<<< HEAD
     validation_PATH: "/home/csstddg/covid19-postprocess/validation"
+=======
+    validation_PATH: "<PATH to validation folder from covid19-postprocess repo>"
+>>>>>>> 8c7afff57ea127e58d9eabff52d70a75bd851ba6
     validation_files:
       brent: "NPH_admissions.csv"
       camden: "<INPUT csv>"
@@ -45,7 +49,11 @@ facs_modules: &FACS_MODULES
 localhost:
 
   # location of FACS in your local PC
+<<<<<<< HEAD
   facs_location: "/home/csstddg/facs"
+=======
+  facs_location: "<..>"
+>>>>>>> 8c7afff57ea127e58d9eabff52d70a75bd851ba6
 
 eagle_vecma:
   # location of FACS in the remote machine
@@ -67,7 +75,11 @@ eagle_vecma:
 
 eagle_hidalgo:
   # location of FACS in the remote machine
+<<<<<<< HEAD
   facs_location: "/home/users/derek/facs"
+=======
+  facs_location: "<..>"
+>>>>>>> 8c7afff57ea127e58d9eabff52d70a75bd851ba6
 
   cores: 1
   # format days-hours:minutes:seconds
@@ -82,6 +94,7 @@ eagle_hidalgo:
 
   # required modules for FACS
   modules: *FACS_MODULES
+<<<<<<< HEAD
 
 training_hidalgo:
   # location of FACS in the remote machine
@@ -94,3 +107,5 @@ training_hidalgo:
   PJ_wall_time : "0-2:00:00"
   modules: *FACS_MODULES
 
+=======
+>>>>>>> 8c7afff57ea127e58d9eabff52d70a75bd851ba6
