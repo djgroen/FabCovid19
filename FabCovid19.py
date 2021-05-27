@@ -231,16 +231,31 @@ def set_facs_args_list(*dicts):
 
 try:
     from plugins.FabCovid19.postprocess import *
+except:
+    exc = sys.exc_info()
+    print("Error: failed to import module ({})".format(exc))
+    print("The FabCovid19 postprocessing module is not imported as a result.")
+    pass
 
+try:
     from plugins.FabCovid19.SA.facs_SA import facs_init_SA
     from plugins.FabCovid19.SA.facs_SA import facs_analyse_SA
 
     from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
     from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
-    from plugins.FabCovid19.VVP.facs_VVP_ensemble_validation import *
 
     from plugins.FabCovid19.validation.ValidateAvg import covid19_postprocessing
 
-except ImportError as exc:
+except:
+    exc = sys.exc_info()
     print("Error: failed to import settings module ({})".format(exc))
+    print("The FabCovid19 EasyVVUQ-based functionalities are not imported as a result.")
+    pass
+
+try:
+    from plugins.FabCovid19.VVP.facs_VVP_ensemble_validation import *
+except:
+    exc = sys.exc_info()
+    print("Error: failed to import settings module ({})".format(exc))
+    print("The FabCovid19 ensemble VVP functionalities are not imported as a result.")
     pass
