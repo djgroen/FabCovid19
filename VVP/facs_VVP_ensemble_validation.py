@@ -65,7 +65,6 @@ def validate_facs_output(results_dir):
                      facs_make_vvp_mean)
 
 
-
 @task
 @load_plugin_env_vars("FabCovid19")
 def validate_facs(cores=1, skip_runs=False, label="", **args):
@@ -83,7 +82,7 @@ def validate_facs(cores=1, skip_runs=False, label="", **args):
         mode = "parallel"
 
     if not skip_runs:
-        covid19_ensemble("validation", cores=1, **args)
+        facs_ensemble("validation", cores=1, **args)
 
     # if not run locally, wait for runs to complete
     update_environment()
@@ -96,4 +95,3 @@ def validate_facs(cores=1, skip_runs=False, label="", **args):
 
     results_dir = template(env.job_name_template)
     validate_facs_output(results_dir)
-

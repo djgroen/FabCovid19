@@ -57,6 +57,7 @@ def covid19(config,
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_campus(config,
                    TS,
                    TM,
@@ -70,6 +71,34 @@ def covid19_campus(config,
             facs_script="run_campus.py",
             quicktest=quicktest,
             **args)
+
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_ensemble(config,
+                  transition_scenario="uk-forecast",
+                  transition_mode=0,
+                  ci_multiplier=0.475,
+                  facs_script="run.py",
+                  quicktest="false",
+                  ** args):
+    # fab localhost validate_facs
+    update_environment(args, {"facs_script": facs_script})
+
+    with_config(config)
+    print("\n\nCHECK 1\n\n")
+    set_facs_args_list(args, {"location": config,
+                              "transition_scenario": transition_scenario,
+                              "transition_mode": transition_mode,
+                              "ci_multiplier": ci_multiplier,
+                              "quicktest": quicktest
+                              })
+    path_to_config = find_config_file_path(config)
+    sweep_dir = path_to_config + "/SWEEP"
+    env.script = "Covid19"
+
+    run_ensemble(config, sweep_dir, **args)
+    exit()
 
 
 @task
@@ -215,4 +244,3 @@ try:
 except ImportError as exc:
     print("Error: failed to import settings module ({})".format(exc))
     pass
-
