@@ -87,7 +87,7 @@ def facs_ensemble(config,
 
     with_config(config)
     print("\n\nCHECK 1\n\n")
-    set_facs_args_list(args, {"location": config,
+    set_facs_args_list(args, {"location": "$current_dir",
                               "transition_scenario": transition_scenario,
                               "transition_mode": transition_mode,
                               "ci_multiplier": ci_multiplier,
