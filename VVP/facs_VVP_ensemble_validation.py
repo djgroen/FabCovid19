@@ -1,7 +1,7 @@
 try:
-    from fabsim.VVP.vvp import ensemble_vvp_LoR
+    import fabsim.VVP.vvp as vvp
 except ImportError:
-    from VVP.vvp import ensemble_vvp_LoR
+    import VVP.vvp as vvp
 
 from pprint import pprint
 import yaml
