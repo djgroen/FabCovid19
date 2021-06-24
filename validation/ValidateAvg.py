@@ -42,7 +42,10 @@ def covid19_postprocessing(results_dir,
     for dirpath, dirnames, filenames in os.walk(results_dir):
         for filename in [f for f in filenames if f == output_file]:
 
-            replica = os.path.basename(dirpath).split("_")[1]
+            try:
+                replica = os.path.basename(dirpath).split("_")[1]
+            except IndexError:
+                pass
             rundir = os.path.basename(dirpath).split("_")[0]
             ci_multiplier = rundir.rsplit("-", 2)[2]
             transition_mode = rundir.rsplit("-", 2)[1]
@@ -69,7 +72,10 @@ def covid19_postprocessing(results_dir,
                 os.path.join(dirpath, output_file),
                 usecols=["num hospitalisations today", "num infections today"]
             )
-            columns = [x + "-" + replica for x in df.columns]
+            if "replica" in locals():
+                columns = [x + "-" + replica for x in df.columns]
+            else:
+                columns = [x for x in df.columns]
             df.columns = columns
             for column in df:
                 results[borough_key]["df_name"].append(column)
