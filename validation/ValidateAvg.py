@@ -14,7 +14,7 @@ from plugins.FabCovid19.FabCovid19 import *
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def covid19_postprocessing(output_dir,
+def facs_postprocess(output_dir,
                            output_file="out.csv"):
     """
     run a post-processing on input folder
