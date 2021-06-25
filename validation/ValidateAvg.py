@@ -121,13 +121,9 @@ def covid19_postprocessing(results_dir,
 
         df["hosp new data"] = 0
 
-        adm_csv_fname = os.path.join(
-            env.facs_validation["validation_PATH"],
-            "validation",
-            env.facs_validation["validation_files"][borough_name]
-        )
+        adm_csv_fname = os.path.join(results_dir,"validation_data","admissions.csv")
 
-        env.facs_validation["validation_files"]
+        #env.facs_validation["validation_files"]
         validation = pd.read_csv(adm_csv_fname, delimiter=',')
         for index, d in validation.iterrows():
             day = int(subtract_dates(d['Date'], Start_Date))

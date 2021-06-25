@@ -231,6 +231,7 @@ def set_facs_args_list(*dicts):
 
 try:
     from plugins.FabCovid19.postprocess import *
+    from plugins.FabCovid19.validation.ValidateAvg import covid19_postprocessing
 except:
     exc = sys.exc_info()
     print("Error: failed to import module ({})".format(exc))
@@ -243,9 +244,6 @@ try:
 
     from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
     from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
-
-    from plugins.FabCovid19.validation.ValidateAvg import covid19_postprocessing
-
 except:
     exc = sys.exc_info()
     print("Error: failed to import settings module ({})".format(exc))
