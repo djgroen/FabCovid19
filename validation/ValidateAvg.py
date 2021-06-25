@@ -237,9 +237,13 @@ def getline(name):
 def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
     df["#time"] = pd.date_range(start=Start_Date, periods=len(df))
     print(df["#time"])
-    step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
-    step1 = datetime.strptime("2020-12-16", "%Y-%m-%d")
-    step2 = datetime.strptime("2020-12-20", "%Y-%m-%d")
+    # step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
+    # step1 = datetime.strptime("2020-12-16", "%Y-%m-%d")
+    # step2 = datetime.strptime("2020-12-20", "%Y-%m-%d")
+
+    step0 = datetime.strptime("02/12/2020", "%d/%m/%Y")
+    step1 = datetime.strptime("16/12/2020", "%d/%m/%Y")
+    step2 = datetime.strptime("20/12/2020", "%d/%m/%Y")
 
     # Add traces
     fig = make_subplots(
