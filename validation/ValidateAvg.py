@@ -3,7 +3,7 @@ import plotly as py
 import pandas as pd
 import sys
 import os
-import glob
+import pathlib
 from datetime import datetime
 from datetime import timedelta
 from plotly.subplots import make_subplots
@@ -14,7 +14,7 @@ from plugins.FabCovid19.FabCovid19 import *
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def covid19_postprocessing(results_dir,
+def covid19_postprocessing(output_dir,
                            output_file="out.csv"):
     """
     run a post-processing on input folder
@@ -31,12 +31,35 @@ def covid19_postprocessing(results_dir,
 
     Start_Date = env.facs_validation["Start_Date"]
     End_Date = env.facs_validation["End_Date"]
-    Run_Date = env.facs_validation["Run_Date"]
 
-    for loc in env.facs_validation["validation_files"].keys():
-        if loc in os.path.basename(results_dir):
-            borough = loc
-            break
+    # check if the output_dir is exists.
+    results_dir = os.path.join(env.local_results, output_dir)
+    if not os.path.isdir(results_dir):
+        raise RuntimeError(
+            "\n\nThe input output_dir = {} does NOT exists in "
+            "{} direcotry !!!\n"
+            "Myabe you did not fetch the results from remote mahcine."
+            .format(output_dir, env.local_results)
+        )
+
+    # finding the name of borough
+    for path in pathlib.Path(results_dir).rglob("*_buildings.csv"):
+        borough = os.path.basename(path).split("_buildings.csv")[0]
+        # there is no need to contirnue since we already
+        # found the name of borough
+        break
+
+    # finding admissions.csv file
+    for path in pathlib.Path(results_dir).rglob("admissions.csv"):
+        adm_csv_fname = str(path)
+        # adm_csv_fname = os.path.join(
+        #     "/home/hamid/Downloads/moo/FabSim3/results/brent_localhost_derek/RUNS/uk-forecast-0-0.475/validation_data",
+        #     "admissions.csv"
+        # )
+        # since the output_dir contains a single or ensebmle runs for a same
+        # borough, in all sub-directories in RUN, the admissions.csv file is
+        # replicated
+        break
 
     results = {}
     for dirpath, dirnames, filenames in os.walk(results_dir):
@@ -121,35 +144,36 @@ def covid19_postprocessing(results_dir,
 
         df["hosp new data"] = 0
 
-        adm_csv_fname = os.path.join(results_dir,"validation_data","admissions.csv")
-
-        #env.facs_validation["validation_files"]
         validation = pd.read_csv(adm_csv_fname, delimiter=',')
         for index, d in validation.iterrows():
-            day = int(subtract_dates(d['Date'], Start_Date))
+            day = int(subtract_dates(d["date"], Start_Date))
             if day >= 0 and day < len(df['hosp new data']):
-                df['hosp new data'][day] = int(d['Admissions'])
+                df['hosp new data'][day] = int(d['admissions'])
 
-        title = "Location: {} Scenario: {} Mode: {} (Run Date: {})".format(
-                borough_name, transition_scenario, transition_mode, Run_Date
+        title = "Location: {} Scenario: {} Mode: {}".format(
+                borough_name, transition_scenario, transition_mode
         )
 
         html_file = os.path.join(
             results_dir,
-            "{}-{}-{}_{}.html".format(borough_name, transition_scenario,
-                                      transition_mode, Run_Date)
+            "{}-{}-{}.html".format(borough_name, transition_scenario,
+                                   transition_mode)
         )
         png_file = os.path.join(
             results_dir,
-            "{}-{}-{}_{}.png".format(borough_name, transition_scenario,
-                                     transition_mode, Run_Date)
+            "{}-{}-{}.png".format(borough_name, transition_scenario,
+                                  transition_mode)
         )
         plot(df, Start_Date, adm_csv_fname, title, html_file, png_file)
 
 
-def subtract_dates(date1, Start_Date, date_format="%Y-%m-%d"):
+def subtract_dates(date1, Start_Date, date_format="%d/%m/%Y"):
     """
     Takes two dates %m/%d/%Y format. Returns date1 - date2, measured in days.
+    28/04/2021
+    %d-%m-%Y
+    2020-02-28
+    %Y-%m-%d
     """
     a = datetime.strptime(date1, date_format)
     b = datetime.strptime(Start_Date, date_format)

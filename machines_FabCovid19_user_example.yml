@@ -21,19 +21,8 @@ default:
     simulation_period: "-1" # -1 for full simulation
 
   facs_validation:
-    validation_PATH: "<PATH to validation folder from covid19-postprocess repo>"
-    validation_files:
-      brent: "NPH_admissions.csv"
-      camden: "<INPUT csv>"
-      ealing: "<INPUT csv>"
-      hammersmith_fulham: "<INPUT csv>"
-      hillingdon: "Hillingdon_CCG_admissions.csv"
-      kensington_chelsea: "<INPUT csv>"
-      westminster: "<INPUT csv>"
-
-    Start_Date: "2020-03-01"
-    End_Date: "2020-12-30"
-    Run_Date: "08-12-2020"
+    Start_Date: "01/03/2020"
+    End_Date: "30/12/2020"
 
 # required modules for FACS
 facs_modules: &FACS_MODULES
