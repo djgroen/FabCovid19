@@ -98,7 +98,7 @@ def facs_postprocess(output_dir,
             if "replica" in locals():
                 columns = [x + "-" + replica for x in df.columns]
             else:
-                columns = [x for x in df.columns]
+                columns = [x + "-" for x in df.columns]
             df.columns = columns
             for column in df:
                 results[borough_key]["df_name"].append(column)
