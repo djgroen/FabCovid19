@@ -82,11 +82,11 @@ def facs_ensemble(config,
                   facs_script="run.py",
                   quicktest="false",
                   ** args):
-    # fab localhost validate_facs
+    # fab localhost facs_validation
     update_environment(args, {"facs_script": facs_script})
 
     with_config(config)
-    print("\n\nCHECK 1\n\n")
+
     set_facs_args_list(args, {"location": "$current_dir",
                               "transition_scenario": transition_scenario,
                               "transition_mode": transition_mode,
@@ -98,7 +98,6 @@ def facs_ensemble(config,
     env.script = "Covid19"
 
     run_ensemble(config, sweep_dir, **args)
-    exit()
 
 
 @task
