@@ -164,6 +164,7 @@ def facs_postprocess(output_dir,
             "{}-{}-{}.png".format(borough_name, transition_scenario,
                                   transition_mode)
         )
+        print(Start_Date)
         plot(df, Start_Date, adm_csv_fname, title, html_file, png_file)
 
 
@@ -235,8 +236,7 @@ def getline(name):
 
 
 def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
-    df["#time"] = pd.date_range(start=Start_Date, periods=len(df))
-    print(df["#time"])
+    df["#time"] = pd.date_range(start=datetime.strptime(Start_Date, "%d/%m/%Y"), periods=len(df))
     # step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
     # step1 = datetime.strptime("2020-12-16", "%Y-%m-%d")
     # step2 = datetime.strptime("2020-12-20", "%Y-%m-%d")
