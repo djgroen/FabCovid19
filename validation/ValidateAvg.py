@@ -49,6 +49,7 @@ def facs_postprocess(output_dir,
         # found the name of borough
         break
 
+    adm_csv_fname = ""
     # finding admissions.csv file
     for path in pathlib.Path(results_dir).rglob("admissions.csv"):
         adm_csv_fname = str(path)
@@ -144,6 +145,7 @@ def facs_postprocess(output_dir,
 
         df["hosp new data"] = 0
 
+        print("reading validation data at: {}".format(adm_csv_fname))
         validation = pd.read_csv(adm_csv_fname, delimiter=',')
         for index, d in validation.iterrows():
             day = int(subtract_dates(d["date"], Start_Date))
