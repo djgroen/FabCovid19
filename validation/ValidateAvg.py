@@ -15,12 +15,12 @@ from plugins.FabCovid19.FabCovid19 import *
 @task
 @load_plugin_env_vars("FabCovid19")
 def facs_postprocess(output_dir,
-                           output_file="out.csv"):
+                     output_file="out.csv"):
     """
     run a post-processing on input folder
     Example:
 
-    fab localhost covid19_postprocessing:results_dir=brent_eagle_hidalgo_1
+    fab localhost facs_postprocess:brent_eagle_hidalgo_1
     """
 
     if env.machine_name != "localhost":
