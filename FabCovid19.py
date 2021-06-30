@@ -230,7 +230,7 @@ def set_facs_args_list(*dicts):
 
 try:
     from plugins.FabCovid19.postprocess import *
-    from plugins.FabCovid19.validation.ValidateAvg import facs_postprocess
+    from plugins.FabCovid19.visualisation.ValidateAvg import facs_postprocess
 except:
     exc = sys.exc_info()
     print("Error: failed to import module ({})".format(exc))
