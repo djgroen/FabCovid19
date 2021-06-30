@@ -10,7 +10,29 @@ from plotly.subplots import make_subplots
 from pprint import pprint
 
 from plugins.FabCovid19.FabCovid19 import *
+from .facs_postprocess_utils import *
 
+
+"""
+@load_plugin_env_vars("FabCovid19")
+def locate_results_dir(output_dir):
+    # check if the output_dir is exists.
+    results_dir = os.path.join(env.local_results, output_dir)
+    if not os.path.isdir(results_dir):
+        raise RuntimeError(
+            "\n\nFabCovid19 Error: The input output_dir = {} does NOT exist in "
+            "{} directory.\n"
+            "Perhaps you did not fetch the results from the remote machine."
+            .format(output_dir, env.local_results)
+        )
+    return results_dir
+
+
+def extract_location_name(results_dir):
+    # finding the name of borough
+    for path in pathlib.Path(results_dir).rglob("*_buildings.csv"):
+        return os.path.basename(path).split("_buildings.csv")[0]
+"""
 
 @task
 @load_plugin_env_vars("FabCovid19")
@@ -32,22 +54,8 @@ def facs_postprocess(output_dir,
     Start_Date = env.facs_validation["Start_Date"]
     End_Date = env.facs_validation["End_Date"]
 
-    # check if the output_dir is exists.
-    results_dir = os.path.join(env.local_results, output_dir)
-    if not os.path.isdir(results_dir):
-        raise RuntimeError(
-            "\n\nThe input output_dir = {} does NOT exists in "
-            "{} direcotry !!!\n"
-            "Myabe you did not fetch the results from remote mahcine."
-            .format(output_dir, env.local_results)
-        )
-
-    # finding the name of borough
-    for path in pathlib.Path(results_dir).rglob("*_buildings.csv"):
-        borough = os.path.basename(path).split("_buildings.csv")[0]
-        # there is no need to contirnue since we already
-        # found the name of borough
-        break
+    results_dir = locate_results_dir(output_dir)
+    borough = extract_location_name(results_dir)
 
     adm_csv_fname = ""
     # finding admissions.csv file
