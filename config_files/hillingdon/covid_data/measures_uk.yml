@@ -156,18 +156,25 @@ household_isolation: True
 17/5/2021:
   partial_closure: 
     leisure: 0.2
-  social_distance: 0.5
+  social_distance: 0.6
   work_from_home: 0.5
   traffic_multiplier: 0.55
   mask_uptake: 0.15
   mask_uptake_shopping: 0.8
   track_trace_efficacy: 0.5 # assuming track and trace loses efficacy during this surge.
 21/6/2021:
-  social_distance: 0.3
+  social_distance: 0.5
   work_from_home: 0.25
   traffic_multiplier: 0.75
   mask_uptake: 0.1
   mask_uptake_shopping: 0.8
+  track_trace_efficacy: 0.5 # assuming track and trace loses efficacy during this surge.
+19/7/2021:
+  social_distance: 0.1
+  work_from_home: 0.2
+  traffic_multiplier: 0.9
+  mask_uptake: 0.05
+  mask_uptake_shopping: 0.5
   track_trace_efficacy: 0.5 # assuming track and trace loses efficacy during this surge.
 
 

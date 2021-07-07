@@ -23,7 +23,14 @@ vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred 
     boosters_per_day: 50
 
 1/4/2021:
+  no_symptoms: 0.75 # relative probability that vaccination reduces COVID infection to mild and asymptomatic, given that infection does take place.
+  no_transmission: 0.6 # relative probability that vaccination prevents COVID altogether.
   booster:
     boosters_per_day: 500
 
-
+1/4/2021:
+  vaccines_per_day: 1500
+  no_symptoms: 0.75 # relative probability that vaccination reduces COVID infection to mild and asymptomatic, given that infection does take place.
+  no_transmission: 0.6 # relative probability that vaccination prevents COVID altogether.
+  booster:
+    boosters_per_day: 500

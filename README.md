@@ -47,6 +47,9 @@ Once you have installed the required dependencies, you will need to take a few s
 3. Under the section `default:`, please add the following lines:
    <br/> `facs_location=(facs PATH)`
    <br/> NOTE: Please replace `facs PATH` with your actual install directory.
+
+### Quick test
+1. To run a quick test, type `fab localhost covid19_ensemble:configs='test',TS='uk-forecast',TM='0',cores=1,replicas=1,starting_infections=10,job_wall_time=0:15:00`.
   
 ### Execution
 1. To run a single job, simply type:
