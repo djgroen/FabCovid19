@@ -199,6 +199,10 @@ def sync_facs():
     facs_location_local = user_config["localhost"].get(
         "facs_location", user_config["default"].get("facs_location"))
 
+    local("rm -rf {}".format(facs_location_local + '/facs/__pycache__'))
+    local("rm -rf {}".format(facs_location_local + '/__pycache__'))
+    local("rm -rf {}".format(facs_location_local + '/readers/__pycache__'))
+
     rsync_project(
         local_dir=facs_location_local + '/',
         remote_dir=env.facs_location
