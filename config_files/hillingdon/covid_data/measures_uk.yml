@@ -1,14 +1,11 @@
 date_format: "%d/%m/%Y"
 keyworker_fraction: 0.18 # percentage workers that are keyworkers
-case_isolation: True
-household_isolation: True
 
-1/3/2020:
-  case_isolation: True
-  household_isolation: True
 12/3/2020:
   work_from_home: 0.1
   social_distance: 0.1
+  case_isolation: True
+  household_isolation: True
 16/3/2020:
   partial_closure: 
     leisure: 0.3
@@ -42,7 +39,7 @@ household_isolation: True
     school: 1.0
     shopping: 0.8
   closure: ["leisure"]
-  social_distance: 0.7
+  social_distance: 0.75
   mask_uptake: 0.2
   mask_uptake_shopping: 0.3
   work_from_home: 0.9
@@ -52,7 +49,7 @@ household_isolation: True
     school: 1.0
     shopping: 0.6 
   closure: ["leisure"]
-  social_distance: 0.7
+  social_distance: 0.75
   mask_uptake: 0.2
   mask_uptake_shopping: 0.3
   work_from_home: 0.65
@@ -62,7 +59,7 @@ household_isolation: True
     school: 1.0
     shopping: 0.2
   closure: ["leisure"]
-  social_distance: 0.7
+  social_distance: 0.75
   mask_uptake: 0.2
   mask_uptake_shopping: 0.3
   work_from_home: 0.5
@@ -74,26 +71,26 @@ household_isolation: True
     school: 1.0
     shopping: 0.1
     leisure: 0.8 
-  social_distance: 0.7
+  social_distance: 0.75
   work_from_home: 0.5
   traffic_multiplier: 0.2
 15/7/2020:
   partial_closure: 
     school: 0.8
     leisure: 0.3
-  social_distance: 0.7
+  social_distance: 0.75
   work_from_home: 0.5
   traffic_multiplier: 0.2
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
 1/9/2020:
-  social_distance: 0.7
-  work_from_home: 0.3
+  social_distance: 0.75
+  work_from_home: 0.5
   traffic_multiplier: 0.25
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
 22/9/2020:
-  social_distance: 0.7
+  social_distance: 0.75
   work_from_home: 0.5
   traffic_multiplier: 0.25
   mask_uptake: 0.2
@@ -102,20 +99,20 @@ household_isolation: True
   partial_closure: 
     shopping: 0.6
   closure: ["leisure"]
-  social_distance: 0.7
+  social_distance: 0.75
   work_from_home: 0.7
   traffic_multiplier: 0.35
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
 2/12/2020:
-  social_distance: 0.7
+  social_distance: 0.75
   work_from_home: 0.5
   traffic_multiplier: 0.5
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
 16/12/2020:
-  social_distance: 0.6
-  work_from_home: 0.25
+  social_distance: 0.7
+  work_from_home: 0.3
   traffic_multiplier: 0.5
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
@@ -124,7 +121,7 @@ household_isolation: True
   partial_closure: 
     leisure: 0.5
     shopping: 0.1
-  social_distance: 0.6
+  social_distance: 0.7
   work_from_home: 0.7
   traffic_multiplier: 0.3
   mask_uptake: 0.2
