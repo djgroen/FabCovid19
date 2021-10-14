@@ -37,19 +37,20 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
   results_dir = locate_results_dir(output_dir)
   borough = extract_location_name(results_dir)
 
-  list = []
+  run_list = []
   for root, dirs, files in os.walk(results_dir, topdown=True):
+    print(root,dirs,files)
     for name in files:
-      if "covid_out_infections.csv" in name and borough in root:
+      if "covid_out_infections_0.csv" in name and borough in root:
         replica = root.split('\\')[-1].split('_')[1]
         filepath = os.path.join(root, name)
-        # print(filepath)
+        print("file found at:",filepath)
         df = pd.read_csv(filepath, usecols=['#time','x','y','location_type'])
-        list.append(df)
+        run_list.append(df)
 
   rows = []
   no=0
-  for df in list:
+  for df in run_list:
     grouped = df.groupby(['#time','location_type'])
     for name, group in grouped:
       d = {'time': name[0], 'run': no, 'type' : name[1], 'count': len(group)}

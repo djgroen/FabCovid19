@@ -37,7 +37,7 @@ def facs_vvp_validate_results(output_dir="", **kwargs):
     return -1.0
 
 
-def facs_vvp_sif(output_dir="", sif_dir="", **kwargs):
+def _facs_vvp_sif(output_dir="", sif_dir="", **kwargs):
     """ Extract validation results (no dependencies on FabSim env). """
 
     facs_location_local = user_config["localhost"].get(
@@ -125,7 +125,7 @@ def validate_facs(cores=1, skip_runs=False, label="", sif_mode=False, sif_dir=""
 # Syntax: fabsim localhost
 # validate_results:facs_results_directory
 def facs_vvp_sif(output_dir, sif_dir):
-    score = vvp_sif("{}/{}".format(env.local_results, output_dir), "{}/{}".format(env.local_results, sif_dir))
+    score = _facs_vvp_sif("{}/{}".format(env.local_results, output_dir), "{}/{}".format(env.local_results, sif_dir))
     print("Validation {}: {}".format(output_dir.split[-1]), score)
     return score
 
