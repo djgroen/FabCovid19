@@ -26,9 +26,10 @@ add_local_paths("FabCovid19")
 @task
 @load_plugin_env_vars("FabCovid19")
 def covid19(config,
-            TS,
-            TM,
+            TS="uk-forecast",
+            TM="0",
             ci_multiplier="0.475",
+            starting_infections="200",
             facs_script="run.py",
             quicktest="false",
             **args):
@@ -45,6 +46,7 @@ def covid19(config,
 
     set_facs_args_list(args, {"location": config,
                               "transition_scenario": TS,
+                              "starting_infections": starting_infections,
                               "transition_mode": TM,
                               "ci_multiplier": ci_multiplier,
                               "quicktest": quicktest
