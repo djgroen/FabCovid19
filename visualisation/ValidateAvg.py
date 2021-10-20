@@ -153,12 +153,13 @@ def facs_postprocess(output_dir,
 
         df["hosp new data"] = 0
 
-        print("reading validation data at: {}".format(adm_csv_fname))
-        validation = pd.read_csv(adm_csv_fname, delimiter=',')
-        for index, d in validation.iterrows():
-            day = int(subtract_dates(d["date"], Start_Date))
-            if day >= 0 and day < len(df['hosp new data']):
-                df['hosp new data'][day] = int(d['admissions'])
+        if len(adm_csv_fname) > 0:
+          print("reading validation data at: {}".format(adm_csv_fname))
+          validation = pd.read_csv(adm_csv_fname, delimiter=',')
+          for index, d in validation.iterrows():
+              day = int(subtract_dates(d["date"], Start_Date))
+              if day >= 0 and day < len(df['hosp new data']):
+                  df['hosp new data'][day] = int(d['admissions'])
 
         title = "Location: {} Scenario: {} Mode: {}".format(
                 borough_name, transition_scenario, transition_mode
@@ -335,16 +336,18 @@ def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
         row=2,
         col=1
     )
-    fig.add_trace(
-        go.Scatter(x=df["#time"],
-                   y=df["hosp new data"],
-                   mode="lines",
-                   name="# of new hospitalisations (data:" +
-                   adm_csv_fname + ")",
-                   line=dict(color="green")),
-        row=2,
-        col=1
-    )
+
+    if len(adm_csv_fname) > 0:
+      fig.add_trace(
+          go.Scatter(x=df["#time"],
+                     y=df["hosp new data"],
+                     mode="lines",
+                     name="# of new hospitalisations (data:" +
+                     adm_csv_fname + ")",
+                     line=dict(color="green")),
+          row=2,
+          col=1
+      )
 
     fig.update_xaxes(
         showline=True, linewidth=1, linecolor="black", zeroline=True,
