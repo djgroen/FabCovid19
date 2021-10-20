@@ -60,6 +60,40 @@ def covid19(config,
 
 @task
 @load_plugin_env_vars("FabCovid19")
+def pfacs(config,
+            TS="uk-forecast",
+            TM="0",
+            ci_multiplier="0.475",
+            starting_infections="200",
+            facs_script="run.py",
+            quicktest="false",
+            **args):
+    """
+    parameters:
+      - config : [brent,harrow,ealing,hillingdon]
+      - TS (Transition Scenario) : [uk-forecast]
+      - TM (transition Mode) : [1,2,3]
+    """
+    update_environment(args, {"facs_script": facs_script})
+    with_config(config)
+
+    set_facs_args_list(args, {"location": config,
+                              "transition_scenario": TS,
+                              "starting_infections": starting_infections,
+                              "transition_mode": TM,
+                              "ci_multiplier": ci_multiplier,
+                              "quicktest": quicktest
+                              })
+
+    execute(put_configs, config)
+    print(args)
+    job(dict(script='pfacs', wall_time='1:00:0', memory='2G',
+             label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
+
+
+
+@task
+@load_plugin_env_vars("FabCovid19")
 def covid19_campus(config,
                    TS,
                    TM,

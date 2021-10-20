@@ -1,0 +1,24 @@
+
+cd $job_results
+$run_prefix
+
+if [ -z "$facs_location" ]
+then
+	echo "Please set $$facs_location in your deploy/machines_user.yml file."
+else
+	export PYTHONPATH=$facs_location:$$PYTHONPATH
+fi
+
+/usr/bin/env > env.log
+
+current_dir=$${PWD##*/}
+
+start_time="$$(date -u +%s.%N)"
+
+mpirun -np $cores python3 $facs_location/$facs_script $facs_args_list
+
+
+end_time="$$(date -u +%s.%N)"
+elapsed="$$(bc <<<"$$end_time-$$start_time")"
+echo "Total Executing Time = $$elapsed seconds"
+
