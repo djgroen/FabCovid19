@@ -627,7 +627,7 @@ def load_campaign_files(work_dir_SCSampler):
     )
 
 
-class CustomEncoder(uq.encoders.GenericEncoder, encoder_name="CustomEncoder"):
+class CustomEncoder(uq.encoders.GenericEncoder):
 
     def encode(self, params={}, target_dir=''):
         # scale default values found in pre param file
