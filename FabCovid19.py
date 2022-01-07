@@ -143,6 +143,7 @@ def covid19_ensemble(configs,
                      ci_multiplier=0.475,
                      facs_script="run.py",
                      quicktest="false",
+                     solver="pfacs",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -204,7 +205,8 @@ def covid19_ensemble(configs,
                     f.write('"transition_mode",%d' %
                             (transition_mode))
 
-        env.script = 'Covid19'
+        env.script = solver # pfacs or Covid19
+
         run_ensemble(loc, sweep_dir, **args)
 
 

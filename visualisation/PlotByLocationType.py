@@ -39,7 +39,7 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
 
   run_list = []
   for root, dirs, files in os.walk(results_dir, topdown=True):
-    print(root,dirs,files)
+    #print(root,dirs,files)
     for name in files:
       if "covid_out_infections_0.csv" in name and borough in root:
         replica = root.split('\\')[-1].split('_')[1]
@@ -59,6 +59,9 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
 
   types = ['hospital', 'house', 'office', 'park', 'leisure', 'school', 'supermarket', 'shopping', 'traffic']
   pdf = pd.DataFrame(rows)
+  pdf = pdf[pdf.time != "#t"]
+  pdf['time'] = pd.to_numeric(pdf['time'])
+
   mean_rows = []
   for i in range(pdf['time'].min(), pdf['time'].max()):
     for j in types:

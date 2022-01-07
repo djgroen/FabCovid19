@@ -70,9 +70,14 @@ def facs_postprocess(output_dir,
         # replicated
         break
 
+    print("postprocessing ", borough, " in ", results_dir)
+    print("target outputfile is ", output_file)
+
     results = {}
     for dirpath, dirnames, filenames in os.walk(results_dir):
         for filename in [f for f in filenames if f == output_file]:
+            
+            #print("checking file: ", filename)
 
             try:
                 replica = os.path.basename(dirpath).split("_")[1]
