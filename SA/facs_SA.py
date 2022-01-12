@@ -208,8 +208,7 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
 
     job_folder_name = template(env.job_name_template)
     print("fetching results from remote machine ...")
-    with hide('output', 'running', 'warnings'), settings(warn_only=True):
-        fetch_results(regex=job_folder_name)
+    fetch_results(regex=job_folder_name)
     print("Done\n")
 
     #####################################################
@@ -222,7 +221,6 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
     des = campaign.campaign_db.runs_dir()
 
     print("Syncing output_dir ...")
-    # with hide('output', 'running', 'warnings'), settings(warn_only=True):
     local(
         "rsync -av -m -v \
         --include='/*/' \
@@ -605,33 +603,31 @@ def backup_campaign_files(work_dir_SCSampler):
         rmtree(backup_dir)
     os.mkdir(backup_dir)
 
-    with hide('output', 'running', 'warnings'), settings(warn_only=True):
-        local(
-            "rsync -av -m -v \
+    local(
+        "rsync -av -m -v \
             --include='*.db' \
             --include='*.pickle' \
             --include='*.json' \
             --exclude='*' \
             {}/  {} ".format(work_dir_SCSampler, backup_dir)
-        )
+    )
 
 
 def load_campaign_files(work_dir_SCSampler):
 
     backup_dir = os.path.join(work_dir_SCSampler, 'backup')
 
-    with hide('output', 'running', 'warnings'), settings(warn_only=True):
-        local(
-            "rsync -av -m -v \
+    local(
+        "rsync -av -m -v \
             --include='*.db' \
             --include='*.pickle' \
             --include='*.json' \
             --exclude='*' \
             {}/  {} ".format(backup_dir, work_dir_SCSampler)
-        )
+    )
 
 
-class CustomEncoder(uq.encoders.GenericEncoder, encoder_name="CustomEncoder"):
+class CustomEncoder(uq.encoders.GenericEncoder):
 
     def encode(self, params={}, target_dir=''):
         # scale default values found in pre param file
