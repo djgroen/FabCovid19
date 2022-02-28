@@ -58,6 +58,10 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
                                  '#time', 'x', 'y', 'location_type'])
                 run_list.append(df)
 
+    print("INFO: {} files read, representing {} runs.".format(len(run_list), len(run_list)/cores))
+    # Calculate ensemble size
+    runs = int(len(run_list)/cores)
+
     rows = []
     no = 0
     for df in run_list:
@@ -78,9 +82,9 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
     for i in range(pdf['time'].min(), pdf['time'].max()):
         for j in types:
             data = pdf[(pdf['time'] == i) & (pdf['type'] == j)]
-            count = data['count'].mean() * cores
-            if np.isnan(count):
-                count = 0
+            print(j,data)
+            count = data['count'].sum()
+            count /= runs
             d = {'time': i, 'type': j, 'mean': count}
             mean_rows.append(d)
     mdf = pd.DataFrame(mean_rows)
