@@ -34,6 +34,7 @@ def extract_location_name(results_dir):
         return os.path.basename(path).split("_buildings.csv")[0]
 """
 
+
 @task
 @load_plugin_env_vars("FabCovid19")
 def facs_postprocess(output_dir,
@@ -76,7 +77,7 @@ def facs_postprocess(output_dir,
     results = {}
     for dirpath, dirnames, filenames in os.walk(results_dir):
         for filename in [f for f in filenames if f == output_file]:
-            
+
             #print("checking file: ", filename)
 
             try:
@@ -159,12 +160,12 @@ def facs_postprocess(output_dir,
         df["hosp new data"] = 0
 
         if len(adm_csv_fname) > 0:
-          print("reading validation data at: {}".format(adm_csv_fname))
-          validation = pd.read_csv(adm_csv_fname, delimiter=',')
-          for index, d in validation.iterrows():
-              day = int(subtract_dates(d["date"], Start_Date))
-              if day >= 0 and day < len(df['hosp new data']):
-                  df['hosp new data'][day] = int(d['admissions'])
+            print("reading validation data at: {}".format(adm_csv_fname))
+            validation = pd.read_csv(adm_csv_fname, delimiter=',')
+            for index, d in validation.iterrows():
+                day = int(subtract_dates(d["date"], Start_Date))
+                if day >= 0 and day < len(df['hosp new data']):
+                    df['hosp new data'][day] = int(d['admissions'])
 
         title = "Location: {} Scenario: {} Mode: {}".format(
                 borough_name, transition_scenario, transition_mode
@@ -252,7 +253,8 @@ def getline(name):
 
 
 def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
-    df["#time"] = pd.date_range(start=datetime.strptime(Start_Date, "%d/%m/%Y"), periods=len(df))
+    df["#time"] = pd.date_range(start=datetime.strptime(
+        Start_Date, "%d/%m/%Y"), periods=len(df))
     # step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
     # step1 = datetime.strptime("2020-12-16", "%Y-%m-%d")
     # step2 = datetime.strptime("2020-12-20", "%Y-%m-%d")
@@ -343,16 +345,16 @@ def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
     )
 
     if len(adm_csv_fname) > 0:
-      fig.add_trace(
-          go.Scatter(x=df["#time"],
-                     y=df["hosp new data"],
-                     mode="lines",
-                     name="# of new hospitalisations (data:" +
-                     adm_csv_fname + ")",
-                     line=dict(color="green")),
-          row=2,
-          col=1
-      )
+        fig.add_trace(
+            go.Scatter(x=df["#time"],
+                       y=df["hosp new data"],
+                       mode="lines",
+                       name="# of new hospitalisations (data:" +
+                       adm_csv_fname + ")",
+                       line=dict(color="green")),
+            row=2,
+            col=1
+        )
 
     fig.update_xaxes(
         showline=True, linewidth=1, linecolor="black", zeroline=True,
