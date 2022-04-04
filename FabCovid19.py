@@ -54,7 +54,7 @@ def covid19(config,
 
     execute(put_configs, config)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G',
+    job(dict(script='pfacs', wall_time='0:15:0', memory='2G',
              label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
 
 
