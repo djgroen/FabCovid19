@@ -60,6 +60,9 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
   types = ['hospital', 'house', 'office', 'park', 'leisure', 'school', 'supermarket', 'shopping', 'traffic']
   pdf = pd.DataFrame(rows)
   mean_rows = []
+  pd.to_numeric(pdf['time'],downcast='integer')
+  print(pdf['time'])
+  print(pdf['time'])
   for i in range(pdf['time'].min(), pdf['time'].max()):
     for j in types:
       data = pdf[(pdf['time']==i) & (pdf['type']==j)]
