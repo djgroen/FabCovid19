@@ -60,8 +60,6 @@ def _facs_vvp_sif(output_dir="", sif_dir="", **kwargs):
     return -1.0
 
 
-
-
 @task
 @load_plugin_env_vars("FabCovid19")
 # Syntax: fabsim localhost
@@ -125,7 +123,8 @@ def validate_facs(cores=1, skip_runs=False, label="", sif_mode=False, sif_dir=""
 # Syntax: fabsim localhost
 # validate_results:facs_results_directory
 def facs_vvp_sif(output_dir, sif_dir):
-    score = _facs_vvp_sif("{}/{}".format(env.local_results, output_dir), "{}/{}".format(env.local_results, sif_dir))
+    score = _facs_vvp_sif("{}/{}".format(env.local_results,
+                                         output_dir), "{}/{}".format(env.local_results, sif_dir))
     print("Validation {}: {}".format(output_dir.split[-1]), score)
     return score
 
@@ -140,14 +139,12 @@ def compare_facs_to_sif_output(results_dir, sif_dir, ensemble_mode=True):
 
     if ensemble_mode:
         vvp.compare_sif("{}/{}/RUNS".format(env.local_results, results_dir), "{}/{}/RUNS".format(env.local_results, sif_dir)
-                     facs_vvp_sif,
-                     facs_make_vvp_mean)
+                        facs_vvp_sif,
+                        facs_make_vvp_mean)
     else:
         vvp.compare_sif("{}/{}".format(env.local_results, results_dir), "{}/{}".format(env.local_results, sif_dir)
-                     facs_vvp_sif,
-                     facs_make_vvp_mean)
-
-
+                        facs_vvp_sif,
+                        facs_make_vvp_mean)
 
 
 @task
@@ -183,4 +180,3 @@ def facs_compare_sif(config, cores=1, ensemble_mode=True skip_runs=False, label=
 
     results_dir = template(env.job_name_template)
     compare_facs_to_sif_output(results_dir, sif_dir, ensemble_mode)
-

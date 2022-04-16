@@ -54,20 +54,20 @@ def covid19(config,
 
     execute(put_configs, config)
     print(args)
-    job(dict(script='Covid19', wall_time='0:15:0', memory='2G',
+    job(dict(script='pfacs', wall_time='0:15:0', memory='2G',
              label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
 
 
 @task
 @load_plugin_env_vars("FabCovid19")
 def pfacs(config,
-            TS="uk-forecast",
-            TM="0",
-            ci_multiplier="0.475",
-            starting_infections="200",
-            facs_script="run.py",
-            quicktest="false",
-            **args):
+          TS="uk-forecast",
+          TM="0",
+          ci_multiplier="0.475",
+          starting_infections="200",
+          facs_script="run.py",
+          quicktest="false",
+          **args):
     """
     parameters:
       - config : [brent,harrow,ealing,hillingdon]
@@ -89,7 +89,6 @@ def pfacs(config,
     print(args)
     job(dict(script='pfacs', wall_time='1:00:0', memory='2G',
              label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
-
 
 
 @task
@@ -143,6 +142,7 @@ def covid19_ensemble(configs,
                      ci_multiplier=0.475,
                      facs_script="run.py",
                      quicktest="false",
+                     solver="pfacs",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -204,7 +204,8 @@ def covid19_ensemble(configs,
                     f.write('"transition_mode",%d' %
                             (transition_mode))
 
-        env.script = 'Covid19'
+        env.script = solver  # pfacs or Covid19
+
         run_ensemble(loc, sweep_dir, **args)
 
 
@@ -254,6 +255,10 @@ def set_facs_args_list(*dicts):
 
     # check for quicktest option
     for adict in dicts:
+        if 'debug' in adict and \
+            adict['debug'].lower() == 'true' and \
+                '--dbg' not in env.facs_args['flags']:
+            env.facs_args['flags'].append('--dbg')
         if 'quicktest' in adict and \
             adict['quicktest'].lower() == 'true' and \
                 '--quicktest' not in env.facs_args['flags']:

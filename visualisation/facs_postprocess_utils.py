@@ -27,4 +27,3 @@ def extract_location_name(results_dir):
     # finding the name of borough
     for path in pathlib.Path(results_dir).rglob("*_buildings.csv"):
         return os.path.basename(path).split("_buildings.csv")[0]
-
