@@ -5,6 +5,8 @@ FabCovid19 is a FabSim3 plugin for Flu And Coronavirus Simulator (FACS).
 
 ## Preface
 
+This is a shortened tutorial. Full documentation for FabCovid19 is available at [facs.readthedocs.io](https://facs.readthedocs.io).
+
 In this tutorial, you will get step-by-step guidance on the usage of FabCovid19 components to simulate FACS simulations within a local and HPC execution environment. In this tutorial you will learn about the following FabCovid19 software components and how these components are used in COVID-19 prediction application as shown in the Tube Map below:
 
 ![Graphical depiction of the FabCovid19 components used in the FACS Simulation tutorial](https://raw.githubusercontent.com/djgroen/FabCovid19/master/FabCovid19Map.png)
@@ -58,38 +60,34 @@ Once you have installed the required dependencies, you will need to take a few s
 	> ```   
 	> _NOTE:_
 	> 	- **location_scenario** : _Currently 4 location scenario are available_ : `brent`, `ealing`, `harrow`, _and_ `hillingdon`.
-	> 	- **TS** : _Acceptable Transition Scenario :._ `no-measures`,`extend-lockdown`,`open-all`,`open-schools`,`open-shopping`,`open-leisure`,`work50`,`work75`,  `work100`, and `dynamic-lockdown`.
-	> 	- **TM** : _Acceptable Transition Mode :._ `1`,`2`,`3`,and `4`.	
+	> 	- **measures** : _name of the measures.yml file used, minus the .yml extension. This file should reside in the covid_data subdirectory
 	>
 	> _Example:_
-	>	-  `fabsim localhost covid19:harrow,TS=periodic-lockdown,TM=1,ci_multiplier=0.3,cores=1,job_wall_time=6:00:00` 	
+	>	-  `fabsim localhost covid19:harrow,measures=measures_uk,cores=1,job_wall_time=6:00:00` 	
 
 2. To run the ensemble, you can type, simply type:
 	>``` sh
-	> fab <localhost/remote machine> covid19_ensemble:location=<area_name>[,TS=transition scenario list][,TM=transition mode list]
+	> fab <localhost/remote machine> covid19_ensemble:location=<area_name>[,measures=measure file name list]
 	> ```   
-	> _NOTE:_
-	> 	-  By default, all _Acceptable_ Transition Scenario and Mode will be executed if these **TS** and **TM**  parameters did not passed
-	>
 	> _Examples:_
 	> 	-  `fabsim localhost covid19_ensemble:location=harrow`
 	> 	-  `fabsim localhost covid19_ensemble:location='brent;harrow;hillingdon'`
-	> 	-  `fabsim localhost covid19_ensemble:location='harrow;hillingdon',TS='open-schools;open-shopping;open-leisure',TM='2;3'`	
+	> 	-  `fabsim localhost covid19_ensemble:location='harrow;hillingdon',measures='measures_openschools;measures_uk'`	
 	> 	
-3. If you ran an ensemble jobs, you may need to do averaging across runs on the output `csv` files before plotting, in that case you can type:
+3. (Not recently tested:) If you ran an ensemble jobs, you may need to do averaging across runs on the output `csv` files before plotting, in that case you can type:
    >``` sh
 	> fab <localhost/remote machine> cal_avg_csv:<location_scenario>,<TS=transition scenario>,<TM=transition mode>
 	> ```   
 	> _Examples:_
 	> 	- submit an ensambe jobs
-	>       `fabsim eagle_hidalgo covid19_ensemble:location='brent',TS='extend-lockdown;dynamic-lockdown',TM='1',cores=1,PilotJob=true,replicas=25`
+	>       `fabsim eagle_hidalgo covid19_ensemble:location='brent',measures='measures_extend_lockdown;measures_uk',cores=1,PilotJob=true,replicas=25`
 	>    - fetching results 
 	> 	 `fabsim eagle_hidalgo fetch_results'`
 	>   -  Averaging across runs 
-	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,TS='extend-lockdown',TM=1,cores=1`
-	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,TS='dynamic-lockdown',TM=1,cores=1`		
+	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,measures='measures_extend_lockdown',cores=1`
+	> 	-  `fabsim eagle_hidalgo cal_avg_csv:brent,measures='measures_uk',cores=1`		
 	> 	
 
 ## Acknowledgements
 
-This work was supported by the HiDALGO and VECMA projects, which has received funding from the European Union Horizon 2020 research and innovation programme under grant agreement No 824115 and 800925.
+This work was supported by the HiDALGO, VECMA and STAMINA projects, which has received funding from the European Union Horizon 2020 research and innovation programme under grant agreement No 824115, 800925 and 883441.
