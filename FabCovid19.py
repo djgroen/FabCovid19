@@ -26,44 +26,37 @@ add_local_paths("FabCovid19")
 @task
 @load_plugin_env_vars("FabCovid19")
 def covid19(config,
-            TS="uk-forecast",
-            TM="0",
-            ci_multiplier="0.475",
+            measures="measures_uk",
             starting_infections="200",
             facs_script="run.py",
             quicktest="false",
             **args):
     """
     parameters:
-      - config : [brent,harrow,ealing,hillingdon]
-      - TS (Transition Scenario) : [no-measures, extend-lockdown, open-all,
-                                    open-schools, open-shopping, open-leisure,
-                                    work50, work75, work100]
-      - TM (transition Mode) : [1,2,3]
+      - config : [e.g. brent,harrow,ealing,hillingdon]
+      - measures : name of measures input YML file
+      - starting_infections : number of infections to seed 20 days prior to simulation start
+      - quicktest : use larger house sizes to reduce simulation initialisation time
     """
     update_environment(args, {"facs_script": facs_script})
     with_config(config)
 
     set_facs_args_list(args, {"location": config,
-                              "transition_scenario": TS,
+                              "measures_yml": measures,
                               "starting_infections": starting_infections,
-                              "transition_mode": TM,
-                              "ci_multiplier": ci_multiplier,
                               "quicktest": quicktest
                               })
 
     execute(put_configs, config)
     print(args)
     job(dict(script='pfacs', wall_time='0:15:0', memory='2G',
-             label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
+             label=measures), args)
 
 
 @task
 @load_plugin_env_vars("FabCovid19")
 def pfacs(config,
-          TS="uk-forecast",
-          TM="0",
-          ci_multiplier="0.475",
+          measures="measures_uk",
           starting_infections="200",
           facs_script="run.py",
           quicktest="false",
@@ -71,38 +64,32 @@ def pfacs(config,
     """
     parameters:
       - config : [brent,harrow,ealing,hillingdon]
-      - TS (Transition Scenario) : [uk-forecast]
-      - TM (transition Mode) : [1,2,3]
+      - measures : name of measures input YML file
+      - starting_infections : number of infections to seed 20 days prior to simulation start
     """
     update_environment(args, {"facs_script": facs_script})
     with_config(config)
 
     set_facs_args_list(args, {"location": config,
-                              "transition_scenario": TS,
+                              "measures_yml": measures,
                               "starting_infections": starting_infections,
-                              "transition_mode": TM,
-                              "ci_multiplier": ci_multiplier,
                               "quicktest": quicktest
                               })
 
     execute(put_configs, config)
     print(args)
     job(dict(script='pfacs', wall_time='1:00:0', memory='2G',
-             label="{}-{}-{}".format(TS, TM, ci_multiplier)), args)
+             label=measures), args)
 
 
 @task
 @load_plugin_env_vars("FabCovid19")
 def covid19_campus(config,
-                   TS,
-                   TM,
-                   ci_multiplier="0.475",
+                   measures,
                    quicktest="false",
                    **args):
     covid19(config,
-            TS=TS,
-            TM=TM,
-            ci_multiplier=ci_multiplier,
+            measures=measures,
             facs_script="run_campus.py",
             quicktest=quicktest,
             **args)
@@ -111,9 +98,7 @@ def covid19_campus(config,
 @task
 @load_plugin_env_vars("FabCovid19")
 def facs_ensemble(config,
-                  transition_scenario="uk-forecast",
-                  transition_mode=0,
-                  ci_multiplier=0.475,
+                  measures="measures_uk",
                   facs_script="run.py",
                   quicktest="false",
                   ** args):
@@ -123,9 +108,7 @@ def facs_ensemble(config,
     with_config(config)
 
     set_facs_args_list(args, {"location": "$current_dir",
-                              "transition_scenario": transition_scenario,
-                              "transition_mode": transition_mode,
-                              "ci_multiplier": ci_multiplier,
+                              "measures_yml": measures,
                               "quicktest": quicktest
                               })
     path_to_config = find_config_file_path(config)
@@ -137,9 +120,7 @@ def facs_ensemble(config,
 
 @task
 def covid19_ensemble(configs,
-                     TS=None,
-                     TM=None,
-                     ci_multiplier=0.475,
+                     measures=None,
                      facs_script="run.py",
                      quicktest="false",
                      solver="pfacs",
@@ -152,21 +133,12 @@ def covid19_ensemble(configs,
     '''
     configs = configs.split(';')
 
-    if not (TS is None):
-        TS = TS.split(';')
+    if not (measures is None):
+        measures = measures.split(';')
     else:
-        TS = ['no-measures', 'extend-lockdown', 'open-all', 'open-schools',
-              'open-shopping', 'open-leisure', 'work50', 'work75', 'work100',
-              'dynamic-lockdown', 'periodic-lockdown']
+        measures = ['measures_uk']
 
-    if not (TM is None):
-        TM = [int(s) if s.isdigit() else -1 for s in TM.split(';')]
-    else:
-        TM = [1, 2, 3, 4]
-
-    print("TS set to: ", TS)
-    print("TM set to: ", TM)
-    print("ci_multiplier set to: ", ci_multiplier)
+    print("measures set to: ", measures)
 
     count = 0
     for loc in configs:
@@ -174,9 +146,7 @@ def covid19_ensemble(configs,
         update_environment(args, {"facs_script": facs_script})
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
-                                  "transition_scenario": '',
-                                  "transition_mode": '-1',
-                                  "ci_multiplier": ci_multiplier,
+                                  "measures": '',
                                   "quicktest": quicktest
                                   })
 
@@ -187,22 +157,14 @@ def covid19_ensemble(configs,
         shutil.rmtree(sweep_dir, ignore_errors=True)
         makedirs(sweep_dir)
 
-        for transition_scenario in TS:
-            for transition_mode in TM:
-                count = count + 1
-                base_csv_folder = os.path.join(
-                    sweep_dir,
-                    "{}-{:d}-{}".format(transition_scenario,
-                                        transition_mode,
-                                        ci_multiplier)
-                )
-                makedirs(base_csv_folder)
-                with open(os.path.join(base_csv_folder, 'simsetting.csv'),
-                          'w') as f:
-                    f.write('"transition_scenario","%s"\n' %
-                            (transition_scenario))
-                    f.write('"transition_mode",%d' %
-                            (transition_mode))
+        for transition_scenario in measures:
+            count = count + 1
+            base_csv_folder = os.path.join(sweep_dir, measures)
+            makedirs(base_csv_folder)
+            with open(os.path.join(base_csv_folder, 'simsetting.csv'),
+                      'w') as f:
+                f.write('"measures","%s"\n' %
+                        (measures))
 
         env.script = solver  # pfacs or Covid19
 
@@ -211,15 +173,11 @@ def covid19_ensemble(configs,
 
 @task
 def covid19_campus_ensemble(configs,
-                            TS=None,
-                            TM=None,
-                            ci_multiplier=0.475,
+                            measures=None,
                             quicktest="false",
                             ** args):
     covid19_ensemble(configs,
-                     TS=TS,
-                     TM=TM,
-                     ci_multiplier=ci_multiplier,
+                     measures=measures,
                      facs_script="run_campus.py",
                      quicktest=quicktest,
                      **args)
