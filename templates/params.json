@@ -35,22 +35,6 @@
     "max": 16.0,
     "default": 12.0
   },
-  "transition_mode": {
-    "type": "float",
-    "min": 1,
-    "max": 4,
-    "default": 1
-  },
-  "transition_scenario_index": {
-    "type": "float",
-    "min": 0,
-    "max": 11,
-    "default": 1
-  },
-  "transition_scenario": {
-    "default": "extend-lockdown",
-    "type": "string"
-  },
   "out_file": {
     "type": "string",
     "default": "out.csv"

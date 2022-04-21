@@ -157,9 +157,9 @@ def covid19_ensemble(configs,
         shutil.rmtree(sweep_dir, ignore_errors=True)
         makedirs(sweep_dir)
 
-        for transition_scenario in measures:
+        for measure_scenario in measures:
             count = count + 1
-            base_csv_folder = os.path.join(sweep_dir, measures)
+            base_csv_folder = os.path.join(sweep_dir, measure_scenario)
             makedirs(base_csv_folder)
             with open(os.path.join(base_csv_folder, 'simsetting.csv'),
                       'w') as f:

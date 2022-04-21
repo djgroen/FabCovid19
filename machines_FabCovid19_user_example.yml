@@ -11,10 +11,8 @@ default:
     
     # default values are extracted from facs/run.py
     location: "brent"
-    transition_scenario: "extend-lockdown"
-    transition_mode: "1"
-    ci_multiplier: "0.625"
     output_dir: "."
+    measures: "measures_uk"
     data_dir: "covid_data"
     starting_infections: "500"
     start_date: "1/3/2020"
