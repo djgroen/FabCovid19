@@ -85,12 +85,10 @@ def facs_postprocess(output_dir,
             except IndexError:
                 pass
             rundir = os.path.basename(dirpath).split("_")[0]
-            ci_multiplier = rundir.rsplit("-", 2)[2]
-            transition_mode = rundir.rsplit("-", 2)[1]
-            transition_scenario = rundir.rsplit("-", 2)[0]
+            measures = rundir.rsplit("-", 2)[0]
 
-            borough_key = "{}-{}-{}".format(
-                borough, transition_scenario, transition_mode
+            borough_key = "{}".format(
+                measures
             )
             if borough_key not in results:
                 results.update(
@@ -98,8 +96,7 @@ def facs_postprocess(output_dir,
                         borough_key:
                         {
                             "borough_name": borough,
-                            "transition_mode": transition_mode,
-                            "transition_scenario": transition_scenario,
+                            "measures_yml": measures,
                             "df_name": [],
                             "df_list": [],
                         }
@@ -122,8 +119,7 @@ def facs_postprocess(output_dir,
 
     for borough_key in results.keys():
         borough_name = results[borough_key]["borough_name"]
-        transition_mode = results[borough_key]["transition_mode"]
-        transition_scenario = results[borough_key]["transition_scenario"]
+        measures = results[borough_key]["measures_yml"]
         df = pd.concat(results[borough_key]["df_list"],
                        axis=1, ignore_index=True
                        )
@@ -167,19 +163,17 @@ def facs_postprocess(output_dir,
                 if day >= 0 and day < len(df['hosp new data']):
                     df['hosp new data'][day] = int(d['admissions'])
 
-        title = "Location: {} Scenario: {} Mode: {}".format(
-                borough_name, transition_scenario, transition_mode
+        title = "Location: {} Scenario: {}".format(
+                borough_name, measures 
         )
 
         html_file = os.path.join(
             results_dir,
-            "{}-{}-{}.html".format(borough_name, transition_scenario,
-                                   transition_mode)
+            "{}-{}.html".format(borough_name, measures)
         )
         png_file = os.path.join(
             results_dir,
-            "{}-{}-{}.png".format(borough_name, transition_scenario,
-                                  transition_mode)
+            "{}-{}.png".format(borough_name, measures)
         )
         print(Start_Date)
         plot(df, Start_Date, adm_csv_fname, title, html_file, png_file)
