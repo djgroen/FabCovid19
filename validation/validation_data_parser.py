@@ -13,9 +13,16 @@ def get_validation_names():
     return d
 
 
-if __name__ == '__main__':
+def update_validation_data(regions='all', force=False):
+
     region_list = get_region_names()
-    validation_region_list = get_validation_names()
+    if regions == 'all':
+        validation_region_list = get_validation_names()
+    else:
+        if isinstance(regions, list):
+            validation_region_list = regions
+        else:
+            validation_region_list = list([regions])
 
     for region in validation_region_list:
 
@@ -24,7 +31,7 @@ if __name__ == '__main__':
         else:
             print('Region {} found in config files...'.format(region))
             validation_path = '../config_files/' + region +'/covid_data/admissions.csv'
-            if os.path.exists(validation_path):
+            if os.path.exists(validation_path) and not force:
                 print('Validation data for {} already exists.'.format(region))
             else:
                 print('Compiling validation data for {}...'.format(region))
@@ -39,7 +46,10 @@ if __name__ == '__main__':
                     data_path = 'raw_data/' + region + '_' + str(ii) + '.csv'
 
                     if ii == 1:
-                        df = pd.read_csv(data_path)
+                        try:
+                            df = pd.read_csv(data_path)
+                        except:
+                            print('Name format wrong')
                         df = df[['date', 'newAdmissions']]
                     else:
                         try:
@@ -53,11 +63,12 @@ if __name__ == '__main__':
  
                     ii += 1
  
-                print(df)
-
                 df['date'] = pd.to_datetime(df['date'])
                 df['date'] = df['date'].dt.strftime('%d/%m/%Y')
                 df = df.rename(columns={'newAdmissions': 'admissions'})
-                print(df)
 
                 df.to_csv(validation_path, index=False)
+
+if __name__ == '__main__':
+    update_validation_data(force=True)
+    print('Done')
