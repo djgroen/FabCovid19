@@ -96,7 +96,7 @@ dd/mm/yyyy: # date according to date format above
     leisure: 0.8 
   social_distance: 0.7
   work_from_home: 0.5
-  track_trace_efficacy: 0.6 # 60% escape.
+  track_trace_efficacy: 0.5 
   traffic_multiplier: 0.3
 15/7/2020:
   partial_closure: 
