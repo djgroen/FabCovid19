@@ -172,6 +172,17 @@ def covid19_ensemble(configs,
 
 
 @task
+def covid19_uk_trial_small(measures, **args):
+    configs = "blackburn_with_darwen;blackpool;buckinghamshire;cheshire_east;cheshire_west_and_chester;cumbria;east_sussex;halton;warrington"
+    covid19_ensemble(configs, **args)
+
+@task
+def covid19_uk_trial_large(measures, **args):
+    configs = "berkshire;greater_manchester;hampshire;kent;lancashire;merseyside;oxfordshire;surrey;west_sussex"
+    #configs = "cheshire_east;surrey"
+    covid19_ensemble(configs, **args)
+
+@task
 def covid19_campus_ensemble(configs,
                             measures=None,
                             quicktest="false",

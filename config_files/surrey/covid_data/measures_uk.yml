@@ -13,7 +13,7 @@ dd/mm/yyyy: # date according to date format above
   closure: ["example"] # List of building types that are closed for the public.
   partial_closure:
     example: 0.3 # visits to example type facilities are reduced by 30% (e.g. to close schools for non-keyworkers). 
-  track_trace_efficiency: 0.3 # 30% of persons escape the track and trace system. Affects self-isolation compliance.
+  track_trace_efficiency: 0.3 # 70% of persons escape the track and trace system. Affects self-isolation compliance.
 
 11/2/2020:
   case_isolation: True
@@ -23,7 +23,7 @@ dd/mm/yyyy: # date according to date format above
 12/3/2020:
   work_from_home: 0.1
   social_distance: 0.1
-  traffic_multiplier: 0.6
+  traffic_multiplier: 0.5
 16/3/2020:
   partial_closure: 
     leisure: 0.3
@@ -75,7 +75,7 @@ dd/mm/yyyy: # date according to date format above
   mask_uptake: 0.2
   mask_uptake_shopping: 0.3
   work_from_home: 0.65
-  track_trace_efficacy: 0.5 #Track and trace is assumed to catch 50% of the cases.
+  track_trace_efficiency: 0.5 #Track and trace is assumed to catch 50% of the cases.
   traffic_multiplier: 0.25
 15/6/2020:
   partial_closure: 
@@ -86,7 +86,7 @@ dd/mm/yyyy: # date according to date format above
   mask_uptake: 0.2
   mask_uptake_shopping: 0.3
   work_from_home: 0.5
-  track_trace_efficacy: 0.5 #Track and trace is assumed to catch 50% of the cases.
+  track_trace_efficiency: 0.5 #Track and trace is assumed to catch 50% of the cases.
   traffic_multiplier: 0.3
   masks_on_public_transport: True
 4/7/2020:
@@ -96,7 +96,7 @@ dd/mm/yyyy: # date according to date format above
     leisure: 0.8 
   social_distance: 0.7
   work_from_home: 0.5
-  track_trace_efficacy: 0.5 
+  track_trace_efficiency: 0.4 # 60% escape.
   traffic_multiplier: 0.3
 15/7/2020:
   partial_closure: 
@@ -107,7 +107,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.4
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  external_multiplier: 1.0 # some travel possible again.
+  external_multiplier: 2.0 # some travel possible again.
 22/8/2020:
   partial_closure: 
     school: 0.8
@@ -117,7 +117,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.4
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  external_multiplier: 1.5 # returns from holidays.
+  external_multiplier: 4.0 # returns from holidays.
 1/9/2020:
   social_distance: 0.6
   work_from_home: 0.3
@@ -130,7 +130,6 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.45
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  external_multiplier: 1.0 # back to normal rates
 22/9/2020:
   social_distance: 0.6
   work_from_home: 0.4
@@ -146,21 +145,21 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.35
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  #external_multiplier: 1.0 # tighter travel restrictions again.
+  external_multiplier: 2.0 # tighter travel restrictions again.
 2/12/2020:
   social_distance: 0.6
   work_from_home: 0.5
   traffic_multiplier: 0.5
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  external_multiplier: 2.0 # lifting of measures and holiday period
+  external_multiplier: 4.0 # lifting of measures 
 16/12/2020:
   social_distance: 0.6
-  work_from_home: 0.6
-  traffic_multiplier: 0.35
+  work_from_home: 0.25
+  traffic_multiplier: 0.5
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.6 
+  track_trace_efficiency: 0.3 
 20/12/2020:
   partial_closure: 
     leisure: 0.5
@@ -170,7 +169,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.3
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.7 
+  track_trace_efficiency: 0.3 
 23/12/2020: # Christmas bubble
   partial_closure:
     leisure: 0.5
@@ -180,7 +179,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.5
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.7
+  track_trace_efficiency: 0.3
 27/12/2020: # Christmas bubble ends
   partial_closure:
     leisure: 0.5
@@ -190,7 +189,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.4
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.7
+  track_trace_efficiency: 0.3
 6/1/2021:
   partial_closure: 
     school: 1.0
@@ -201,8 +200,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.25
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.8 # assuming track and trace loses efficacy during this surge.
-  external_multiplier: 1.0 # end of holiday period
+  track_trace_efficiency: 0.2 # assuming track and trace loses efficiency during this surge.
 8/3/2021:
   partial_closure: 
     leisure: 1.0
@@ -212,7 +210,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.3
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.8 # assuming track and trace loses efficacy during this surge.
+  track_trace_efficiency: 0.2 # assuming track and trace loses efficiency during this surge.
 12/4/2021:
   partial_closure: 
     leisure: 0.5
@@ -221,7 +219,7 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.55
   mask_uptake: 0.2
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.8 # assuming track and trace loses efficacy during this surge.
+  track_trace_efficiency: 0.2 # assuming track and trace loses efficiency during this surge.
 17/5/2021:
   partial_closure: 
     leisure: 0.2
@@ -230,21 +228,19 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.55
   mask_uptake: 0.15
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.8 # assuming track and trace loses efficacy during this surge.
+  track_trace_efficiency: 0.2 # assuming track and trace loses efficiency during this surge.
 21/6/2021:
   social_distance: 0.4
   work_from_home: 0.25
   traffic_multiplier: 0.75
   mask_uptake: 0.1
   mask_uptake_shopping: 0.8
-  track_trace_efficacy: 0.9 # track and trace largely abandoned.
+  track_trace_efficiency: 0.1 # track and trace largely abandoned.
 19/7/2021:
   social_distance: 0.3
   work_from_home: 0.2
   traffic_multiplier: 0.9
   mask_uptake: 0.05
   mask_uptake_shopping: 0.5
-  track_trace_efficacy: 1.0
-
-
+  track_trace_efficiency: 0.0
 
