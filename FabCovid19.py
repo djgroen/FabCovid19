@@ -163,8 +163,8 @@ def covid19_ensemble(configs,
             makedirs(base_csv_folder)
             with open(os.path.join(base_csv_folder, 'simsetting.csv'),
                       'w') as f:
-                f.write('"measures","%s"\n' %
-                        (measures))
+                f.write('"measures_yml","%s"\n' %
+                        (measure_scenario))
 
         env.script = solver  # pfacs or Covid19
 
