@@ -172,15 +172,25 @@ def covid19_ensemble(configs,
 
 
 @task
-def covid19_uk_trial_small(measures, **args):
+def covid19_uk_trial_small(measures, partition_name="altair", **args):
     configs = "blackburn_with_darwen;blackpool;buckinghamshire;cheshire_east;cheshire_west_and_chester;cumbria;east_sussex;halton;warrington"
-    covid19_ensemble(configs, **args)
+    #configs = "blackpool"
+    covid19_ensemble(configs, measures=measures, partition_name=partition_name, **args)
+
 
 @task
-def covid19_uk_trial_large(measures, **args):
+def covid19_uk_trial_large(measures, partition_name="altair", **args):
     configs = "berkshire;greater_manchester;hampshire;kent;lancashire;merseyside;oxfordshire;surrey;west_sussex"
     #configs = "cheshire_east;surrey"
-    covid19_ensemble(configs, **args)
+    covid19_ensemble(configs, measures=measures, partition_name=partition_name, **args)
+
+
+@task
+def covid19_uk_trial_rest(measures, partition_name="altair", **args):
+    configs = "berkshire;greater_manchester;halton;cumbria"
+    #configs = "cheshire_east;surrey"
+    covid19_ensemble(configs, measures=measures, partition_name=partition_name, **args)
+
 
 @task
 def covid19_campus_ensemble(configs,
@@ -192,6 +202,14 @@ def covid19_campus_ensemble(configs,
                      facs_script="run_campus.py",
                      quicktest=quicktest,
                      **args)
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def refresh_local_measures():
+    config_path = "{}/config_files".format(env.localplugins["FabCovid19"])
+    for config_dir in os.listdir(config_path):
+        print("cp {}/measures/* {}/covid_data/".format(env.localplugins["FabCovid19"], "{}/{}".format(config_path, config_dir)))
+        local("cp {}/measures/* {}/covid_data/".format(env.localplugins["FabCovid19"], "{}/{}".format(config_path, config_dir)))
 
 
 @task
