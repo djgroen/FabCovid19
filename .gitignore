@@ -139,4 +139,4 @@ dmypy.json
 machines_FabCovid19_user.yml
 
 # Copies of measures files
-config_figs/*/covid_data/measures_*.yml
+config_files/*/covid_data/measures_*.yml
