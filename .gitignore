@@ -138,5 +138,6 @@ dmypy.json
 # User-defined machines file
 machines_FabCovid19_user.yml
 
-# Copies of measures files
+# Copies of measures and README files
 config_files/*/covid_data/measures_*.yml
+config_files/*/covid_data/README.md
