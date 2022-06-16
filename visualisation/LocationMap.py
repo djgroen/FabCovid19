@@ -26,27 +26,16 @@ def plot(df, types, houses, title):
  
     fig = px.scatter_mapbox(df,lon='lon', lat='lat', color='type', zoom=10, title=title)
     fig.update_layout(mapbox_style="open-street-map")
-    # fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     py.offline.plot(fig)
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_locationmap(output_dir, location_types='all', plot_replications=False, houses=False):
-    results_dir = locate_results_dir(output_dir)
-    borough = extract_location_name(results_dir)
+def facs_locationmap(region, location_types='all', plot_replications=False, houses=False):
+
+    fname = '{}/config_files/{}/covid_data/{}_buildings.csv'.format(env.localplugins["FabCovid19"], region, region)
+    print(fname)
+    df = pd.read_csv(fname, names=['type', 'lon', 'lat', 'area'])
     location_types = location_types.split(';')
-
-    flag = False
-
-    for root, dirs, files in os.walk(results_dir, topdown=True):
-        for name in files:
-            if "_buildings.csv" in name and borough in root:
-                filepath = os.path.join(root, name)
-                print("file found at:", filepath)
-                df = pd.read_csv(filepath, names=['type', 'lon', 'lat', 'area'])
-                title = 'Map of {}'.format(borough.title())
-                plot(df, location_types, houses, title)
-                flag = True
-            if flag and not plot_replications:
-                break
+    title = 'Map of {}'.format(region.title())
+    plot(df, location_types, houses, title)
