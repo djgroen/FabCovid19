@@ -18,7 +18,7 @@ from .facs_postprocess_utils import *
 titles = {
     'susceptible': 'No. of susceptible people over time',
     'exposed': 'No. of exposed people over time',
-    'infectious': 'No. of daily infections over time',
+    'infectious': 'No. of infected people over time',
     'recovered': 'No. of recoveries over time',
     'dead': 'Cumulative no. of deaths over time',
     'immune': 'No. of immune people over time',
@@ -29,6 +29,17 @@ titles = {
     'cum num hospitalisations today': 'Cumulative no. of hospitalisations over time',
     'cum num infections today': 'Cumulative no. of infections over time'
 }
+
+def get_region(fname):
+
+    base = len(env.local_results.split('/'))
+    return fname.split('/')[-4].split('_')[0]
+
+def get_population(region):
+
+    age_file = '{}/config_files/{}/covid_data/age-distr.csv'.format(env.localplugins["FabCovid19"], region)
+    df = pd.read_csv(age_file)
+    return df[region].sum()
 
 def create_plot(df, title):
 
@@ -62,9 +73,10 @@ def create_plot(df, title):
         ),
     ])
     fig.update_layout(
-        yaxis_title='No. of hospitalisations per 100,000',
+        yaxis_title='Number per 100,000',
         xaxis_title='Date',
-        title=title,
+        title=title.title(),
+        title_x=0.5,
         hovermode="x"
     )
     # fig.write_image('Combine_NW_hospitalisation.png')
@@ -118,6 +130,8 @@ def compute_mean(variables,files):
 
         for ff in files:
 
+            pop = get_population(get_region(ff))
+
             dd = pd.read_csv(ff, usecols=[vv])
             if len(list(dd[vv])) == 0:
                 print('Run {} corresponding to {} not found'.format(ii, ff))
@@ -128,8 +142,8 @@ def compute_mean(variables,files):
         
         ss = pd.DataFrame()
         ss['date'] = pd.read_csv(ff, usecols=['date'])
-        ss['mean'] = df.mean(axis=1)
-        ss['std'] = df.std(axis=1)
+        ss['mean'] = df.mean(axis=1)*100000/pop
+        ss['std'] = df.std(axis=1)*100000/pop
 
         vs.append(ss)
 
@@ -141,6 +155,20 @@ def plot(files, variables):
     vs = compute_mean(variables, files)
     for ii in range(len(vs)):
         create_plot(vs[ii], title=titles[variables[ii]])
+
+def select_comparision_instance(base, instance, compare, region, machine, cores, measures, runs):
+    if compare == 'region':
+        region = base[instance]
+    elif compare == 'machine':
+        machine = base[instance]
+    elif compare == 'cores':
+        cores = base[instance]
+    elif compare == 'measures':
+        measures = base[instance]
+    elif compare == 'runs':
+        runs = base[instance]
+
+    return [region, machine, cores, measures, runs]
 
 @task
 @load_plugin_env_vars("FabCovid19")
@@ -159,6 +187,8 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
 @load_plugin_env_vars("FabCovid19")
 def facs_compare(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', compare='all'):
 
+    print(get_population(region))
+
     if compare not in list(locals().keys()):
         print('Comparision not valid')
         sys.exit()
@@ -172,31 +202,11 @@ def facs_compare(region='all', machine='all', cores='all', measures='all', runs=
 
             for jj in range(ii+1, len(base)):
 
-                if compare == 'region':
-                    region = base[ii]
-                elif compare == 'machine':
-                    machine = base[ii]
-                elif compare == 'cores':
-                    cores = base[ii]
-                elif compare == 'measures':
-                    measures = base[ii]
-                elif compare == 'runs':
-                    runs = base[ii]
-
+                [region, machine, cores, measures, runs] = select_comparision_instance(base, ii, compare, region, machine, cores, measures, runs)
                 files1 = filter_data(region=region, machine=machine, cores=cores, measures=measures, runs=runs)
                 ss1 = compute_mean(variables, files1)
 
-                if compare == 'region':
-                    region = base[jj]
-                elif compare == 'machine':
-                    machine = base[jj]
-                elif compare == 'cores':
-                    cores = base[jj]
-                elif compare == 'measures':
-                    measures = base[jj]
-                elif compare == 'runs':
-                    runs = base[jj]
-
+                [region, machine, cores, measures, runs] = select_comparision_instance(base, jj, compare, region, machine, cores, measures, runs)
                 files2 = filter_data(region=region, machine=machine, cores=cores, measures=measures, runs=runs)
                 ss2 = compute_mean(variables, files2)
 
@@ -205,6 +215,4 @@ def facs_compare(region='all', machine='all', cores='all', measures='all', runs=
                 tt['mean'] = ss1[0]['mean']-ss2[0]['mean']
                 tt['std'] = ss1[0]['std']+ss2[0]['std']
 
-                # print(ss1, ss2, tt)
-
-                create_plot(tt, titles[variables[0]])
+                create_plot(tt, 'Difference in {} <br> ({} {}-{})'.format(titles[variables[0]], compare, base[ii], base[jj]))
