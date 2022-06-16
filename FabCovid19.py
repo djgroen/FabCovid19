@@ -208,6 +208,8 @@ def covid19_campus_ensemble(configs,
 def refresh_local_measures():
     config_path = "{}/config_files".format(env.localplugins["FabCovid19"])
     for config_dir in os.listdir(config_path):
+        if config_dir == "facs_validation":
+            continue
         print("cp {}/measures/* {}/covid_data/".format(env.localplugins["FabCovid19"], "{}/{}".format(config_path, config_dir)))
         local("cp {}/measures/* {}/covid_data/".format(env.localplugins["FabCovid19"], "{}/{}".format(config_path, config_dir)))
 
