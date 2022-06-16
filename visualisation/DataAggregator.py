@@ -70,7 +70,6 @@ def create_plot(df, title):
     # fig.write_image('Combine_NW_hospitalisation.png')
     fig.show()
 
-
 def filter_data(region, machine, cores, measures, runs):
 
     region = region.split(';')
@@ -103,9 +102,9 @@ def filter_data(region, machine, cores, measures, runs):
 
     return ll
 
-def plot(files, variables):
+def compute_mean(variables,files):
 
-    variables = variables.split(';')
+    vs = []
 
     for vv in variables:
 
@@ -132,7 +131,16 @@ def plot(files, variables):
         ss['mean'] = df.mean(axis=1)
         ss['std'] = df.std(axis=1)
 
-        create_plot(ss, title=titles[vv])
+        vs.append(ss)
+
+    return vs
+
+def plot(files, variables):
+
+    variables = variables.split(';')
+    vs = compute_mean(variables, files)
+    for ii in range(len(vs)):
+        create_plot(vs[ii], title=titles[variables[ii]])
 
 @task
 @load_plugin_env_vars("FabCovid19")
@@ -143,4 +151,60 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
     if variables == 'all':
         variables = ';'.join(list(titles.keys()))
 
-    plot(files, variables)
+    ss = plot(files, variables)
+
+    return ss
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_compare(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', compare='all'):
+
+    if compare not in list(locals().keys()):
+        print('Comparision not valid')
+        sys.exit()
+
+    if len(locals()[compare].split(';')) > 1:
+
+        base = locals()[compare].split(';')
+        variables = variables.split(';')
+
+        for ii in range(len(base)):
+
+            for jj in range(ii+1, len(base)):
+
+                if compare == 'region':
+                    region = base[ii]
+                elif compare == 'machine':
+                    machine = base[ii]
+                elif compare == 'cores':
+                    cores = base[ii]
+                elif compare == 'measures':
+                    measures = base[ii]
+                elif compare == 'runs':
+                    runs = base[ii]
+
+                files1 = filter_data(region=region, machine=machine, cores=cores, measures=measures, runs=runs)
+                ss1 = compute_mean(variables, files1)
+
+                if compare == 'region':
+                    region = base[jj]
+                elif compare == 'machine':
+                    machine = base[jj]
+                elif compare == 'cores':
+                    cores = base[jj]
+                elif compare == 'measures':
+                    measures = base[jj]
+                elif compare == 'runs':
+                    runs = base[jj]
+
+                files2 = filter_data(region=region, machine=machine, cores=cores, measures=measures, runs=runs)
+                ss2 = compute_mean(variables, files2)
+
+                tt = pd.DataFrame()
+                tt['date'] = ss1[0]['date']
+                tt['mean'] = ss1[0]['mean']-ss2[0]['mean']
+                tt['std'] = ss1[0]['std']+ss2[0]['std']
+
+                # print(ss1, ss2, tt)
+
+                create_plot(tt, titles[variables[0]])
