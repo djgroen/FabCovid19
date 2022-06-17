@@ -82,7 +82,7 @@ def facs_locationplot(output_dir, output_file='covid_out_infections.csv'):
     for i in range(pdf['time'].min(), pdf['time'].max()):
         for j in types:
             data = pdf[(pdf['time'] == i) & (pdf['type'] == j)]
-            print(j,data)
+            # print(j,data)
             count = data['count'].sum()
             count /= runs
             d = {'time': i, 'type': j, 'mean': count}
