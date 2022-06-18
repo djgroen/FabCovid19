@@ -39,6 +39,7 @@ def get_population(region):
 
     age_file = '{}/config_files/{}/covid_data/age-distr.csv'.format(env.localplugins["FabCovid19"], region)
     df = pd.read_csv(age_file)
+    df.columns = df.columns.str.lower()
     return df[region].sum()
 
 def create_plot(df, title):
