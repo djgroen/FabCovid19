@@ -33,7 +33,7 @@ titles = {
 def get_region(fname):
 
     base = len(env.local_results.split('/'))
-    return fname.split('/')[-4].split('_')[0]
+    return '_'.join(fname.split('/')[-4].split('_')[:-2])
 
 def get_population(region):
 
@@ -99,13 +99,13 @@ def filter_data(region, machine, cores, measures, runs):
     ll = [x for x in ll if len(x.split('/')) == base + 4 and x.split('/')[-1] == 'out.csv' and x.split('/')[-3] == 'RUNS']
 
     if region != ['all']:
-        ll = [x for x in ll if x.split('/')[-4].split('_')[0] in region]
+        ll = [x for x in ll if '_'.join(x.split('/')[-4].split('_')[:-2]) in region]
 
     if machine != ['all']:
-        ll = [x for x in ll if x.split('/')[-4].split('_')[1] in machine]
+        ll = [x for x in ll if x.split('/')[-4].split('_')[-2] in machine]
 
     if cores != ['all']:
-        ll = [x for x in ll if x.split('/')[-4].split('_')[2] in cores]
+        ll = [x for x in ll if x.split('/')[-4].split('_')[-1] in cores]
 
     if measures != ['all']:
         ll = [x for x in ll if '_'.join(x.split('/')[-2].split('_')[:-1]) in measures]
@@ -144,7 +144,7 @@ def compute_mean(variables,files):
         ss = pd.DataFrame()
         ss['date'] = pd.read_csv(ff, usecols=['date'])
         ss['mean'] = df.mean(axis=1)*100000/pop
-        ss['std'] = df.std(axis=1)*100000/pop
+        ss['std'] = df.sem(axis=1)*100000/pop
 
         vs.append(ss)
 
@@ -181,6 +181,7 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
         variables = ';'.join(list(titles.keys()))
 
     ss = plot(files, variables)
+    print(ss)
 
     return ss
 
@@ -215,5 +216,7 @@ def facs_compare(region='all', machine='all', cores='all', measures='all', runs=
                 tt['date'] = ss1[0]['date']
                 tt['mean'] = ss1[0]['mean']-ss2[0]['mean']
                 tt['std'] = ss1[0]['std']+ss2[0]['std']
+
+                tt.to_csv('~/iccs/brent_hosp_compare.csv')
 
                 create_plot(tt, 'Difference in {} <br> ({} {}-{})'.format(titles[variables[0]], compare, base[ii], base[jj]))
