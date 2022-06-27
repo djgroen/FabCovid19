@@ -30,6 +30,7 @@ def covid19(config,
             starting_infections="200",
             facs_script="run.py",
             quicktest="false",
+            household_size="2.6",
             **args):
     """
     parameters:
@@ -44,7 +45,8 @@ def covid19(config,
     set_facs_args_list(args, {"location": config,
                               "measures_yml": measures,
                               "starting_infections": starting_infections,
-                              "quicktest": quicktest
+                              "quicktest": quicktest,
+                              "household_size": household_size
                               })
 
     execute(put_configs, config)
@@ -60,6 +62,7 @@ def pfacs(config,
           starting_infections="200",
           facs_script="run.py",
           quicktest="false",
+          household_size="2.6",
           **args):
     """
     parameters:
@@ -73,7 +76,8 @@ def pfacs(config,
     set_facs_args_list(args, {"location": config,
                               "measures_yml": measures,
                               "starting_infections": starting_infections,
-                              "quicktest": quicktest
+                              "quicktest": quicktest,
+                              "household_size": household_size
                               })
 
     execute(put_configs, config)
@@ -100,6 +104,8 @@ def covid19_campus(config,
 def facs_ensemble(config,
                   measures="measures_uk",
                   facs_script="run.py",
+                  starting_infections=200,
+                   household_size="2.6",
                   quicktest="false",
                   ** args):
     # fab localhost facs_validation
@@ -109,7 +115,9 @@ def facs_ensemble(config,
 
     set_facs_args_list(args, {"location": "$current_dir",
                               "measures_yml": measures,
-                              "quicktest": quicktest
+                              "starting_infections": starting_infections,
+                              "quicktest": quicktest,
+                              "household_size": household_size
                               })
     path_to_config = find_config_file_path(config)
     sweep_dir = path_to_config + "/SWEEP"
@@ -119,11 +127,14 @@ def facs_ensemble(config,
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_ensemble(configs,
                      measures=None,
                      facs_script="run.py",
                      quicktest="false",
+                     starting_infections=200,
                      solver="pfacs",
+                     household_size="2.6",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -147,7 +158,9 @@ def covid19_ensemble(configs,
         with_config(loc)
         set_facs_args_list(args, {"location": loc,
                                   "measures": '',
-                                  "quicktest": quicktest
+                                  "starting_infections": starting_infections,
+                                  "quicktest": quicktest,
+                                  "household_size": household_size
                                   })
 
         path_to_config = find_config_file_path(loc)
@@ -172,6 +185,7 @@ def covid19_ensemble(configs,
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_uk_trial_small(measures, partition_name="altair", **args):
     configs = "blackburn_with_darwen;blackpool;buckinghamshire;cheshire_east;cheshire_west_and_chester;cumbria;east_sussex;halton;warrington"
     #configs = "blackpool"
@@ -179,6 +193,7 @@ def covid19_uk_trial_small(measures, partition_name="altair", **args):
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_uk_trial_large(measures, partition_name="altair", **args):
     configs = "berkshire;greater_manchester;hampshire;kent;lancashire;merseyside;oxfordshire;surrey;west_sussex"
     #configs = "cheshire_east;surrey"
@@ -186,6 +201,7 @@ def covid19_uk_trial_large(measures, partition_name="altair", **args):
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_uk_trial_rest(measures, partition_name="altair", **args):
     configs = "berkshire;greater_manchester;halton;cumbria"
     #configs = "cheshire_east;surrey"
@@ -193,6 +209,7 @@ def covid19_uk_trial_rest(measures, partition_name="altair", **args):
 
 
 @task
+@load_plugin_env_vars("FabCovid19")
 def covid19_campus_ensemble(configs,
                             measures=None,
                             quicktest="false",
