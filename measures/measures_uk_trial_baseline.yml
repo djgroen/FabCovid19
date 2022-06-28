@@ -107,16 +107,21 @@ dd/mm/yyyy: # date according to date format above
     leisure: 0.3
   traffic_multiplier: 0.45
   external_multiplier: 2.0 # some travel possible again.
+3/8/2020:
+  partial_closure:
+    leisure: 0.0
+  mask_uptake: 0.15 # Eat out to help out
 14/8/2020:
   partial_closure: 
     school: 0.8
-    leisure: 0.1
+    leisure: 0.0
   traffic_multiplier: 0.5
   external_multiplier: 4.0 # returns from holidays.
 1/9/2020:
   partial_closure: 
     school: 0.0
     leisure: 0.0
+  mask_uptake: 0.2
   traffic_multiplier: 0.6
   external_multiplier: 2.0 # returns from holidays.
 14/9/2020:
