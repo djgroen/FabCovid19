@@ -11,6 +11,7 @@ import glob
 import fnmatch
 import numpy as np
 from pathlib import Path
+import datetime as dt
 
 from plugins.FabCovid19.FabCovid19 import *
 from .facs_postprocess_utils import *
@@ -42,9 +43,9 @@ def get_population(region):
     df.columns = df.columns.str.lower()
     return df[region].sum()
 
-def create_plot(df, title):
+def create_trace(df, t=[]):
 
-    fig = go.Figure([
+    t.extend([
         go.Scatter(
             name='mean',
             x=df['date'],
@@ -55,7 +56,7 @@ def create_plot(df, title):
         go.Scatter(
             name='Upper Bound',
             x=df['date'],
-            y=df['mean']+df['std'],
+            y=(df['mean']+df['std']),
             mode='lines',
             marker=dict(color="#444"),
             line=dict(width=0),
@@ -64,15 +65,21 @@ def create_plot(df, title):
         go.Scatter(
             name='Lower Bound',
             x=df['date'],
-            y=df['mean']-df['std'],
+            y=(df['mean']-df['std']),
             marker=dict(color="#444"),
             line=dict(width=0),
             mode='lines',
             fillcolor='rgba(68, 68, 68, 0.3)',
             fill='tonexty',
             showlegend=False
-        ),
-    ])
+        )]
+    )
+
+    return t
+
+def create_plot(tr, title):
+
+    fig = go.Figure(tr)
     fig.update_layout(
         yaxis_title='Number per 100,000',
         xaxis_title='Date',
@@ -80,7 +87,7 @@ def create_plot(df, title):
         title_x=0.5,
         hovermode="x"
     )
-    # fig.write_image('Combine_NW_hospitalisation.png')
+    # fig.write_image('measures_lithuania_2.png')
     fig.show()
 
 def filter_data(region, machine, cores, measures, runs):
@@ -113,6 +120,10 @@ def filter_data(region, machine, cores, measures, runs):
     if runs != ['all']:
         ll = [x for x in ll if x.split('/')[-2].split('_')[-1] in runs]
 
+    if len(ll) == 0:
+        print('No results found for the query')
+        sys.exit()
+
     return ll
 
 def compute_mean(variables,files):
@@ -129,9 +140,11 @@ def compute_mean(variables,files):
 
         ii = 1
 
+        pop = 0
+
         for ff in files:
 
-            pop = get_population(get_region(ff))
+            pop += get_population(get_region(ff))
 
             dd = pd.read_csv(ff, usecols=[vv])
             if len(list(dd[vv])) == 0:
@@ -143,19 +156,14 @@ def compute_mean(variables,files):
         
         ss = pd.DataFrame()
         ss['date'] = pd.read_csv(ff, usecols=['date'])
-        ss['mean'] = df.mean(axis=1)*100000/pop
+        ss['mean'] = df.sum(axis=1)*100000/pop
         ss['std'] = df.sem(axis=1)*100000/pop
+        ss['date'] = pd.to_datetime(ss['date'],format="%d/%m/%Y").dt.date
+        print(ss)
 
         vs.append(ss)
 
     return vs
-
-def plot(files, variables):
-
-    variables = variables.split(';')
-    vs = compute_mean(variables, files)
-    for ii in range(len(vs)):
-        create_plot(vs[ii], title=titles[variables[ii]])
 
 def select_comparision_instance(base, instance, compare, region, machine, cores, measures, runs):
     if compare == 'region':
@@ -173,17 +181,23 @@ def select_comparision_instance(base, instance, compare, region, machine, cores,
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all'):
+def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', groupbymeasures=False):
 
     files = filter_data(region, machine, cores, measures, runs)
 
     if variables == 'all':
         variables = ';'.join(list(titles.keys()))
 
-    ss = plot(files, variables)
-    print(ss)
+    variables = variables.split(';')
 
-    return ss
+    if groupbymeasures == False:
+        vs = compute_mean(variables, files)
+        for ii in range(len(vs)):
+            tr = create_trace(vs[ii])
+            create_plot(tr, title=titles[variables[ii]])
+    else:
+        mm = set('_'.join(f.split('/')[-2].split('_')[:-1]) for f in files)
+        print(mm)
 
 @task
 @load_plugin_env_vars("FabCovid19")
