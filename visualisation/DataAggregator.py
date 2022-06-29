@@ -145,6 +145,7 @@ def compute_mean(variables,files):
         for ff in files:
 
             pop += get_population(get_region(ff))
+            # print(get_region(ff), get_population(get_region(ff)))
 
             dd = pd.read_csv(ff, usecols=[vv])
             if len(list(dd[vv])) == 0:
@@ -153,6 +154,9 @@ def compute_mean(variables,files):
                 df['Run {}'.format(ii)] = dd
 
             ii += 1
+
+        # print(pop)
+        # print(df)
         
         ss = pd.DataFrame()
         ss['date'] = pd.read_csv(ff, usecols=['date'])
@@ -181,7 +185,7 @@ def select_comparision_instance(base, instance, compare, region, machine, cores,
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', groupbymeasures=False):
+def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', groupbymeasures=False, validation=False):
 
     files = filter_data(region, machine, cores, measures, runs)
 
@@ -191,13 +195,93 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
     variables = variables.split(';')
 
     if groupbymeasures == False:
+        tt = []
         vs = compute_mean(variables, files)
         for ii in range(len(vs)):
             tr = create_trace(vs[ii])
-            create_plot(tr, title=titles[variables[ii]])
+            if validation:
+                tt.append(tr)
+            else:
+                create_plot(tr, title=titles[variables[ii]])
     else:
         mm = set('_'.join(f.split('/')[-2].split('_')[:-1]) for f in files)
         print(mm)
+
+    return tt, vs
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_uk_validation_nw(machine='all', cores='all', measures='all', runs='all'):
+
+    region = 'cheshire_east;cheshire_west_and_chester;halton;warrington;cumbria;greater_manchester;lancashire;blackpool;blackburn_with_darwen;merseyside'
+    variables = 'infectious;num hospitalisations today'
+
+    tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
+    tt = tt[0]
+
+    variables = variables.split(';')
+
+    for ii in range(2):
+        tr = tt[3*ii:3*(ii+1)]
+
+        if ii == 0:
+            df = pd.read_csv('{}/validation/validation_nw_infectious.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newCasesBySpecimenDate'])
+            df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+            df = df.rename(columns={'newCasesBySpecimenDate': 'validation'})
+            df = df[::-1]
+            df = df[29:29+len(vs[ii])]
+
+        if ii == 1:
+            df = pd.read_csv('{}/validation/validation_nw_hospitalisations.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newAdmissions'])
+            df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+            df = df.rename(columns={'newAdmissions': 'validation'})
+            df = df[::-1]
+            df = df[:len(vs[ii])-18]
+
+        ts = [
+            go.Scatter(name='validation',x=df['date'],y=df['validation']*100000/7367456,mode='lines')
+            ]
+
+        tr.extend(ts)
+
+        create_plot(tr, title=titles[variables[ii]])
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_uk_validation_se(machine='all', cores='all', measures='all', runs='all'):
+
+    region = 'berkshire;buckinghamshire;east_sussex;hampshire;kent;oxfordshire;surrey;west_sussex'
+    variables = 'infectious;num hospitalisations today'
+
+    tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
+    tt = tt[0]
+
+    variables = variables.split(';')
+
+    for ii in range(2):
+        tr = tt[3*ii:3*(ii+1)]
+
+        if ii == 0:
+            df = pd.read_csv('{}/validation/validation_se_infectious.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newCasesBySpecimenDate'])
+            df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+            df = df.rename(columns={'newCasesBySpecimenDate': 'validation'})
+            df = df[::-1]
+            df = df[29:29+len(vs[ii])]
+
+        if ii == 1:
+            df = pd.read_csv('{}/validation/validation_se_hospitalisations.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newAdmissions'])
+            df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+            df = df.rename(columns={'newAdmissions': 'validation'})
+            df = df[::-1]
+            df = df[:len(vs[ii])-18]
+
+        ts = [
+            go.Scatter(name='validation',x=df['date'],y=df['validation']*100000/9217265,mode='lines')
+            ]
+
+        tr.extend(ts)
+
+        create_plot(tr, title=titles[variables[ii]])
 
 @task
 @load_plugin_env_vars("FabCovid19")

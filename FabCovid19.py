@@ -284,7 +284,7 @@ try:
     from plugins.FabCovid19.visualisation.ValidateAvg import facs_postprocess
     from plugins.FabCovid19.visualisation.PlotByLocationType import facs_locationplot
     from plugins.FabCovid19.visualisation.LocationMap import facs_locationmap
-    from plugins.FabCovid19.visualisation.DataAggregator import facs_combine, facs_compare
+    from plugins.FabCovid19.visualisation.DataAggregator import facs_combine, facs_compare, facs_uk_validation_nw, facs_uk_validation_se
 
 except:
     exc = sys.exc_info()
