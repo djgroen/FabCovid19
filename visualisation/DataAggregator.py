@@ -214,7 +214,7 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
 def facs_uk_validation_nw(machine='all', cores='all', measures='all', runs='all'):
 
     region = 'cheshire_east;cheshire_west_and_chester;halton;warrington;cumbria;greater_manchester;lancashire;blackpool;blackburn_with_darwen;merseyside'
-    variables = 'infectious;num hospitalisations today'
+    variables = 'num infections today;num hospitalisations today'
 
     tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
     tt = tt[0]
@@ -251,7 +251,7 @@ def facs_uk_validation_nw(machine='all', cores='all', measures='all', runs='all'
 def facs_uk_validation_se(machine='all', cores='all', measures='all', runs='all'):
 
     region = 'berkshire;buckinghamshire;east_sussex;hampshire;kent;oxfordshire;surrey;west_sussex'
-    variables = 'infectious;num hospitalisations today'
+    variables = 'num infections today;num hospitalisations today'
 
     tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
     tt = tt[0]
