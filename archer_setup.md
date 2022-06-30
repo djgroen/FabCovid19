@@ -69,7 +69,7 @@ Follow the steps listed below
    export PYTHONPATH=$PYTHONUSERBASE/lib/python3.8/site-packages:$PYTHONPATH
    ```
 
-   Save the changes and exit the editor.
+   Save the changes, exit the editor and log out and back in into ARCHER2.
 
 
 3. From your home directory in ARCHER2, issue the following commands
