@@ -215,7 +215,7 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='all', runs='all'):
+def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='all', runs='all', show=True):
 
     variables = 'num infections today;num hospitalisations today'
 
@@ -235,11 +235,6 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
 
     df_inf = pd.DataFrame()
     df_hos = pd.DataFrame()
-
-    cs = ['lightgray' for ii in range(len(runs_list)+2)]
-    cs[-1] = 'darkred'
-    cs[-2] = 'darkblue'
-
 
     for runs in runs_list:
         tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
@@ -263,8 +258,8 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
             title_inf = 'No. of daily infections in North-West-England <br> with current measures'
             title_hos = 'No. of daily hospitalisations in North-West-England <br> with current measures'
         else:
-            title_inf = 'No. of daily infections in North-West-England <br> with Tier 2'
-            title_hos = 'No. of daily hospitalisations in North-West-England <br> with Tier 2'
+            title_inf = 'No. of daily infections in North-West-England <br> with Tier 2 measures'
+            title_hos = 'No. of daily hospitalisations in North-West-England <br> with Tier 2 measures'
 
         df = pd.read_csv('{}/validation/validation_nw_infectious.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newCasesBySpecimenDate'])
         df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
@@ -310,31 +305,321 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
 
         df_hos['validation'] = df['validation']*100000/9217265
 
-    fig1 = px.line(df_inf, color_discrete_sequence=cs)
+    df_inf = df_inf.reset_index()
+    tr = []
+    for cc in df_inf.columns:
+        if cc not in ['date', 'mean', 'validation']:
+            tr.append(
+                go.Scatter(
+                    name=cc,
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    marker=dict(color='lightgray'),
+                    line=dict(width=3),
+                    showlegend=False
+                )
+            )
+        elif cc == 'mean':
+            if measures == 'measures_uk_trial_baseline':
+                name = 'Current measures'
+                color = 'darkred'
+            else:
+                name = 'Tier 2 measures'
+                color = 'darkgreen'
+            tr.append(
+                go.Scatter(
+                    name=name,
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    marker=dict(color=color),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+        elif cc == 'validation':
+            tr.append(
+                go.Scatter(
+                    name='Validation',
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    marker=dict(color='darkblue'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+    fig1 = go.Figure(tr)
+
+    fig1.add_vline(x='2020-09-24', line_dash="dash")
+
     fig1.update_layout(
-        showlegend=False,
         title = title_inf,
+        legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Infections per 100,000 population',
         title_x=0.5,
-        hovermode="x"
+        hovermode="x",
+        font=dict(size=18),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=0.3
         )
-    fig1.show()
+    )
 
-    fig2 = px.line(df_hos, color_discrete_sequence=cs)
+    fig1.update_layout({
+        'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+        'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+    })
+
+    fig1.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig1.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    df_hos = df_hos.reset_index()
+    tr = []
+    for cc in df_hos.columns:
+        if cc not in ['date', 'mean', 'validation']:
+            tr.append(
+                go.Scatter(
+                    name=cc,
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    marker=dict(color='lightgray'),
+                    line=dict(width=3),
+                    showlegend=False
+                )
+            )
+        elif cc == 'mean':
+            if measures == 'measures_uk_trial_baseline':
+                name = 'Current measures'
+                color = 'darkred'
+            else:
+                name = 'Tier 2 measures'
+                color = 'darkgreen'
+            tr.append(
+                go.Scatter(
+                    name=name,
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    marker=dict(color=color),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+        elif cc == 'validation':
+            tr.append(
+                go.Scatter(
+                    name='Validation',
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    marker=dict(color='darkblue'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+    fig2 = go.Figure(tr)
+
+    fig2.add_vline(x='2020-09-24', line_dash="dash")
+
     fig2.update_layout(
-        showlegend=False,
         title = title_hos,
+        legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Hospitalisations per 100,000 population',
         title_x=0.5,
-        hovermode="x"
+        hovermode="x",
+        font=dict(size=18),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=0.3
+        )
         )
 
-    fig2.show()
+    fig2.update_layout({
+        'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+        'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+    })
+
+    fig2.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig2.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    if show:
+        fig1.show()
+        fig2.show()
+        fig1.write_image('/home/arindam/UK_Trial_Plots/Inf_{}_{}.png'.format(len(region.split(';')), measures), scale=10)
+        fig2.write_image('/home/arindam/UK_Trial_Plots/Hos_{}_{}.png'.format(len(region.split(';')), measures), scale=10)
 
     return df_inf, df_hos, fig1, fig2
 
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
+
+    legend = {'measures_uk_trial_baseline': 'Current measures', 'measures_uk_tier_two': 'Tier 2 measures'}
+
+    for rr in ['nw', 'se']:
+        
+        if rr == 'nw':
+            region_name = 'North-West-England'
+        else:
+            region_name = 'South-East-England'
+
+        dfi = pd.DataFrame()
+        dfh = pd.DataFrame()
+        
+        for mm in ['measures_uk_trial_baseline', 'measures_uk_tier_two']:
+            df_inf, df_hos, fig1, fig2 = facs_uk_combined_plotter(region=rr, machine=machine, cores=cores, measures=mm, runs=runs, show=False)
+
+            dfi[legend[mm]] = df_inf['mean']
+            dfh[legend[mm]] = df_hos['mean']
+
+        # f1 = px.line(dfi, title='Daily infections in {}'.format(region_name))
+
+        tr = []
+        f1 = make_subplots(specs=[[{"secondary_y": True}]])
+        for cc in dfi.columns:
+            if cc not in ['date']:
+                if cc == 'Current measures':
+                    color = 'darkred'
+                else:
+                    color = 'darkgreen'
+                tr.append(
+                    go.Scatter(
+                        name=cc,
+                        x=df_inf['date'],
+                        y=dfi[cc],
+                        mode='lines',
+                        marker=dict(color=color),
+                        line=dict(width=3),
+                        showlegend=True
+                    )
+                )
+        for tt in tr:
+            f1.add_trace(tt, secondary_y=False)
+        f1.add_trace(
+                go.Scatter(
+                    name='Impact of Tier 2',
+                    x=df_inf['date'],
+                    y=(dfi['Current measures'] - dfi['Tier 2 measures'])*100/dfi['Current measures'],
+                    mode='lines',
+                    marker=dict(color='magenta'),
+                    line=dict(width=3),
+                    showlegend=True,
+                ),
+                secondary_y=True,
+            )
+        f1.update_yaxes(range=[0,100], title_text='Relative decrease in percentage', secondary_y=True)
+        f1.update_xaxes(range=['2020-8-1','2021-1-15'])
+        f1.add_vline(x='2020-09-24', line_dash='dash')
+
+        # f2 = px.line(dfh, title='Daily hospitalisations in {}'.format(region_name))
+        tr = []
+        f2 = make_subplots(specs=[[{"secondary_y": True}]])
+        for cc in dfh.columns:
+            if cc not in ['date']:
+                if cc == 'Current measures':
+                    color = 'darkred'
+                else:
+                    color = 'darkgreen'
+                tr.append(
+                    go.Scatter(
+                        name=cc,
+                        x=df_hos['date'],
+                        y=dfh[cc],
+                        mode='lines',
+                        marker=dict(color=color),
+                        line=dict(width=3),
+                        showlegend=True,
+                    )
+                )
+        for tt in tr:
+            f2.add_trace(tt, secondary_y=False)
+        f2.add_trace(
+                go.Scatter(
+                    name='Impact of Tier 2',
+                    x=df_hos['date'],
+                    y=(dfh['Current measures'] - dfh['Tier 2 measures'])*100/dfh['Current measures'],
+                    mode='lines',
+                    marker=dict(color='magenta'),
+                    line=dict(width=3),
+                    showlegend=True,
+                ),
+                secondary_y=True,
+            )
+        f2.update_yaxes(range=[0,100], title_text='Relative decrease in percentage', secondary_y=True)
+        f2.update_xaxes(range=['2020-8-1','2021-1-15'])
+        f2.add_vline(x='2020-09-24', line_dash='dash')
+
+        f1.update_layout(
+            title = 'Daily infections in {}'.format(region_name),
+            legend_title_text='Legend',
+            xaxis_title = 'Date',
+            yaxis_title = 'Infections per 100,000 population',
+            title_x=0.5,
+            hovermode="x",
+            font=dict(size=18),
+            legend=dict(
+                orientation="v",
+                yanchor="top",
+                y=1,
+                xanchor="left",
+                x=0.5
+                )
+            )
+
+        f1.update_layout({
+            'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+            'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+        })
+
+        f1.update_xaxes(showline=True, linewidth=2, linecolor='black')
+        f1.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+
+        f2.update_layout(
+            title = 'Daily hospitalisations in {}'.format(region_name),
+            legend_title_text='Legend',
+            xaxis_title = 'Date',
+            yaxis_title = 'Hospitalisations per 100,000 population',
+            title_x=0.5,
+            hovermode="x",
+            font=dict(size=18),
+            legend=dict(
+                orientation="v",
+                yanchor="top",
+                y=1,
+                xanchor="left",
+                x=0.5
+                )
+            )
+
+        f2.update_layout({
+            'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+            'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+        })
+
+        f2.update_xaxes(showline=True, linewidth=2, linecolor='black')
+        f2.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+        f1.show()
+        f1.write_image('/home/arindam/UK_Trial_Plots/Compare_Inf_{}.png'.format(region_name), scale=10)
+
+        f2.show()
+        f2.write_image('/home/arindam/UK_Trial_Plots/Compare_Hos_{}.png'.format(region_name), scale=10)
 
 @task
 @load_plugin_env_vars("FabCovid19")
