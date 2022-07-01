@@ -61,14 +61,7 @@ Follow the steps listed below
    ssh uname@login.archer2.ac.uk
    ```
 
-2. From your home directory in ARCHER2, issue the following commands
-
-   ```bash
-   module load cray-python
-   pip3 install --user pyyaml
-   ```
-
-3. Add the following lines to `~/.bashrc`
+2. Add the following lines to `~/.bashrc`
 
    ```bash
    export PYTHONUSERBASE=/work/p123/p123/uname/.local
@@ -76,7 +69,15 @@ Follow the steps listed below
    export PYTHONPATH=$PYTHONUSERBASE/lib/python3.8/site-packages:$PYTHONPATH
    ```
 
-   Save the changes and exit the editor.
+   Save the changes, exit the editor and log out and back in into ARCHER2.
+
+
+3. From your home directory in ARCHER2, issue the following commands
+
+   ```bash
+   module load cray-python
+   pip3 install --user pyyaml
+   ```
 
 4. Now move to your work directory using
 
