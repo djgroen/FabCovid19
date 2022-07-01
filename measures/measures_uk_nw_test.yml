@@ -111,6 +111,8 @@ dd/mm/yyyy: # date according to date format above
   partial_closure:
     leisure: 0.0
   mask_uptake: 0.15 # Eat out to help out
+  social_distance: 0.3
+  track_trace_efficiency: 0.2
 14/8/2020:
   partial_closure: 
     school: 0.8
