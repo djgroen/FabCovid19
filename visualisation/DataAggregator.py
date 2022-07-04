@@ -467,6 +467,275 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
 
 @task
 @load_plugin_env_vars("FabCovid19")
+def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='all', runs='all', show=True):
+    
+    variables = 'num infections today;num hospitalisations today'
+
+    if region == 'nw':
+        region = 'cheshire_east;cheshire_west_and_chester;cumbria;greater_manchester;lancashire;blackpool;blackburn_with_darwen;merseyside;warrington_and_halton'
+    elif region == 'se':
+        region = 'berkshire;buckinghamshire;east_sussex;hampshire;kent;oxfordshire;surrey;west_sussex'
+    else:
+        print('Invalid region')
+        return
+    
+    files = filter_data(region, machine, cores, measures, runs)
+    # print(files)
+
+    region_list = list(set(get_region(ff) for ff in files))
+    print(region_list)
+    region_list.sort()
+    region_list = [str(x) for x in region_list]
+    print(region_list)
+
+    df_inf = pd.DataFrame()
+    df_hos = pd.DataFrame()
+
+    for region in region_list:
+        tt, vs = facs_combine(region=region, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, validation=True)
+
+        df_inf[region] = vs[0]['mean']
+        df_hos[region] = vs[1]['mean']
+
+    print(df_inf)
+    print(df_hos)
+
+    # fig = px.line(df_inf)
+    # fig.show()
+
+    # fig = px.line(df_hos)
+    # fig.show()
+
+
+    pop = sum(get_population(region) for region in region_list)
+
+    df_inf['mean'] = sum(df_inf[region]*get_population(region)/100000 for region in df_inf.columns)*100000/pop
+    df_hos['mean'] = sum(df_hos[region]*get_population(region)/100000 for region in df_hos.columns)*100000/pop
+
+    df_inf['date'] = pd.to_datetime(vs[0]['date'],format="%Y-%m-%d").dt.date
+    df_inf = df_inf.set_index('date', drop=True)
+
+    df_hos['date'] = pd.to_datetime(vs[1]['date'],format="%Y-%m-%d").dt.date
+    df_hos = df_hos.set_index('date', drop=True)
+
+
+    if len(region_list) == 9:
+
+        print('Test')
+
+        if measures == 'measures_uk_trial_baseline':
+            title_inf = 'No. of daily infections in North-West-England <br> with current measures'
+            title_hos = 'No. of daily hospitalisations in North-West-England <br> with current measures'
+        else:
+            title_inf = 'No. of daily infections in North-West-England <br> with Tier 2 measures'
+            title_hos = 'No. of daily hospitalisations in North-West-England <br> with Tier 2 measures'
+
+        df = pd.read_csv('{}/validation/validation_nw_infectious.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newCasesBySpecimenDate'])
+        df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+        df = df.rename(columns={'newCasesBySpecimenDate': 'validation'})
+        df = df[::-1]
+        df = df[29:29+len(vs[0])]
+        df = df.set_index('date')
+
+        df_inf['validation'] = df['validation']*100000/7367456
+
+        df = pd.read_csv('{}/validation/validation_nw_hospitalisations.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newAdmissions'])
+        df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+        df = df.rename(columns={'newAdmissions': 'validation'})
+        df = df[::-1]
+        df = df[:len(vs[1])-18]
+        df = df.set_index('date')
+
+        df_hos['validation'] = df['validation']*100000/pop
+
+    else:
+        if measures == 'measures_uk_trial_baseline':
+            title_inf = 'No. of daily infections in South-East-England <br> with current measures'
+            title_hos = 'No. of daily hospitalisations in South-East-England <br> with current measures'
+        else:
+            title_inf = 'No. of daily infections in South-East-England <br> with Tier 2'
+            title_hos = 'No. of daily hospitalisations in South-East-England <br> with Tier 2'
+
+        df = pd.read_csv('{}/validation/validation_se_infectious.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newCasesBySpecimenDate'])
+        df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+        df = df.rename(columns={'newCasesBySpecimenDate': 'validation'})
+        df = df[::-1]
+        df = df[29:29+len(vs[0])]
+        df = df.set_index('date')
+
+        df_inf['validation'] = df['validation']*100000/pop
+
+        df = pd.read_csv('{}/validation/validation_se_hospitalisations.csv'.format(env.localplugins["FabCovid19"]), usecols=['date', 'newAdmissions'])
+        df['date'] = pd.to_datetime(df['date'],format="%Y-%m-%d").dt.date
+        df = df.rename(columns={'newAdmissions': 'validation'})
+        df = df[::-1]
+        df = df[:len(vs[1])-18]
+        df = df.set_index('date')
+
+        df_hos['validation'] = df['validation']*100000/9217265
+
+    df_inf = df_inf.reset_index()
+    tr = []
+    for cc in df_inf.columns:
+        if cc not in ['date', 'mean', 'validation']:
+            tr.append(
+                go.Scatter(
+                    name=cc,
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    # marker=dict(color='lightgray'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+        elif cc == 'mean':
+            if measures == 'measures_uk_trial_baseline':
+                name = 'Current measures'
+                color = 'darkred'
+            else:
+                name = 'Tier 2 measures'
+                color = 'darkgreen'
+            tr.append(
+                go.Scatter(
+                    name=name,
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    marker=dict(color=color),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+        elif cc == 'validation':
+            tr.append(
+                go.Scatter(
+                    name='Validation',
+                    x=df_inf['date'],
+                    y=df_inf[cc],
+                    mode='lines',
+                    marker=dict(color='darkblue'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+    fig1 = go.Figure(tr)
+
+    fig1.add_vline(x='2020-09-24', line_dash="dash")
+
+    fig1.update_layout(
+        title = title_inf,
+        legend_title_text='Legend',
+        xaxis_title = 'Date',
+        yaxis_title = 'Infections per 100,000 population',
+        title_x=0.5,
+        hovermode="x",
+        font=dict(size=18),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=0.3
+        )
+    )
+
+    fig1.update_layout({
+        'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+        'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+    })
+
+    fig1.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig1.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    df_hos = df_hos.reset_index()
+    tr = []
+    for cc in df_hos.columns:
+        if cc not in ['date', 'mean', 'validation']:
+            tr.append(
+                go.Scatter(
+                    name=cc,
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    # marker=dict(color='lightgray'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+        elif cc == 'mean':
+            if measures == 'measures_uk_trial_baseline':
+                name = 'Current measures'
+                color = 'darkred'
+            else:
+                name = 'Tier 2 measures'
+                color = 'darkgreen'
+            tr.append(
+                go.Scatter(
+                    name=name,
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    marker=dict(color=color),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+        elif cc == 'validation':
+            tr.append(
+                go.Scatter(
+                    name='Validation',
+                    x=df_hos['date'],
+                    y=df_hos[cc],
+                    mode='lines',
+                    marker=dict(color='darkblue'),
+                    line=dict(width=3),
+                    showlegend=True
+                )
+            )
+
+    fig2 = go.Figure(tr)
+
+    fig2.add_vline(x='2020-09-24', line_dash="dash")
+
+    fig2.update_layout(
+        title = title_hos,
+        legend_title_text='Legend',
+        xaxis_title = 'Date',
+        yaxis_title = 'Hospitalisations per 100,000 population',
+        title_x=0.5,
+        hovermode="x",
+        font=dict(size=18),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=0.3
+        )
+        )
+
+    fig2.update_layout({
+        'plot_bgcolor': 'rgba(256, 256, 256, 100)',
+        'paper_bgcolor': 'rgba(256, 256, 256, 100)',
+    })
+
+    fig2.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig2.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    if show:
+        fig1.show()
+        fig2.show()
+        fig1.write_image('/home/arindam/UK_Trial_Plots/County_Inf_{}_{}.png'.format(len(region_list), measures), scale=10)
+        fig2.write_image('/home/arindam/UK_Trial_Plots/County_Hos_{}_{}.png'.format(len(region_list), measures), scale=10)
+
+    return df_inf, df_hos, fig1, fig2
+
+@task
+@load_plugin_env_vars("FabCovid19")
 def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
 
     legend = {'measures_uk_trial_baseline': 'Current measures', 'measures_uk_tier_two': 'Tier 2 measures'}
