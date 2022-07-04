@@ -189,7 +189,7 @@ def select_comparision_instance(base, instance, compare, region, machine, cores,
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', groupbymeasures=False, validation=False):
+def facs_combine(region='all', machine='all', cores='all', measures='all', runs='all', variables='all', groupbymeasures=False, validation=False, show_plot=True):
 
     files = filter_data(region, machine, cores, measures, runs)
 
@@ -205,7 +205,7 @@ def facs_combine(region='all', machine='all', cores='all', measures='all', runs=
             tr = create_trace(vs[ii])
             if validation:
                 tt.append(tr)
-            else:
+            elif show_plot:
                 create_plot(tr, title=titles[variables[ii]])
     else:
         mm = set('_'.join(f.split('/')[-2].split('_')[:-1]) for f in files)
@@ -889,6 +889,58 @@ def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
 
         f2.show()
         f2.write_image('/home/arindam/UK_Trial_Plots/Compare_Hos_{}.png'.format(region_name), scale=10)
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def facs_doubling_time(region='all', machine='all', cores='all', measures='all', runs='all', variables='num infections today', n_times=6):
+
+    if region == 'nw':
+        region = 'cheshire_east;cheshire_west_and_chester;cumbria;greater_manchester;lancashire;blackpool;blackburn_with_darwen;merseyside;warrington_and_halton'
+    elif region == 'se':
+        region = 'berkshire;buckinghamshire;east_sussex;hampshire;kent;oxfordshire;surrey;west_sussex'
+
+    region = region.split(';')
+
+    df1 = pd.DataFrame()
+    df2 = pd.DataFrame()
+    df3 = pd.DataFrame()
+
+    for rr in region:
+
+        tt, vs = facs_combine(region=rr, machine=machine, cores=cores, measures=measures, runs=runs, variables=variables, show_plot=False)
+        vs = vs[0][['date', 'mean']]
+        vs = vs[206:]
+
+        cc = vs.iloc[0]['mean']
+        dd = vs.iloc[0]['date']
+
+        ll = []
+        mm = []
+        nn = []
+        for ii in range(len(vs)):
+            if vs.iloc[ii]['mean'] > 2*cc:
+                dt = vs.iloc[ii]['date'] - dd
+                cc = vs.iloc[ii]['mean']
+                dd = vs.iloc[ii]['date']
+                ll.append(dt.days)
+                mm.append(dd)
+                nn.append(cc)
+
+        ll += ['-'] * (n_times - len(ll))
+        mm += ['-'] * (n_times - len(mm))
+        nn += ['-'] * (n_times - len(nn))
+        
+        df1[rr] = ll
+        df2[rr] = mm
+        df3[rr] = nn
+
+    print(df1)
+    print(df2)
+    print(df3)
+
+    df1.to_csv('se_doubling_time.csv')
+    df2.to_csv('se_doubling_date.csv')
+    df3.to_csv('se_doubling_infe.csv')
 
 @task
 @load_plugin_env_vars("FabCovid19")
