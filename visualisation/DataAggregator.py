@@ -358,7 +358,7 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
 
     fig1.update_layout(
         title = title_inf,
-        legend_title_text='Legend',
+        # legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Infections per 100,000 population',
         title_x=0.5,
@@ -369,7 +369,8 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
             yanchor="top",
             y=1,
             xanchor="left",
-            x=0.3
+            x=0.2,
+            font=dict(size=12)
         )
     )
 
@@ -434,7 +435,7 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
 
     fig2.update_layout(
         title = title_hos,
-        legend_title_text='Legend',
+        # legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Hospitalisations per 100,000 population',
         title_x=0.5,
@@ -445,7 +446,8 @@ def facs_uk_combined_plotter(region='all',machine='all', cores='all', measures='
             yanchor="top",
             y=1,
             xanchor="left",
-            x=0.3
+            x=0.2,
+            font=dict(size=12)
         )
         )
 
@@ -584,9 +586,9 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
                     x=df_inf['date'],
                     y=df_inf[cc],
                     mode='lines',
-                    # marker=dict(color='lightgray'),
+                    marker=dict(color='lightgray'),
                     line=dict(width=3),
-                    showlegend=True
+                    showlegend=False
                 )
             )
         elif cc == 'mean':
@@ -627,7 +629,7 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
 
     fig1.update_layout(
         title = title_inf,
-        legend_title_text='Legend',
+        # legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Infections per 100,000 population',
         title_x=0.5,
@@ -638,7 +640,8 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
             yanchor="top",
             y=1,
             xanchor="left",
-            x=0.3
+            x=0.2,
+            font=dict(size=12)
         )
     )
 
@@ -665,45 +668,47 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
                     showlegend=True
                 )
             )
-        elif cc == 'mean':
-            if measures == 'measures_uk_trial_baseline':
-                name = 'Current measures'
-                color = 'darkred'
-            else:
-                name = 'Tier 2 measures'
-                color = 'darkgreen'
-            tr.append(
-                go.Scatter(
-                    name=name,
-                    x=df_hos['date'],
-                    y=df_hos[cc],
-                    mode='lines',
-                    marker=dict(color=color),
-                    line=dict(width=3),
-                    showlegend=True
-                )
-            )
+        # elif cc == 'mean':
+        #     if measures == 'measures_uk_trial_baseline':
+        #         name = 'Current measures'
+        #         color = 'darkred'
+        #     else:
+        #         name = 'Tier 2 measures'
+        #         color = 'darkgreen'
+        #     tr.append(
+        #         go.Scatter(
+        #             name=name,
+        #             x=df_hos['date'],
+        #             y=df_hos[cc],
+        #             mode='lines',
+        #             marker=dict(color=color),
+        #             line=dict(width=3),
+        #             showlegend=True
+        #         )
+        #     )
 
-        elif cc == 'validation':
-            tr.append(
-                go.Scatter(
-                    name='Validation',
-                    x=df_hos['date'],
-                    y=df_hos[cc],
-                    mode='lines',
-                    marker=dict(color='darkblue'),
-                    line=dict(width=3),
-                    showlegend=True
-                )
-            )
+        # elif cc == 'validation':
+        #     tr.append(
+        #         go.Scatter(
+        #             name='Validation',
+        #             x=df_hos['date'],
+        #             y=df_hos[cc],
+        #             mode='lines',
+        #             marker=dict(color='darkblue'),
+        #             line=dict(width=3),
+        #             showlegend=True
+        #         )
+        #     )
 
     fig2 = go.Figure(tr)
 
     fig2.add_vline(x='2020-09-24', line_dash="dash")
+    # fig2.add_hline(y='9.9', line_dash="dash")
+    fig2.add_hline(y='8.8', line_dash="dash")
 
     fig2.update_layout(
         title = title_hos,
-        legend_title_text='Legend',
+        # legend_title_text='Legend',
         xaxis_title = 'Date',
         yaxis_title = 'Hospitalisations per 100,000 population',
         title_x=0.5,
@@ -714,7 +719,8 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
             yanchor="top",
             y=1,
             xanchor="left",
-            x=0.3
+            x=0.2,
+            font=dict(size=12)
         )
         )
 
@@ -723,14 +729,14 @@ def facs_uk_county_plotter(region='all',machine='all', cores='all', measures='al
         'paper_bgcolor': 'rgba(256, 256, 256, 100)',
     })
 
-    fig2.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig2.update_yaxes(showline=True, linewidth=2, linecolor='black')
+    fig2.update_xaxes(showline=True, linewidth=2, linecolor='black', range=['2020-08-1','2021-01-15'])
+    fig2.update_yaxes(showline=True, linewidth=2, linecolor='black', range=[0,12])
 
     if show:
         fig1.show()
         fig2.show()
-        fig1.write_image('/home/arindam/UK_Trial_Plots/County_Inf_{}_{}.png'.format(len(region_list), measures), scale=10)
-        fig2.write_image('/home/arindam/UK_Trial_Plots/County_Hos_{}_{}.png'.format(len(region_list), measures), scale=10)
+        fig1.write_image('/home/arindam/UK_Trial_Plots/County_Colored_Inf_{}_{}.png'.format(len(region_list), measures), scale=10)
+        fig2.write_image('/home/arindam/UK_Trial_Plots/County_Colored_Hos_{}_{}.png'.format(len(region_list), measures), scale=10)
 
     return df_inf, df_hos, fig1, fig2
 
@@ -787,11 +793,11 @@ def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
                     mode='lines',
                     marker=dict(color='magenta'),
                     line=dict(width=3),
-                    showlegend=True,
+                    showlegend=False,
                 ),
                 secondary_y=True,
             )
-        f1.update_yaxes(range=[0,100], title_text='Relative decrease in percentage', secondary_y=True)
+        f1.update_yaxes(range=[0,100], title_text='Relative decrease (%)', title_font_color='magenta', tickfont=dict(color='magenta'), secondary_y=True)
         f1.update_xaxes(range=['2020-8-1','2021-1-15'])
         f1.add_vline(x='2020-09-24', line_dash='dash')
 
@@ -825,17 +831,17 @@ def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
                     mode='lines',
                     marker=dict(color='magenta'),
                     line=dict(width=3),
-                    showlegend=True,
+                    showlegend=False,
                 ),
                 secondary_y=True,
             )
-        f2.update_yaxes(range=[0,100], title_text='Relative decrease in percentage', secondary_y=True)
+        f2.update_yaxes(range=[0,100], title_text='Relative decrease (%)', title_font_color='magenta', tickfont=dict(color='magenta'), secondary_y=True)
         f2.update_xaxes(range=['2020-8-1','2021-1-15'])
         f2.add_vline(x='2020-09-24', line_dash='dash')
 
         f1.update_layout(
             title = 'Daily infections in {}'.format(region_name),
-            legend_title_text='Legend',
+            # legend_title_text='Legend',
             xaxis_title = 'Date',
             yaxis_title = 'Infections per 100,000 population',
             title_x=0.5,
@@ -846,7 +852,8 @@ def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
                 yanchor="top",
                 y=1,
                 xanchor="left",
-                x=0.5
+                x=0.5,
+                font=dict(size=12)
                 )
             )
 
@@ -861,7 +868,7 @@ def facs_uk_compare_measures(machine='all', cores='all', runs='all'):
 
         f2.update_layout(
             title = 'Daily hospitalisations in {}'.format(region_name),
-            legend_title_text='Legend',
+            # legend_title_text='Legend',
             xaxis_title = 'Date',
             yaxis_title = 'Hospitalisations per 100,000 population',
             title_x=0.5,
