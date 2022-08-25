@@ -38,7 +38,7 @@ def extract_location_name(results_dir):
 @task
 @load_plugin_env_vars("FabCovid19")
 def facs_postprocess(output_dir,
-                     output_file="out.csv"):
+                     output_file="out.csv", start_date=None, end_date=None):
     """
     run a post-processing on input folder
     Example:
@@ -52,8 +52,14 @@ def facs_postprocess(output_dir,
             "please use localhost instead "
         )
 
-    Start_Date = env.facs_validation["Start_Date"]
-    End_Date = env.facs_validation["End_Date"]
+    if start_date == None or end_date == None:
+
+        Start_Date = env.facs_validation["Start_Date"]
+        End_Date = env.facs_validation["End_Date"]
+
+    else:
+        Start_Date = start_date
+        End_Date = end_date
 
     results_dir = locate_results_dir(output_dir)
     borough = extract_location_name(results_dir)
