@@ -200,8 +200,7 @@ def facs_postprocess(output_dir,
             results_dir,
             "{}-{}.png".format(borough_name, measures)
         )
-        print(Start_Date)
-        plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file)
+        plot(df, Start_Date, End_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file)
 
 
 def subtract_dates(date1, Start_Date, date_format="%d/%m/%Y"):
@@ -271,7 +270,7 @@ def getline(name):
     return (line, fill)
 
 
-def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file):
+def plot(df, Start_Date, End_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file):
     df["#time"] = pd.date_range(start=datetime.strptime(
         Start_Date, "%d/%m/%Y"), periods=len(df))
     # step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
@@ -382,7 +381,7 @@ def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_f
                        mode="lines",
                        name="# of new cases (data:" +
                        cases_csv_fname + ")",
-                       line=dict(color="green")),
+                       line=dict(color="brown")),
             row=1,
             col=1
         )
@@ -390,7 +389,8 @@ def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_f
     fig.update_xaxes(
         showline=True, linewidth=1, linecolor="black", zeroline=True,
         zerolinewidth=2, zerolinecolor="black", showgrid=False,
-        mirror=True, dtick="M1"
+        mirror=True, dtick="M1",
+        range=[datetime.strptime(Start_Date, '%d/%m/%Y'), datetime.strptime(End_Date, '%d/%m/%Y')]
     )
     fig.update_yaxes(
         showline=True, linewidth=1, linecolor="black", zeroline=True,
@@ -414,6 +414,9 @@ def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_f
         width=1200,
         height=800,
     )
+
+    print(type(Start_Date))
+    print(datetime.strptime(End_Date, '%d/%m/%Y'))
 
     py.offline.plot(fig, filename=html_file)
 
