@@ -413,17 +413,6 @@ def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_f
         autosize=True,
         width=1200,
         height=800,
-        shapes=[
-            dict(type="rect", xref="x", yref="paper", x0=step0, y0=0,
-                 x1=step0 + timedelta(days=1), y1=1,
-                 fillcolor="salmon", opacity=1, layer="below", line_width=0, ),
-            dict(type="rect", xref="x", yref="paper", x0=step1, y0=0,
-                 x1=step1 + timedelta(days=1), y1=1,
-                 fillcolor="salmon", opacity=1, layer="below", line_width=0, ),
-            dict(type="rect", xref="x", yref="paper", x0=step2, y0=0,
-                 x1=step2 + timedelta(days=1), y1=1,
-                 fillcolor="salmon", opacity=1, layer="below", line_width=0, )
-        ]
     )
 
     py.offline.plot(fig, filename=html_file)
