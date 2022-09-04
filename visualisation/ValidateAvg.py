@@ -64,6 +64,14 @@ def facs_postprocess(output_dir,
     results_dir = locate_results_dir(output_dir)
     borough = extract_location_name(results_dir)
 
+    cases_csv_fname = ""
+    # finding cases.csv file
+    for path in pathlib.Path(results_dir).rglob("cases.csv"):
+        cases_csv_fname = str(path)
+        break
+
+    print(cases_csv_fname)
+
     adm_csv_fname = ""
     # finding admissions.csv file
     for path in pathlib.Path(results_dir).rglob("admissions.csv"):
@@ -160,6 +168,7 @@ def facs_postprocess(output_dir,
             [c for c in columns if "num infections today-" in c]].max(axis=1)
 
         df["hosp new data"] = 0
+        df["cases new data"] = 0
 
         if len(adm_csv_fname) > 0:
             print("reading validation data at: {}".format(adm_csv_fname))
@@ -168,6 +177,16 @@ def facs_postprocess(output_dir,
                 day = int(subtract_dates(d["date"], Start_Date))
                 if day >= 0 and day < len(df['hosp new data']):
                     df['hosp new data'][day] = int(d['admissions'])
+
+        if len(cases_csv_fname) > 0:
+            print("reading validation data at: {}".format(cases_csv_fname))
+            validation = pd.read_csv(cases_csv_fname, delimiter=',')
+            for index, d in validation.iterrows():
+                day = int(subtract_dates(d["date"], Start_Date))
+                if day >= 0 and day < len(df['hosp new data']):
+                    df.iloc[day, -1] = int(d['new cases'])
+                    # df['cases new data'][day] = int(d['new cases'])
+                    # print(d['new cases'], day)
 
         title = "Location: {} Scenario: {}".format(
                 borough_name, measures 
@@ -182,7 +201,7 @@ def facs_postprocess(output_dir,
             "{}-{}.png".format(borough_name, measures)
         )
         print(Start_Date)
-        plot(df, Start_Date, adm_csv_fname, title, html_file, png_file)
+        plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file)
 
 
 def subtract_dates(date1, Start_Date, date_format="%d/%m/%Y"):
@@ -252,7 +271,7 @@ def getline(name):
     return (line, fill)
 
 
-def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
+def plot(df, Start_Date, adm_csv_fname, cases_csv_fname, title, html_file, png_file):
     df["#time"] = pd.date_range(start=datetime.strptime(
         Start_Date, "%d/%m/%Y"), periods=len(df))
     # step0 = datetime.strptime("2020-12-02", "%Y-%m-%d")
@@ -353,6 +372,18 @@ def plot(df, Start_Date, adm_csv_fname, title, html_file, png_file):
                        adm_csv_fname + ")",
                        line=dict(color="green")),
             row=2,
+            col=1
+        )
+
+    if len(cases_csv_fname) > 0:
+        fig.add_trace(
+            go.Scatter(x=df["#time"],
+                       y=df["cases new data"],
+                       mode="lines",
+                       name="# of new cases (data:" +
+                       cases_csv_fname + ")",
+                       line=dict(color="green")),
+            row=1,
             col=1
         )
 
