@@ -149,7 +149,7 @@ def compare_facs_to_sif_output(results_dir, sif_dir, ensemble_mode=True):
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_compare_sif(config, cores=1, ensemble_mode=True skip_runs=False, label="", sif_mode=False, sif_dir="", **args):
+def facs_compare_sif(config, cores=1, ensemble_mode=True, skip_runs=False, label="", sif_mode=False, sif_dir="", **args):
     """
     Runs all the validation test and returns all scores, as well as an average.
     """
