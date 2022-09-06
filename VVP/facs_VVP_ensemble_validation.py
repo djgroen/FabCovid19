@@ -138,11 +138,11 @@ def compare_facs_to_sif_output(results_dir, sif_dir, ensemble_mode=True):
     """
 
     if ensemble_mode:
-        vvp.compare_sif("{}/{}/RUNS".format(env.local_results, results_dir), "{}/{}/RUNS".format(env.local_results, sif_dir)
+        vvp.compare_sif("{}/{}/RUNS".format(env.local_results, results_dir), "{}/{}/RUNS".format(env.local_results, sif_dir),
                         facs_vvp_sif,
                         facs_make_vvp_mean)
     else:
-        vvp.compare_sif("{}/{}".format(env.local_results, results_dir), "{}/{}".format(env.local_results, sif_dir)
+        vvp.compare_sif("{}/{}".format(env.local_results, results_dir), "{}/{}".format(env.local_results, sif_dir),
                         facs_vvp_sif,
                         facs_make_vvp_mean)
 
