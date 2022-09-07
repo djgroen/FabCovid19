@@ -2,7 +2,7 @@ date_format: "%d/%m/%Y"
 
 22/10/2020:
   type: alpha
-  transition_period: 20
+  transition_period: 10
 
 21/04/2023:
   type: delta
