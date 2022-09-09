@@ -139,7 +139,7 @@ keyworker_fraction: 0.18
 
 8/2/2021:
   traffic_multiplier: 0.25
-  work_from_home: 0.5
+  work_from_home: 0.67
   social_distance: 0.8
   mask_uptake: 0.4
   mask_uptake_shopping: 0.4
@@ -150,7 +150,7 @@ keyworker_fraction: 0.18
 
 23/2/2021:
   traffic_multiplier: 0.175
-  work_from_home: 0.5
+  work_from_home: 0.67
   social_distance: 0.8
   mask_uptake: 0.4
   mask_uptake_shopping: 0.4
@@ -161,7 +161,7 @@ keyworker_fraction: 0.18
 
 25/2/2021:
   traffic_multiplier: 0.25
-  work_from_home: 0.5
+  work_from_home: 0.67
   social_distance: 0.8
   mask_uptake: 0.3
   mask_uptake_shopping: 0.3
@@ -172,55 +172,11 @@ keyworker_fraction: 0.18
 
 19/4/2021:
   traffic_multiplier: 0.25
-  work_from_home: 0.5
+  work_from_home: 0.67
   social_distance: 0.7
   mask_uptake: 0.3
   mask_uptake_shopping: 0.3
   partial_closure:
     school: 0.5
-    leisure: 0.5
-  track_trace_efficiency: 0.1
-
-26/4/2021:
-  traffic_multiplier: 0.25
-  work_from_home: 0.25
-  social_distance: 0.7
-  mask_uptake: 0.3
-  mask_uptake_shopping: 0.3
-  partial_closure:
-    school: 0.5
-    leisure: 0.5
-  track_trace_efficiency: 0.1
-
-23/5/2021:
-  traffic_multiplier: 0.25
-  work_from_home: 0.75
-  social_distance: 0.7
-  mask_uptake: 0.3
-  mask_uptake_shopping: 0.3
-  partial_closure:
-    school: 0.5
-    leisure: 0.5
-  track_trace_efficiency: 0.1
-
-27/5/2021:
-  traffic_multiplier: 0.25
-  work_from_home: 0.25
-  social_distance: 0.7
-  mask_uptake: 0.3
-  mask_uptake_shopping: 0.3
-  partial_closure:
-    school: 0.5
-    leisure: 0.5
-  track_trace_efficiency: 0.1
-
-22/7/2021:
-  traffic_multiplier: 0.25
-  work_from_home: 0.25
-  social_distance: 0.7
-  mask_uptake: 0.3
-  mask_uptake_shopping: 0.3
-  partial_closure:
-    school: 0.25
     leisure: 0.5
   track_trace_efficiency: 0.1
