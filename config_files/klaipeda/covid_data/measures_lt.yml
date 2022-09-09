@@ -169,14 +169,3 @@ keyworker_fraction: 0.18
     school: 0.5
     leisure: 0.5
   track_trace_efficiency: 0.1
-
-19/4/2021:
-  traffic_multiplier: 0.25
-  work_from_home: 0.67
-  social_distance: 0.7
-  mask_uptake: 0.3
-  mask_uptake_shopping: 0.3
-  partial_closure:
-    school: 0.5
-    leisure: 0.5
-  track_trace_efficiency: 0.1
