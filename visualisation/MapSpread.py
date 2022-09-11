@@ -15,7 +15,7 @@ from pathlib import Path
 from plugins.FabCovid19.FabCovid19 import *
 from .facs_postprocess_utils import *
 
-def filter_files(filename, region, machine, cores, measures):
+def filter_files(filename, region, machine, cores, measures, runs):
 
     ll = Path(env.local_results).rglob('*')
     ll = [str(p) for p in ll]
@@ -27,17 +27,19 @@ def filter_files(filename, region, machine, cores, measures):
     ll = [x for x in ll if x.split('/')[-4].split('_')[-2] in machine]
     ll = [x for x in ll if x.split('/')[-4].split('_')[-1] in cores]
     ll = [x for x in ll if '_'.join(x.split('/')[-2].split('_')[:-1]) in measures]
+    if runs != ['all']:
+        ll = [x for x in ll if x.split('/')[-2].split('_')[-1] in runs]
 
     return ll
 
-def day_to_index(region, machine, cores, measures, day):
+def day_to_index(region, machine, cores, measures, runs, day):
 
     if '-' in day:
         a = day.split('-')
     else:
         a = [day, day]
 
-    ll = filter_files('out.csv', region, machine, cores, measures)
+    ll = filter_files('out.csv', region, machine, cores, measures, runs)
 
     df = pd.read_csv(ll[0])
 
@@ -50,15 +52,15 @@ def day_to_index(region, machine, cores, measures, day):
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_mapspread(region, machine, cores, measures, day):
+def facs_mapspread(region, machine, cores, measures, day, runs='all', types='all'):
 
-    ll = filter_files('covid_out_infections', region, machine, cores, measures)
+    ll = filter_files('covid_out_infections', region, machine, cores, measures, runs)
 
     lon = []
     lat = []
     typ = []
 
-    delta = day_to_index(region, machine, cores, measures, day)
+    delta = day_to_index(region, machine, cores, measures, runs, day)
 
     for ff in ll:
 
@@ -74,10 +76,14 @@ def facs_mapspread(region, machine, cores, measures, day):
     dd = pd.DataFrame()
     dd['lon'] = lon
     dd['lat'] = lat
-    dd['typ'] = typ
+    dd['type'] = typ
+
+    if types != 'all':
+        dd = dd[dd['type'] == types]
 
     title = 'Spread of infections in {} from {} to {} with measures defined in {} file'.format(region.title(), day.split('-')[0], day.split('-')[1], measures)
-    fig = px.scatter_mapbox(dd, lon='lon', lat='lat', color='typ', zoom=10, title=title)
+    fig = px.scatter_mapbox(dd, lon='lon', lat='lat', color='type', zoom=10, title=title)
+    # fig.update_layout(mapbox_style="carto-darkmatter")
     fig.update_layout(mapbox_style="open-street-map")
 
-    py.offline.plot(fig)
+    fig.show()
