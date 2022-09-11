@@ -284,7 +284,7 @@ try:
     from plugins.FabCovid19.visualisation.ValidateAvg import facs_postprocess
     from plugins.FabCovid19.visualisation.PlotByLocationType import facs_locationplot
     from plugins.FabCovid19.visualisation.LocationMap import facs_locationmap
-    from plugins.FabCovid19.visualisation.DataAggregator import facs_combine, facs_compare, facs_uk_validation_nw, facs_uk_validation_se, facs_uk_combined_plotter, facs_uk_county_plotter, facs_uk_compare_measures, facs_doubling_time
+    from plugins.FabCovid19.visualisation.DataAggregator import facs_combine, facs_compare, facs_uk_validation_nw, facs_uk_validation_se, facs_uk_combined_plotter, facs_uk_county_plotter, facs_uk_compare_measures, facs_doubling_time, facs_lithuania
     from plugins.FabCovid19.visualisation.MapSpread import facs_mapspread
 
 except:
