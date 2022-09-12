@@ -1067,14 +1067,20 @@ def facs_lithuania(scenario):
         cores1 = '130'
         cores2 = '132'
         title = 'No. of cases with schools open/close'
+        legend1 = 'Close'
+        legend2 = 'Open'
     elif scenario == '2':
         cores1 = '134'
         cores2 = '136'
         title = 'No. of cases with leisure facilities open/close'
+        legend1 = 'Close'
+        legend2 = 'Open'
     elif scenario == '3':
         cores1 = '138'
         cores2 = '140'
         title = 'No. of cases with internal movement allowed/forbidden'
+        legend1 = 'Forbidden'
+        legend2 = 'Allowed'
     else:
         print('Invalid Scenario')
         return
@@ -1091,7 +1097,7 @@ def facs_lithuania(scenario):
     fig.add_trace(
         go.Scatter(x=vs1['date'],
                    y=vs1['mean'],
-                   name="closed",
+                   name=legend1,
                    line_shape="spline",
                    legendgroup="group1",
                    line=dict(width=4)),
@@ -1102,7 +1108,7 @@ def facs_lithuania(scenario):
     fig.add_trace(
         go.Scatter(x=vs2['date'],
                    y=vs2['mean'],
-                   name="open",
+                   name=legend2,
                    line_shape="spline",
                    legendgroup="group1",
                    line=dict(width=4)),
@@ -1119,8 +1125,15 @@ def facs_lithuania(scenario):
         title=title.title(),
         title_x=0.5,
         hovermode="x",
-        font=dict(size=18)
+        font=dict(size=36)
         )
+
+    fig.update_layout(legend=dict(
+        yanchor="top",
+        y=0.99,
+        xanchor="left",
+        x=0.01
+    ))
 
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
