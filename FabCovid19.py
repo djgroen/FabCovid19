@@ -31,6 +31,7 @@ def covid19(config,
             facs_script="run.py",
             quicktest="false",
             household_size="2.6",
+            disease="covid19",
             **args):
     """
     parameters:
@@ -46,7 +47,8 @@ def covid19(config,
                               "measures_yml": measures,
                               "starting_infections": starting_infections,
                               "quicktest": quicktest,
-                              "household_size": household_size
+                              "household_size": household_size,
+                              "disease_yml": "disease_{}".format(disease)
                               })
 
     execute(put_configs, config)
@@ -63,6 +65,7 @@ def pfacs(config,
           facs_script="run.py",
           quicktest="false",
           household_size="2.6",
+          disease="covid19",
           **args):
     """
     parameters:
@@ -77,7 +80,8 @@ def pfacs(config,
                               "measures_yml": measures,
                               "starting_infections": starting_infections,
                               "quicktest": quicktest,
-                              "household_size": household_size
+                              "household_size": household_size,
+                              "disease_yml": "disease_{}".format(disease)
                               })
 
     execute(put_configs, config)
@@ -135,6 +139,7 @@ def covid19_ensemble(configs,
                      starting_infections=200,
                      solver="pfacs",
                      household_size="2.6",
+                     disease="covid19",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation
@@ -160,7 +165,8 @@ def covid19_ensemble(configs,
                                   "measures": '',
                                   "starting_infections": starting_infections,
                                   "quicktest": quicktest,
-                                  "household_size": household_size
+                                  "household_size": household_size,
+                                  "disease_yml": "disease_{}".format(disease)
                                   })
 
         path_to_config = find_config_file_path(loc)
@@ -253,6 +259,9 @@ def sync_facs():
 
 
 def set_facs_args_list(*dicts):
+    # Loads in facs arguments. Will ONLY load in arguments that have explicitly specified 
+    # defaults in the machines_FabCovid19_user.yml file.
+
     # update facs args from input arguments
     for adict in dicts:
         for key in env.facs_args.keys():
@@ -277,6 +286,8 @@ def set_facs_args_list(*dicts):
             env.facs_args_list += '  '.join(value)
         else:
             env.facs_args_list += " --%s=%s " % (key, value)
+
+    print("FACS prepared with args list:", env.facs_args_list)
 
 
 try:

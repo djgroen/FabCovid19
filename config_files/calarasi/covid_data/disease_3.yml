@@ -1,5 +1,5 @@
 name: Highly Infectious Flu
-infection_rate: 0.15
+infection_rate: 0.1
 
 mortality: 
  - [4.5,0.0000026]
@@ -24,7 +24,7 @@ hospitalised:
 mortality_period: 8.0 
 recovery_period: 8.0 
 mild_recovery_period: 5.0 
-incubation_period: 2.0 
+incubation_period: 2.5 
 period_to_hospitalisation: 14.0 #this is period to ICU.
 immunity_duration: 365.0
 mutations:

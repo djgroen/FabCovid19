@@ -17,8 +17,21 @@ dd/mm/yyyy: # date according to date format above
 
 # Safety rules (social distance, wearing a mask in public places and restricting travel)
 
+# Day -15
+12/2/2020:
+  traffic_multiplier: 1.0
+  work_from_home: 0.0
+  social_distance: 0.0
+  mask_uptake: 0.0
+  mask_uptake_shopping: 0.0
+  partial_closure:
+    school: 0.0
+    leisure: 0.0
+  track_trace_efficiency: 0.3
+  external_multiplier: 0.3
+
 # Day 1 - several outbreaks with a virus
-01/03/2020:
+1/3/2020:
   traffic_multiplier: 1.0
   work_from_home: 0.0
   social_distance: 0.0
@@ -30,7 +43,7 @@ dd/mm/yyyy: # date according to date format above
   track_trace_efficiency: 0.3
 
 # Day 3 - quarantine in place
-02/03/2020:
+2/3/2020:
   traffic_multiplier: 0.25
   work_from_home: 1.0
   social_distance: 0.8
@@ -42,62 +55,62 @@ dd/mm/yyyy: # date according to date format above
   track_trace_efficiency: 0.3
 
 # Day 4 - FACS utilised
-04/03/2020:
-   traffic_multiplier: 0.25
-   work_from_home: 1.0
-   social_distance: 0.8
-   mask_uptake: 0.5
-   mask_uptake_shopping: 0.5
-   partial_closure:
-     school: 1.0
-     leisure: 1.0
-   track_trace_efficiency: 0.3
+4/3/2020:
+  traffic_multiplier: 0.25
+  work_from_home: 1.0
+  social_distance: 0.8
+  mask_uptake: 0.5
+  mask_uptake_shopping: 0.5
+  partial_closure:
+    school: 1.0
+    leisure: 1.0
+  track_trace_efficiency: 0.3
 
 # Day 9 - earthquake with a magnitude of 6.9
-09/03/2020:
-   traffic_multiplier: 0.25
-   work_from_home: 1.0
-   social_distance: 0.8
-   mask_uptake: 0.5
-   mask_uptake_shopping: 0.5
-   partial_closure:
-     school: 1.0
-     leisure: 1.0
-   track_trace_efficiency: 0.3
+9/3/2020:
+  traffic_multiplier: 0.25
+  work_from_home: 1.0
+  social_distance: 0.8
+  mask_uptake: 0.5
+  mask_uptake_shopping: 0.5
+  partial_closure:
+    school: 1.0
+    leisure: 1.0
+  track_trace_efficiency: 0.3
 
 # Day 10 - earthquake with a magnitude of 3.7
-10/03/2020:
-   traffic_multiplier: 0.25
-   work_from_home: 1.0
-   social_distance: 0.8
-   mask_uptake: 0.5
-   mask_uptake_shopping: 0.5
-   partial_closure:
-     school: 1.0
-     leisure: 1.0
-   track_trace_efficiency: 0.3
+10/3/2020:
+  traffic_multiplier: 0.25
+  work_from_home: 1.0
+  social_distance: 0.8
+  mask_uptake: 0.5
+  mask_uptake_shopping: 0.5
+  partial_closure:
+    school: 1.0
+    leisure: 1.0
+  track_trace_efficiency: 0.3
 
 # Day 13 - intervention completed
-13/03/2020:
-   traffic_multiplier: 0.25
-   work_from_home: 1.0
-   social_distance: 0.8
-   mask_uptake: 0.5
-   mask_uptake_shopping: 0.5
-   partial_closure:
-     school: 1.0
-     leisure: 1.0
-   track_trace_efficiency: 0.3
+13/3/2020:
+  traffic_multiplier: 0.25
+  work_from_home: 1.0
+  social_distance: 0.8
+  mask_uptake: 0.5
+  mask_uptake_shopping: 0.5
+  partial_closure:
+    school: 1.0
+    leisure: 1.0
+  track_trace_efficiency: 0.3
 
 # Day 28 - lifting of the quarantine, Safety rules maintained
-28/03/2020:
-   traffic_multiplier: 0.25
-   work_from_home: 1.0
-   social_distance: 0.8
-   mask_uptake: 0.5
-   mask_uptake_shopping: 0.5
-   partial_closure:
-     school: 0.5
-     leisure: 0.5
-   track_trace_efficiency: 0.3
+28/3/2020:
+  traffic_multiplier: 0.25
+  work_from_home: 1.0
+  social_distance: 0.8
+  mask_uptake: 0.5
+  mask_uptake_shopping: 0.5
+  partial_closure:
+    school: 0.5
+    leisure: 0.5
+  track_trace_efficiency: 0.3
 

@@ -1,5 +1,5 @@
 name: Heavier Flu (4x mortality, longer recovery)
-infection_rate: 0.1
+infection_rate: 0.07
 
 mortality: 
  - [4.5,0.0000104]
