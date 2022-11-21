@@ -32,7 +32,7 @@ def facs_init_SA(location,
                  script="Covid19",
                  facs_script="run.py",
                  quicktest="true",
-                 transition_scenario=None,
+                #  transition_scenario=None,
                  sampler_name=None,
                  ** args):
     '''
@@ -71,26 +71,26 @@ def facs_init_SA(location,
     #####################################################
     # check user input argument for transition scenario #
     #####################################################
-    AcceptableTransitionScenario = [
-        "no-measures", "extend-lockdown", "open-all", "open-schools",
-        "open-shopping", "open-leisure", "work50", "work75", "work100",
-        "dynamic-lockdown", "periodic-lockdown", "uk-forecast"
-    ]
+    # AcceptableTransitionScenario = [
+    #     "no-measures", "extend-lockdown", "open-all", "open-schools",
+    #     "open-shopping", "open-leisure", "work50", "work75", "work100",
+    #     "dynamic-lockdown", "periodic-lockdown", "uk-forecast"
+    # ]
 
-    if transition_scenario is not None:
-        if transition_scenario not in AcceptableTransitionScenario:
-            raise RuntimeError(
-                "\nThe input transition scenario, {} , is not VALID"
-                "\nThe acceptable inputs are : [{}]".format(
-                    transition_scenario,
-                    AcceptableTransitionScenario
-                )
-            )
-        else:
-            facs_SA_campaign_config["params"]["transition_scenario_index"][
-                "default"] = AcceptableTransitionScenario.index(
-                transition_scenario
-            )
+    # if transition_scenario is not None:
+    #     if transition_scenario not in AcceptableTransitionScenario:
+    #         raise RuntimeError(
+    #             "\nThe input transition scenario, {} , is not VALID"
+    #             "\nThe acceptable inputs are : [{}]".format(
+    #                 transition_scenario,
+    #                 AcceptableTransitionScenario
+    #             )
+    #         )
+    #     else:
+    #         facs_SA_campaign_config["params"]["transition_scenario_index"][
+    #             "default"] = AcceptableTransitionScenario.index(
+    #             transition_scenario
+    #         )
 
     ############################
     # Create easyvvuq campaign #
@@ -632,12 +632,12 @@ class CustomEncoder(uq.encoders.GenericEncoder):
     def encode(self, params={}, target_dir=''):
         # scale default values found in pre param file
 
-        params["transition_mode"] = round(params["transition_mode"])
+        # params["transition_mode"] = round(params["transition_mode"])
 
-        TS = ["no-measures", "extend-lockdown", "open-all", "open-schools",
-              "open-shopping", "open-leisure", "work50", "work75", "work100",
-              "dynamic-lockdown", "periodic-lockdown", "uk-forecast"]
-        index_TS = round(params["transition_scenario_index"])
-        params["transition_scenario"] = TS[index_TS]
+        # TS = ["no-measures", "extend-lockdown", "open-all", "open-schools",
+        #       "open-shopping", "open-leisure", "work50", "work75", "work100",
+        #       "dynamic-lockdown", "periodic-lockdown", "uk-forecast"]
+        # index_TS = round(params["transition_scenario_index"])
+        # params["transition_scenario"] = TS[index_TS]
 
         super().encode(params, target_dir)
