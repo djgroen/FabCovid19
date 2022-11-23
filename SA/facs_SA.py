@@ -141,6 +141,7 @@ def facs_init_SA(location,
     ##########################################
     path_to_config = find_config_file_path(location)
     sweep_dir = path_to_config + "/SWEEP"
+    print(env)
     run_ensemble(location, sweep_dir, **args)
 
 
@@ -488,12 +489,12 @@ def init_facs_SA_campaign(campaign_name, campaign_config,
             delimiter="$",
             target_filename="covid_data/disease_covid19.yml"
         ),
-        CustomEncoder(
-            template_fname=get_plugin_path("FabCovid19") +
-            "/templates/template_simsetting",
-            delimiter="$",
-            target_filename="simsetting.csv"
-        ),
+        # CustomEncoder(
+        #     template_fname=get_plugin_path("FabCovid19") +
+        #     "/templates/template_simsetting",
+        #     delimiter="$",
+        #     target_filename="simsetting.csv"
+        # ),
     )
 
     ###########################
