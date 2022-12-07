@@ -29,7 +29,7 @@ from plugins.FabCovid19.FabCovid19 import *
 def facs_init_SA(location,
                  ci_multiplier=0.475,
                  outdir=".",
-                 script="Covid19",
+                 script="pfacs",
                  facs_script="run.py",
                  quicktest="true",
                 #  transition_scenario=None,
