@@ -35,6 +35,12 @@
     "max": 16.0,
     "default": 12.0
   },
+  "immunity_duration": {
+    "type": "float",
+    "min": 100.0,
+    "max": 300.0,
+    "default": 273.0
+  },
   "out_file": {
     "type": "string",
     "default": "out.csv"

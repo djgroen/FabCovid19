@@ -13,14 +13,18 @@ vary_parameters_range:
         range: [2.0, 6.0]
     period_to_hospitalisation:
         range: [8.0, 16.0]
+    immunity_duration:
+        range: [100.0, 300.0]
 
 selected_vary_parameters: ["infection_rate",
                            "incubation_period",
+                           "mild_recovery_period",
+                           "immunity_duration",
                           ]
 
 distribution_type: "Uniform" # Uniform, DiscreteUniform
 
-polynomial_order: 2
+polynomial_order: 3
 
 decoder_output_column: "num hospitalisations today"
 

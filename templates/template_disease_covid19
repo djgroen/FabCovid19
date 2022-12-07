@@ -28,7 +28,7 @@ incubation_period: $incubation_period # https://www.ams.edu.sg/view-pdf.aspx?fil
 # Clinical course and risk factors for mortality of adult inpatients with Covid-19 in Wuhan, China: a retrospective cohort study
 # Fei Zhou et al. The Lancet vol. 395.
 period_to_hospitalisation: $period_to_hospitalisation #this is period to ICU.
-immunity_duration: 273.0
+immunity_duration: $immunity_duration
 mutations:
   alpha:
     infection_rate: 0.112
