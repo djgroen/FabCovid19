@@ -160,7 +160,7 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
 
     ===========================================================================
     """
-    update_environment()
+    update_environment(args)
 
     if len(location.split(";")) > 1:
         print("Error, only pass single location and not multiple locations")
