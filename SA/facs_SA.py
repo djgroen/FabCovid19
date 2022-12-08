@@ -32,7 +32,6 @@ def facs_init_SA(location,
                  script="pfacs",
                  facs_script="run.py",
                  quicktest="true",
-                #  transition_scenario=None,
                  sampler_name=None,
                  ** args):
     '''
@@ -68,30 +67,6 @@ def facs_init_SA(location,
     if sampler_name is None:
         sampler_name = facs_SA_campaign_config["sampler_name"]
 
-    #####################################################
-    # check user input argument for transition scenario #
-    #####################################################
-    # AcceptableTransitionScenario = [
-    #     "no-measures", "extend-lockdown", "open-all", "open-schools",
-    #     "open-shopping", "open-leisure", "work50", "work75", "work100",
-    #     "dynamic-lockdown", "periodic-lockdown", "uk-forecast"
-    # ]
-
-    # if transition_scenario is not None:
-    #     if transition_scenario not in AcceptableTransitionScenario:
-    #         raise RuntimeError(
-    #             "\nThe input transition scenario, {} , is not VALID"
-    #             "\nThe acceptable inputs are : [{}]".format(
-    #                 transition_scenario,
-    #                 AcceptableTransitionScenario
-    #             )
-    #         )
-    #     else:
-    #         facs_SA_campaign_config["params"]["transition_scenario_index"][
-    #             "default"] = AcceptableTransitionScenario.index(
-    #             transition_scenario
-    #         )
-
     ############################
     # Create easyvvuq campaign #
     ############################
@@ -121,8 +96,6 @@ def facs_init_SA(location,
                               })
 
     set_facs_args_list(args, {"location": location,
-                              "transition_scenario": '',
-                              "transition_mode": '-1',
                               "output_dir": outdir,
                               "ci_multiplier": ci_multiplier,
                               "quicktest": quicktest,
@@ -631,14 +604,5 @@ def load_campaign_files(work_dir_SCSampler):
 class CustomEncoder(uq.encoders.GenericEncoder):
 
     def encode(self, params={}, target_dir=''):
-        # scale default values found in pre param file
-
-        # params["transition_mode"] = round(params["transition_mode"])
-
-        # TS = ["no-measures", "extend-lockdown", "open-all", "open-schools",
-        #       "open-shopping", "open-leisure", "work50", "work75", "work100",
-        #       "dynamic-lockdown", "periodic-lockdown", "uk-forecast"]
-        # index_TS = round(params["transition_scenario_index"])
-        # params["transition_scenario"] = TS[index_TS]
 
         super().encode(params, target_dir)
