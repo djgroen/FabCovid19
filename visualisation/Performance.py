@@ -55,8 +55,10 @@ def facs_performance(region, machine, cores):
             Cores.append(int(cc))
             Times.append(float(tt))
 
-    fig = px.scatter(x=Cores, y=Times,
-                    labels={'x': 'Cores', 'y': 'Time required (s)'},
+        Speedup = [Times[0]/x for x in Times]
+
+    fig = px.scatter(x=Cores, y=Speedup,
+                    labels={'x': 'Cores', 'y': 'Speedup'},
                     log_x=True,
                     log_y=True,
                     )
