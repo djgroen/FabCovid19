@@ -1,0 +1,30 @@
+name: Heavier Flu (4x mortality, longer recovery)
+infection_rate: 0.07
+
+mortality: 
+ - [4.5,0.0000104]
+ - [14.5,0.0000600]
+ - [24.5,0.0002400]
+ - [34.5,0.0006]
+ - [44.5,0.0012]
+ - [54.5,0.005]
+ - [64.5,0.016]
+ - [74.5,0.034]
+ - [84.5,0.058]
+hospitalised:
+ - [4.5,0.00000]
+ - [14.5,0.00016]
+ - [24.5,0.0041]
+ - [34.5,0.014]
+ - [44.5,0.017]
+ - [54.5,0.0325]
+ - [64.5,0.048]
+ - [74.5,0.067]
+ - [84.5,0.072]
+mortality_period: 10.0 
+recovery_period: 10.0 
+mild_recovery_period: 10.0 
+incubation_period: 2.0 
+period_to_hospitalisation: 14.0 #this is period to ICU.
+immunity_duration: 365.0
+mutations:
