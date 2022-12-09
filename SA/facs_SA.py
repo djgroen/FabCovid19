@@ -33,6 +33,7 @@ def facs_init_SA(location,
                  facs_script="run.py",
                  quicktest="true",
                  sampler_name=None,
+                 category_varied='disease',
                  ** args):
     '''
     ============================================================================
@@ -76,11 +77,18 @@ def facs_init_SA(location,
         "SA",
         "facs_SA_{}".format(sampler_name)
     )
+
+    if category_varied == 'disease':
+        template = 'template_disease_covid19'
+        target = 'disease_covid19.yml'
+
     runs_dir, campaign_dir = init_facs_SA_campaign(
         campaign_name=campaign_name,
         campaign_config=facs_SA_campaign_config,
         polynomial_order=polynomial_order,
-        campaign_work_dir=campaign_work_dir
+        campaign_work_dir=campaign_work_dir,
+        template=template,
+        target=target
     )
 
     #############################################################
@@ -441,7 +449,7 @@ def load_facs_SA_campaign_config(facs_SA_config_file):
 
 
 def init_facs_SA_campaign(campaign_name, campaign_config,
-                          polynomial_order, campaign_work_dir):
+                          polynomial_order, campaign_work_dir, template, target):
     ######################################
     # delete campaign_work_dir is exists #
     ######################################
@@ -458,9 +466,9 @@ def init_facs_SA_campaign(campaign_name, campaign_config,
         uq.encoders.DirectoryBuilder(tree=directory_tree),
         uq.encoders.GenericEncoder(
             template_fname=get_plugin_path("FabCovid19") +
-            "/templates/template_disease_covid19",
+            "/templates/" + template,
             delimiter="$",
-            target_filename="covid_data/disease_covid19.yml"
+            target_filename="covid_data/" + target
         ),
         # CustomEncoder(
         #     template_fname=get_plugin_path("FabCovid19") +

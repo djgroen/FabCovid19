@@ -17,8 +17,8 @@ vary_parameters_range:
         range: [100.0, 300.0]
 
 selected_vary_parameters: ["infection_rate",
-                           "incubation_period",
-                           "mild_recovery_period",
+                        #    "incubation_period",
+                        #    "mild_recovery_period",
                            "immunity_duration",
                           ]
 
