@@ -40,11 +40,18 @@ def facs_performance(region, machine, cores):
 
             with open(ff, 'r') as f:
                 lines = f.read().splitlines()
+                if len(lines) == 0:
+                   sys.exit('File {} not found'.format(ff))
                 last_line = lines[-1]
             
             times.append(last_line.split(' ')[-2])
 
-        for tt in times:
+        for ii in range(len(times)):
+            tt = times[ii]
+            try:
+                float(tt)
+            except ValueError:
+                sys.exit('Siimulation in file {} has not completed'.format(file_list[ii]))
             Cores.append(int(cc))
             Times.append(float(tt))
 
