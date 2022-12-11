@@ -1,0 +1,3 @@
+population: $population
+mu: $pop_mu
+sigma: $pop_sigma
