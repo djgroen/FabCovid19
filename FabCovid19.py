@@ -289,6 +289,15 @@ def set_facs_args_list(*dicts):
 
     print("FACS prepared with args list:", env.facs_args_list)
 
+def set_generator_args_list(dict):
+    # Loads in facs arguments. Will ONLY load in arguments that have explicitly specified 
+    # defaults in the machines_FabCovid19_user.yml file.
+
+    # update facs args from input arguments
+    env.generator_args_list = " --location={} ".format(dict['loc'])
+
+    print("Generator prepared with args list:", env.generator_args_list)
+
 
 try:
     from plugins.FabCovid19.postprocess import *

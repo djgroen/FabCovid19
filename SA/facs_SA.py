@@ -46,6 +46,10 @@ def facs_init_SA(location,
         fab training_hidalgo facs_init_SA:location=test,PJ=True
     ============================================================================
     '''
+
+    if category_varied == 'population':
+        script = 'pfacs_generator'
+
     update_environment()
 
     if len(location.split(';')) > 1:
@@ -81,6 +85,9 @@ def facs_init_SA(location,
     if category_varied == 'disease':
         template = 'template_disease_covid19'
         target = 'disease_covid19.yml'
+    elif category_varied == 'population':
+        template = 'template_population_generator'
+        target = 'population_generator.yml'
 
     runs_dir, campaign_dir = init_facs_SA_campaign(
         campaign_name=campaign_name,
@@ -108,6 +115,8 @@ def facs_init_SA(location,
                               "ci_multiplier": ci_multiplier,
                               "quicktest": quicktest,
                               })
+
+    set_generator_args_list({"loc": location})
 
     ###########################################################
     # set job_desc to avoid overwriting with previous SA jobs #
