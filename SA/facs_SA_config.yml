@@ -15,6 +15,8 @@ vary_parameters_range:
         range: [8.0, 16.0]
     immunity_duration:
         range: [100.0, 300.0]
+    population:
+        range: [100000, 500000]
     pop_mu:
         range: [20.0, 30.0]
     pop_sigma:
@@ -27,7 +29,8 @@ vary_parameters_range:
 #                            "immunity_duration",
 #                           ]
 
-selected_vary_parameters: ["pop_mu",
+selected_vary_parameters: [ "population",
+                            "pop_mu",
                             "pop_sigma"
                             ]
 
