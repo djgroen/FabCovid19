@@ -89,5 +89,8 @@ def facs_performance(regions, machine, cores, mode):
             ax.loglog(cores, mean_time, '.-')
             ax.loglog(Cores, Times, '.')
             
-
+        print('{}\nCore\t\tTime'.format(region))
+        for ii in range(len(cores)):
+            print('{}\t\t{}'.format(cores[ii], mean_time[ii]))
+        
     plt.show()
