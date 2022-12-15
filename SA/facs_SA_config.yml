@@ -22,17 +22,26 @@ vary_parameters_range:
     pop_sigma:
         range: [5.0, 15.0]
 
-
-# selected_vary_parameters: ["infection_rate",
-#                         #    "incubation_period",
-#                         #    "mild_recovery_period",
-#                            "immunity_duration",
+# selected_vary_parameters: ["mortality_period",
+#                            "recovery_period",
+#                            "mild_recovery_period",
 #                           ]
 
-selected_vary_parameters: [ "population",
-                            "pop_mu",
-                            "pop_sigma"
-                            ]
+# selected_vary_parameters: ["infection_rate",
+#                            "incubation_period",
+#                            "period_to_hospitalisation",
+#                           ]
+
+selected_vary_parameters: ["infection_rate",
+                           "incubation_period",
+                           "mild_recovery_period",
+                           "immunity_duration",
+                          ]
+
+# selected_vary_parameters: [ "population",
+#                             "pop_mu",
+#                             "pop_sigma"
+#                             ]
 
 distribution_type: "Uniform" # Uniform, DiscreteUniform
 
