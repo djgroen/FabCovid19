@@ -3,6 +3,9 @@ try:
 except ImportError:
     from base.fab import *
 
+import pandas as pd
+import plotly.express as px
+
 import chaospy as cp
 import numpy as np
 import easyvvuq as uq
@@ -262,9 +265,12 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
             sampler=campaign._active_sampler,
             qoi_cols=[output_column]
         )
-
+    
     campaign.apply_analysis(analysis)
     results = campaign.get_last_analysis()
+
+    dicts = analysis.get_sobol_indices(qoi=output_column, typ='all')
+    df = pd.DataFrame.from_dict(data=dicts)
 
     ###################
     #    Plotting     #
@@ -275,6 +281,48 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
         sampler_name
     )
     props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
+
+    #############################
+    #   Plot all sobol indices  #
+    #############################
+
+    fig, ax = plt.subplots()
+
+    for ll in list(df.columns):
+
+        label = '$S_{'
+        for l in ll:
+            if not math.isnan(l):
+                label = label + str(int(l))
+        label = label + '}$'
+        ax.plot(df[ll], label=label)
+
+    import yaml
+
+    with open(facs_SA_config_file, 'r') as ff:
+        dd = yaml.safe_load(ff)
+
+    heading = "All Sobol Indices : column {}\nParameters: ".format(output_column)
+
+    for i in range(len(dd['selected_vary_parameters'])):
+        heading += '{}: {} '.format(i, dd['selected_vary_parameters'][i])
+
+    ax.set_xlabel("Days")
+    ax.set_ylabel("Sobol Indices")
+    fig.suptitle(
+        heading.format(output_column),
+        fontsize=10, fontweight="bold"
+    )
+    ax.set_title(
+        fig_desc, fontsize=8, loc="center",
+        fontweight="bold", bbox=props
+    )
+
+    plt.legend(loc="best", ncol=3)
+
+    plot_file_name = "plot_all_sobol[{}]".format(output_column)
+    plt.savefig(os.path.join(campaign_work_dir, plot_file_name),
+                dpi=400)
 
     ########################
     #    Plot raw data     #
