@@ -481,7 +481,6 @@ def facs_analyse_SA(location, sampler_name=None, ** args):
     with open(res_file_name, "w") as outfile:
         yaml.dump(yml_results, outfile)
 
-
 def load_facs_SA_campaign_config(facs_SA_config_file):
     facs_SA_campaign_config = yaml.load(
         open(facs_SA_config_file),
@@ -503,7 +502,6 @@ def load_facs_SA_campaign_config(facs_SA_config_file):
     facs_SA_campaign_config.update({"params": sampler_params})
 
     return facs_SA_campaign_config
-
 
 def init_facs_SA_campaign(campaign_name, campaign_config,
                           polynomial_order, campaign_work_dir, template, target):
@@ -632,7 +630,6 @@ def init_facs_SA_campaign(campaign_name, campaign_config,
 
     return runs_dir, campaign_dir
 
-
 def backup_campaign_files(work_dir_SCSampler):
 
     backup_dir = os.path.join(work_dir_SCSampler, 'backup')
@@ -650,7 +647,6 @@ def backup_campaign_files(work_dir_SCSampler):
             --exclude='*' \
             {}/  {} ".format(work_dir_SCSampler, backup_dir)
     )
-
 
 def load_campaign_files(work_dir_SCSampler):
 
