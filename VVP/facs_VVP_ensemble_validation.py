@@ -105,7 +105,7 @@ def validate_facs(cores=1, skip_runs=False, label="", sif_mode=False, sif_dir=""
         mode = "parallel"
 
     if not skip_runs:
-        facs_ensemble("facs_validation", cores=1, **args)
+        facs_ensemble("facs_validation", cores=cores, **args)
 
     # if not run locally, wait for runs to complete
     update_environment()

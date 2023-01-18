@@ -125,7 +125,7 @@ def facs_ensemble(config,
                               })
     path_to_config = find_config_file_path(config)
     sweep_dir = path_to_config + "/SWEEP"
-    env.script = "Covid19"
+    env.script = "pfacs"
 
     run_ensemble(config, sweep_dir, **args)
 
