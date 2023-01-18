@@ -1,15 +1,7 @@
 import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import plotly as py
 import pandas as pd
-import sys
-import os
 import pandas as pd
-from os import walk
-import glob
-import fnmatch
-import numpy as np
 
 from plugins.FabCovid19.FabCovid19 import *
 from .facs_postprocess_utils import *
