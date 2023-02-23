@@ -52,7 +52,6 @@ def covid19(config,
                               })
 
     execute(put_configs, config)
-    print(args)
     job(dict(script='pfacs', wall_time='0:15:0', memory='2G',
              label=measures), args)
 
