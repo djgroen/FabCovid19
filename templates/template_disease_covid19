@@ -31,6 +31,6 @@ period_to_hospitalisation: $period_to_hospitalisation #this is period to ICU.
 immunity_duration: $immunity_duration
 mutations:
   alpha:
-    infection_rate: 0.112
+    infection_rate: $infection_rate_alpha
   delta:
-    infection_rate: 0.165
+    infection_rate: $infection_rate_beta

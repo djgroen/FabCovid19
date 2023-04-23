@@ -21,6 +21,10 @@ vary_parameters_range:
         range: [20.0, 30.0]
     pop_sigma:
         range: [5.0, 15.0]
+    infection_rate_alpha:
+        range: [0.0035, 0.2]
+    infection_rate_beta:
+        range: [0.0035, 0.2]
 
 # selected_vary_parameters: ["mortality_period",
 #                            "recovery_period",
@@ -33,10 +37,16 @@ vary_parameters_range:
 #                           ]
 
 selected_vary_parameters: ["infection_rate",
-                           "incubation_period",
-                           "mild_recovery_period",
-                           "immunity_duration",
+                           "infection_rate_alpha",
+                           "infection_rate_beta",
                           ]
+
+
+# selected_vary_parameters: ["infection_rate",
+#                            "incubation_period",
+#                            "mild_recovery_period",
+#                            "immunity_duration",
+#                           ]
 
 # selected_vary_parameters: [ "population",
 #                             "pop_mu",

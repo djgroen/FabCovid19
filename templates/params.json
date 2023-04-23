@@ -59,6 +59,18 @@
     "max": 90.0,
     "default": 10.0
   },
+  "infection_rate_alpha": {
+    "type": "float",
+    "min": 0.0035,
+    "max": 0.2,
+    "default": 0.112
+  },
+  "infection_rate_beta": {
+    "type": "float",
+    "min": 0.0035,
+    "max": 0.2,
+    "default": 0.165
+  },
   "out_file": {
     "type": "string",
     "default": "out.csv"
