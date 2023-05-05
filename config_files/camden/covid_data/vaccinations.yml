@@ -1,5 +1,6 @@
 date_format: "%d/%m/%Y"
 vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred in days.
+immunity_duration: 287
 
 1/12/2020:
   vaccines_per_day: 500 # Total no. of vaccines handed out daily.
@@ -29,3 +30,5 @@ vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred 
   no_transmission: 0.4
   booster:
     boosters_per_day: 500
+
+
