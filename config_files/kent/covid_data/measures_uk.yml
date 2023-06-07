@@ -43,13 +43,13 @@ dd/mm/yyyy: # date according to date format above
   traffic_multiplier: 0.3
 23/3/2020:
   partial_closure: 
-    school: 1.0
-    shopping: 0.7 #indicates full school closure, but partial_closure is used to allow keyworkers to be added.
+    school: 1.0 # Full closure, except for key workers.
+    shopping: 0.7 # Non-essntial shops (70%) closed.
   closure: ["leisure"]
   social_distance: 0.5
   work_from_home: 0.55
-  traffic_multiplier: 0.25
-  hospital_protection_factor: 0.8 
+  traffic_multiplier: 0.25 # Traffic at 25% of normal levels.
+  hospital_protection_factor: 0.8 # Hygiene -> -80% transmission.
 22/4/2020:
   partial_closure: 
     school: 1.0
