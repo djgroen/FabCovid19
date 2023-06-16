@@ -660,10 +660,3 @@ def load_campaign_files(work_dir_SCSampler):
             --exclude='*' \
             {}/  {} ".format(backup_dir, work_dir_SCSampler)
     )
-
-
-class CustomEncoder(uq.encoders.GenericEncoder):
-
-    def encode(self, params={}, target_dir=''):
-
-        super().encode(params, target_dir)
