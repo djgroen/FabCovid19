@@ -101,7 +101,7 @@ Follow the steps listed below
 
 ### Modifications on the local machine
 
-1. Add the following lines to the file `~/,ssh/config`
+1. Add the following lines to the file `~/.ssh/config`
 
    ```bash
    Host archer2
