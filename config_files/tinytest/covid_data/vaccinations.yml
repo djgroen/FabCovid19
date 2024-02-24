@@ -1,5 +1,7 @@
 date_format: "%d/%m/%Y"
 vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred in days.
+immunity_duration: 287
+antivax_fraction: 0.05
 
 1/12/2020:
   vaccines_per_day: 500 # Total no. of vaccines handed out daily.
@@ -10,6 +12,8 @@ vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred 
 1/2/2021:
   vaccines_per_day: 1200
   vaccine_age_limit: 60
+  no_symptoms: 0.8 # Source: Israel study on Delta - https://twitter.com/segal_eran/status/1418260295550742528
+  no_transmission: 0.4
   booster:
     boosters_per_day: 10 # this number is SUBTRACTED from vaccines_per_day, so 1190 would get a 1st dose here.
     booster_age_limit: 70
@@ -23,14 +27,9 @@ vaccine_effect_time: 21 # time between receiving vaccine and immunity conferred 
     boosters_per_day: 50
 
 1/4/2021:
-  no_symptoms: 0.75 # relative probability that vaccination reduces COVID infection to mild and asymptomatic, given that infection does take place.
-  no_transmission: 0.6 # relative probability that vaccination prevents COVID altogether.
+  no_symptoms: 0.8 # Source: Israel study on Delta - https://twitter.com/segal_eran/status/1418260295550742528
+  no_transmission: 0.4
   booster:
     boosters_per_day: 500
 
-1/4/2021:
-  vaccines_per_day: 1500
-  no_symptoms: 0.75 # relative probability that vaccination reduces COVID infection to mild and asymptomatic, given that infection does take place.
-  no_transmission: 0.6 # relative probability that vaccination prevents COVID altogether.
-  booster:
-    boosters_per_day: 500
+
