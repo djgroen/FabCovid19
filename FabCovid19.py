@@ -108,8 +108,9 @@ def facs_ensemble(config,
                   measures="measures_uk",
                   facs_script="run.py",
                   starting_infections=200,
-                   household_size="2.6",
+                  household_size="2.6",
                   quicktest="false",
+                  disease="covid19",
                   ** args):
     # fab localhost facs_validation
     update_environment(args, {"facs_script": facs_script})
@@ -120,7 +121,8 @@ def facs_ensemble(config,
                               "measures_yml": measures,
                               "starting_infections": starting_infections,
                               "quicktest": quicktest,
-                              "household_size": household_size
+                              "household_size": household_size,
+                              "disease_yml": "disease_{}".format(disease)
                               })
     path_to_config = find_config_file_path(config)
     sweep_dir = path_to_config + "/SWEEP"
