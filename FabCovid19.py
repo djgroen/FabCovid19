@@ -321,7 +321,6 @@ try:
 
     from plugins.FabCovid19.VVP.facs_VVP import facs_init_vvp_LoR
     from plugins.FabCovid19.VVP.facs_VVP import facs_analyse_vvp_LoR
-    from plugins.FabCovid19.VVP.facs_VVP import validate_facs
 except:
     exc = sys.exc_info()
     print("Error: failed to import settings module ({})".format(exc))
