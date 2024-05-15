@@ -30,12 +30,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats.mstats import gmean
-from plugins.FabCovid19.FabCovid19 import *
+from plugins.FabCovid19.FabCovid19 import update_environment, set_facs_args_list
 
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
+def facs_analyse_vvp_LoR(location, sampler_name=None, **args):
     """
     facs_analyse_vvp_LoR will analysis the output of each vvp ensemble series
 
@@ -46,26 +46,22 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
     """
     update_environment()
 
-    if len(location.split(';')) > 1:
-        raise ValueError(
-            "Error, only pass single location and not multiple locations"
-        )
+    if len(location.split(";")) > 1:
+        raise ValueError("Error, only pass single location and not multiple locations")
         exit()
 
     ############################################
     # load FACS SA configuration from yml file #
     ############################################
     facs_VVP_config_file = os.path.join(
-        get_plugin_path("FabCovid19"),
-        "VVP",
-        "facs_VVP_config.yml"
+        get_plugin_path("FabCovid19"), "VVP", "facs_VVP_config.yml"
     )
     facs_VVP_campaign_config = load_VVP_campaign_config(facs_VVP_config_file)
 
     polynomial_order_range = range(
         facs_VVP_campaign_config["polynomial_order_range"]["start"],
         facs_VVP_campaign_config["polynomial_order_range"]["end"],
-        facs_VVP_campaign_config["polynomial_order_range"]["step"]
+        facs_VVP_campaign_config["polynomial_order_range"]["step"],
     )
     sampler_name = facs_VVP_campaign_config["sampler_name"]
 
@@ -76,7 +72,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         get_plugin_path("FabCovid19"),
         "VVP",
         "facs_vvp_LoR_{}".format(sampler_name),
-        "sobol"
+        "sobol",
     )
 
     ###################################
@@ -87,15 +83,12 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
     os.makedirs(sobol_work_dir)
 
     for polynomial_order in polynomial_order_range:
-        campaign_name = "facs_vvp_LoR_{}_po{}_".format(
-            sampler_name,
-            polynomial_order
-        )
+        campaign_name = "facs_vvp_LoR_{}_po{}_".format(sampler_name, polynomial_order)
         campaign_work_dir = os.path.join(
             get_plugin_path("FabCovid19"),
             "VVP",
             "facs_vvp_LoR_{}".format(sampler_name),
-            "campaign_po{}".format(polynomial_order)
+            "campaign_po{}".format(polynomial_order),
         )
 
         load_campaign_files(campaign_work_dir)
@@ -116,10 +109,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         # fetch results from remote machine                #
         # here, we ONLY fetch the required results folders #
         ####################################################
-        env.job_desc = "_vvp_LoR_{}_po{}".format(
-            sampler_name,
-            polynomial_order
-        )
+        env.job_desc = "_vvp_LoR_{}_po{}".format(sampler_name, polynomial_order)
         with_config(location)
 
         job_folder_name = template(env.job_name_template)
@@ -132,8 +122,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         # copy ONLY the required output files for analyse,  #
         # i.e., EasyVVUQ.decoders.target_filename           #
         #####################################################
-        output_filename = facs_VVP_campaign_config[
-            "params"]["out_file"]["default"]
+        output_filename = facs_VVP_campaign_config["params"]["out_file"]["default"]
         src = os.path.join(env.local_results, job_folder_name, "RUNS")
         des = campaign.campaign_db.runs_dir()
         print("Syncing output_dir ...")
@@ -152,16 +141,13 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         #######################################
         output_column = facs_VVP_campaign_config["decoder_output_column"]
         decoder = uq.decoders.SimpleCSV(
-            target_filename=output_filename,
-            output_columns=[output_column]
+            target_filename=output_filename, output_columns=[output_column]
         )
 
         #####################
         # execute collate() #
         #####################
-        actions = uq.actions.Actions(
-            uq.actions.Decode(decoder)
-        )
+        actions = uq.actions.Actions(uq.actions.Decode(decoder))
         campaign.replace_actions(campaign_name, actions)
         campaign.execute().collate()
         collation_result = campaign.get_collation_result()
@@ -170,8 +156,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         # save dataframe containing all collated results #
         ##################################################
         collation_result.to_csv(
-            os.path.join(campaign_work_dir, "collation_result.csv"),
-            index=False
+            os.path.join(campaign_work_dir, "collation_result.csv"), index=False
         )
         collation_result.to_pickle(
             os.path.join(campaign_work_dir, "collation_result.pickle")
@@ -183,13 +168,11 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
 
         if sampler_name == "SCSampler":
             analysis = uq.analysis.SCAnalysis(
-                sampler=campaign._active_sampler,
-                qoi_cols=[output_column]
+                sampler=campaign._active_sampler, qoi_cols=[output_column]
             )
         elif sampler_name == "PCESampler":
             analysis = uq.analysis.PCEAnalysis(
-                sampler=campaign._active_sampler,
-                qoi_cols=[output_column]
+                sampler=campaign._active_sampler, qoi_cols=[output_column]
             )
 
         campaign.apply_analysis(analysis)
@@ -202,9 +185,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         #    Plotting     #
         ###################
         fig_desc = "polynomial_order = {}, num_runs = {}, sampler = {}".format(
-            polynomial_order,
-            campaign.campaign_db.get_num_runs(),
-            sampler_name
+            polynomial_order, campaign.campaign_db.get_num_runs(), sampler_name
         )
         props = dict(boxstyle="round", facecolor="wheat", alpha=0.5)
 
@@ -213,7 +194,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         ########################
         output_files = glob.glob(
             os.path.join(campaign_work_dir + "/**/%s" % (output_filename)),
-            recursive=True
+            recursive=True,
         )
 
         fig, ax = plt.subplots()
@@ -221,20 +202,16 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         ax.set_ylabel(output_column)
         fig.suptitle(
             "RAW data : column {}\n".format(output_column),
-            fontsize=10, fontweight="bold"
+            fontsize=10,
+            fontweight="bold",
         )
-        ax.set_title(
-            fig_desc, fontsize=8, loc="center",
-            fontweight="bold", bbox=props
-        )
+        ax.set_title(fig_desc, fontsize=8, loc="center", fontweight="bold", bbox=props)
         for output_file in output_files:
-            total_errors = pd.read_csv(output_file)[
-                output_column].values.tolist()
+            total_errors = pd.read_csv(output_file)[output_column].values.tolist()
             ax.plot(total_errors)
 
         plot_file_name = "raw[{}]".format(output_column)
-        plt.savefig(os.path.join(campaign_work_dir, plot_file_name),
-                    dpi=400)
+        plt.savefig(os.path.join(campaign_work_dir, plot_file_name), dpi=400)
 
         ###################################
         #    Plot statistical_moments     #
@@ -243,13 +220,9 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         ax.set_xlabel("days")
         ax.set_ylabel("velocity {}".format(output_column))
         fig.suptitle(
-            "code mean +/- standard deviation\n",
-            fontsize=10, fontweight="bold"
+            "code mean +/- standard deviation\n", fontsize=10, fontweight="bold"
         )
-        ax.set_title(
-            fig_desc, fontsize=8, loc="center",
-            fontweight="bold", bbox=props
-        )
+        ax.set_title(fig_desc, fontsize=8, loc="center", fontweight="bold", bbox=props)
 
         mean = results.describe(output_column, "mean")
         std = results.describe(output_column, "std")
@@ -261,8 +234,7 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         # plt.tight_layout()
         plt.legend(loc="best")
         plot_file_name = "plot_statistical_moments[{}]".format(output_column)
-        plt.savefig(os.path.join(campaign_work_dir, plot_file_name),
-                    dpi=400)
+        plt.savefig(os.path.join(campaign_work_dir, plot_file_name), dpi=400)
 
         ###################################
         #        Plot sobols_first        #
@@ -271,14 +243,11 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         ax.set_xlabel("days")
         ax.set_ylabel("Sobol indices")
         fig.suptitle(
-            "First order Sobol index [output column = {}]\n".format(
-                output_column),
-            fontsize=10, fontweight="bold"
+            "First order Sobol index [output column = {}]\n".format(output_column),
+            fontsize=10,
+            fontweight="bold",
         )
-        ax.set_title(
-            fig_desc, fontsize=8, loc='center',
-            fontweight='bold', bbox=props
-        )
+        ax.set_title(fig_desc, fontsize=8, loc="center", fontweight="bold", bbox=props)
 
         sobols_first = results.raw_data["sobols_first"][output_column]
         param_i = 0
@@ -292,11 +261,10 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
 
             param_i = param_i + 1
 
-        plt.legend(loc='best')
+        plt.legend(loc="best")
         # plt.tight_layout()
-        plot_file_name = 'plot_sobols_first[%s]' % (output_column)
-        plt.savefig(os.path.join(campaign_work_dir, plot_file_name),
-                    dpi=400)
+        plot_file_name = "plot_sobols_first[%s]" % (output_column)
+        plt.savefig(os.path.join(campaign_work_dir, plot_file_name), dpi=400)
 
         ###############################################################
         # yml_results contains all campaign info and analysis results #
@@ -304,63 +272,74 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         ###############################################################
         S = ruamel.yaml.scalarstring.DoubleQuotedScalarString
         yml_results = ruamel.yaml.comments.CommentedMap()
-        yml_results.update({'campaign_info': {}})
-        yml_results['campaign_info'].update({
-            'name': S(campaign._active_app_name),
-            'work_dir': S(campaign.work_dir),
-            'num_runs': campaign.campaign_db.get_num_runs(),
-            'output_column': S(output_column),
-            'polynomial_order': polynomial_order,
-            'sampler': S(facs_VVP_campaign_config['sampler_name']),
-            'distribution_type': S(facs_VVP_campaign_config['distribution_type']),
-            'sparse': S(facs_VVP_campaign_config['sparse']),
-            'growth': S(facs_VVP_campaign_config['growth'])
-        })
-        if sampler_name == 'SCSampler':
-            yml_results['campaign_info'].update({
-                'quadrature_rule': S(facs_VVP_campaign_config['quadrature_rule']),
-                'midpoint_level1': S(facs_VVP_campaign_config['midpoint_level1']),
-                'dimension_adaptive': S(facs_VVP_campaign_config
-                                        ['dimension_adaptive'])
-            })
-        elif sampler_name == 'PCESampler':
-            yml_results['campaign_info'].update({
-                'rule': S(facs_VVP_campaign_config['quadrature_rule']),
-            })
+        yml_results.update({"campaign_info": {}})
+        yml_results["campaign_info"].update(
+            {
+                "name": S(campaign._active_app_name),
+                "work_dir": S(campaign.work_dir),
+                "num_runs": campaign.campaign_db.get_num_runs(),
+                "output_column": S(output_column),
+                "polynomial_order": polynomial_order,
+                "sampler": S(facs_VVP_campaign_config["sampler_name"]),
+                "distribution_type": S(facs_VVP_campaign_config["distribution_type"]),
+                "sparse": S(facs_VVP_campaign_config["sparse"]),
+                "growth": S(facs_VVP_campaign_config["growth"]),
+            }
+        )
+        if sampler_name == "SCSampler":
+            yml_results["campaign_info"].update(
+                {
+                    "quadrature_rule": S(facs_VVP_campaign_config["quadrature_rule"]),
+                    "midpoint_level1": S(facs_VVP_campaign_config["midpoint_level1"]),
+                    "dimension_adaptive": S(
+                        facs_VVP_campaign_config["dimension_adaptive"]
+                    ),
+                }
+            )
+        elif sampler_name == "PCESampler":
+            yml_results["campaign_info"].update(
+                {
+                    "rule": S(facs_VVP_campaign_config["quadrature_rule"]),
+                }
+            )
 
         ROUND_NDIGITS = 4
-        for param in facs_VVP_campaign_config['selected_vary_parameters']:
+        for param in facs_VVP_campaign_config["selected_vary_parameters"]:
             # I used CommentedMap for adding comments
             yml_results[param] = ruamel.yaml.comments.CommentedMap()
             # yml_results.update({param: {}})
-            yml_results[param].update({
-                "sobols_first_mean":
-                    round(float(np.mean(sobols_first[param].ravel())),
-                          ROUND_NDIGITS),
-                "sobols_first_gmean":
-                    round(float(gmean(sobols_first[param].ravel())),
-                          ROUND_NDIGITS),
-                "sobols_first":
-                    np.around(sobols_first[param].ravel(),
-                              ROUND_NDIGITS).tolist()
-            })
+            yml_results[param].update(
+                {
+                    "sobols_first_mean": round(
+                        float(np.mean(sobols_first[param].ravel())), ROUND_NDIGITS
+                    ),
+                    "sobols_first_gmean": round(
+                        float(gmean(sobols_first[param].ravel())), ROUND_NDIGITS
+                    ),
+                    "sobols_first": np.around(
+                        sobols_first[param].ravel(), ROUND_NDIGITS
+                    ).tolist(),
+                }
+            )
             # add comments to yml
-            '''
+            """
             yml_results[param].yaml_add_eol_comment(
                 "geometric mean, i.e.,  n-th root of (x1 * x2 * … * xn)",
                 "sobols_first_gmean")
             yml_results[param].yaml_add_eol_comment(
                 "arithmetic mean i.e., (x1 + x2 + … + xn)",
                 "sobols_first_mean")
-            '''
+            """
             yml_results[param].yaml_set_comment_before_after_key(
                 "sobols_first_gmean",
                 before="geometric mean, i.e., n-th root of (x1 * x2 * … * xn)",
-                indent=2)
+                indent=2,
+            )
             yml_results[param].yaml_set_comment_before_after_key(
                 "sobols_first_mean",
                 before="arithmetic mean i.e., (x1 + x2 + … + xn)/n",
-                indent=2)
+                indent=2,
+            )
 
         yaml = ruamel.yaml.YAML()
         yaml.preserve_quotes = True
@@ -369,14 +348,14 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         # we set the yaml.width to a big enough value to prevent line-wrap
         yaml.width = sys.maxsize
 
-        res_file_name = os.path.join(campaign_work_dir, 'sobols.yml')
+        res_file_name = os.path.join(campaign_work_dir, "sobols.yml")
         print(res_file_name)
-        with open(res_file_name, 'w') as outfile:
+        with open(res_file_name, "w") as outfile:
             yaml.dump(yml_results, outfile)
-            '''
+            """
             yaml.dump(yml_results, outfile,
                       default_flow_style=None, width=1000)
-            '''
+            """
 
         ########################################
         # copy sobols.yml file to sobol folder #
@@ -401,21 +380,23 @@ def facs_analyse_vvp_LoR(location, sampler_name=None, ** args):
         results_dirs_PATH=sobol_work_dir,
         load_QoIs_function=load_QoIs_function,
         aggregation_function=plot_convergence,
-        plot_file_path=sobol_work_dir
+        plot_file_path=sobol_work_dir,
     )
 
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def facs_init_vvp_LoR(location,
-                      ci_multiplier=0.475,
-                      outdir=".",
-                      script="Covid19",
-                      facs_script="run.py",
-                      quicktest="true",
-                      transition_scenario=None,
-                      sampler_name=None,
-                      ** args):
+def facs_init_vvp_LoR(
+    location,
+    ci_multiplier=0.475,
+    outdir=".",
+    script="Covid19",
+    facs_script="run.py",
+    quicktest="true",
+    transition_scenario=None,
+    sampler_name=None,
+    **args
+):
     """
     Level of Refinement (LoR) is a general verification pattern that seeks
     asymptotic behaviour in QoI upon increasing the resolution of certain
@@ -435,26 +416,22 @@ def facs_init_vvp_LoR(location,
     """
     update_environment()
 
-    if len(location.split(';')) > 1:
-        raise ValueError(
-            "Error, only pass single location and not multiple locations"
-        )
+    if len(location.split(";")) > 1:
+        raise ValueError("Error, only pass single location and not multiple locations")
         exit()
 
     ############################################
     # load FACS SA configuration from yml file #
     ############################################
     facs_VVP_config_file = os.path.join(
-        get_plugin_path("FabCovid19"),
-        "VVP",
-        "facs_VVP_config.yml"
+        get_plugin_path("FabCovid19"), "VVP", "facs_VVP_config.yml"
     )
     facs_VVP_campaign_config = load_VVP_campaign_config(facs_VVP_config_file)
 
     polynomial_order_range = range(
         facs_VVP_campaign_config["polynomial_order_range"]["start"],
         facs_VVP_campaign_config["polynomial_order_range"]["end"],
-        facs_VVP_campaign_config["polynomial_order_range"]["step"]
+        facs_VVP_campaign_config["polynomial_order_range"]["step"],
     )
     sampler_name = facs_VVP_campaign_config["sampler_name"]
 
@@ -462,9 +439,18 @@ def facs_init_vvp_LoR(location,
     # check user input argument for transition scenario #
     #####################################################
     AcceptableTransitionScenario = [
-        "no-measures", "extend-lockdown", "open-all", "open-schools",
-        "open-shopping", "open-leisure", "work50", "work75", "work100",
-        "dynamic-lockdown", "periodic-lockdown", "uk-forecast"
+        "no-measures",
+        "extend-lockdown",
+        "open-all",
+        "open-schools",
+        "open-shopping",
+        "open-leisure",
+        "work50",
+        "work75",
+        "work100",
+        "dynamic-lockdown",
+        "periodic-lockdown",
+        "uk-forecast",
     ]
 
     if transition_scenario is not None:
@@ -472,49 +458,46 @@ def facs_init_vvp_LoR(location,
             raise RuntimeError(
                 "\nThe input transition scenario, {} , is not VALID"
                 "\nThe acceptable inputs are : [{}]".format(
-                    transition_scenario,
-                    AcceptableTransitionScenario
+                    transition_scenario, AcceptableTransitionScenario
                 )
             )
         else:
             facs_SA_campaign_config["params"]["transition_scenario_index"][
-                "default"] = AcceptableTransitionScenario.index(
-                transition_scenario
-            )
+                "default"
+            ] = AcceptableTransitionScenario.index(transition_scenario)
 
     for polynomial_order in polynomial_order_range:
-        campaign_name = "facs_vvp_LoR_{}_po{}_".format(
-            sampler_name,
-            polynomial_order
-        )
+        campaign_name = "facs_vvp_LoR_{}_po{}_".format(sampler_name, polynomial_order)
         campaign_work_dir = os.path.join(
             get_plugin_path("FabCovid19"),
             "VVP",
             "facs_vvp_LoR_{}".format(sampler_name),
-            "campaign_po{}".format(polynomial_order)
+            "campaign_po{}".format(polynomial_order),
         )
 
         runs_dir, campaign_dir = init_facs_VVP_campaign(
             campaign_name=campaign_name,
             campaign_config=facs_VVP_campaign_config,
             polynomial_order=polynomial_order,
-            campaign_work_dir=campaign_work_dir
+            campaign_work_dir=campaign_work_dir,
         )
 
         ############################################
         # update the FACS simulation env variables #
         ############################################
-        update_environment(args, {"script": script,
-                                  "facs_script": facs_script
-                                  })
+        update_environment(args, {"script": script, "facs_script": facs_script})
 
-        set_facs_args_list(args, {"location": location,
-                                  "transition_scenario": '',
-                                  "transition_mode": '-1',
-                                  "output_dir": outdir,
-                                  "ci_multiplier": ci_multiplier,
-                                  "quicktest": quicktest,
-                                  })
+        set_facs_args_list(
+            args,
+            {
+                "location": location,
+                "transition_scenario": "",
+                "transition_mode": "-1",
+                "output_dir": outdir,
+                "ci_multiplier": ci_multiplier,
+                "quicktest": quicktest,
+            },
+        )
 
         #############################################################
         # copy the EasyVVUQ campaign run set TO config SWEEP folder #
@@ -524,10 +507,7 @@ def facs_init_vvp_LoR(location,
         ###########################################################
         # set job_desc to avoid overwriting with previous SA jobs #
         ###########################################################
-        env.job_desc = "_vvp_LoR_{}_po{}".format(
-            sampler_name,
-            polynomial_order
-        )
+        env.job_desc = "_vvp_LoR_{}_po{}".format(sampler_name, polynomial_order)
         env.prevent_results_overwrite = "delete"
         with_config(location)
         execute(put_configs, location)
@@ -540,8 +520,9 @@ def facs_init_vvp_LoR(location,
         run_ensemble(location, sweep_dir, **args)
 
 
-def init_facs_VVP_campaign(campaign_name, campaign_config,
-                           polynomial_order, campaign_work_dir):
+def init_facs_VVP_campaign(
+    campaign_name, campaign_config, polynomial_order, campaign_work_dir
+):
     ######################################
     # delete campaign_work_dir is exists #
     ######################################
@@ -557,16 +538,16 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
     encoder = uq.encoders.MultiEncoder(
         uq.encoders.DirectoryBuilder(tree=directory_tree),
         uq.encoders.GenericEncoder(
-            template_fname=get_plugin_path("FabCovid19") +
-            "/templates/template_disease_covid19",
+            template_fname=get_plugin_path("FabCovid19")
+            + "/templates/template_disease_covid19",
             delimiter="$",
-            target_filename="covid_data/disease_covid19.yml"
+            target_filename="covid_data/disease_covid19.yml",
         ),
         CustomEncoder(
-            template_fname=get_plugin_path("FabCovid19") +
-            "/templates/template_simsetting",
+            template_fname=get_plugin_path("FabCovid19")
+            + "/templates/template_simsetting",
             delimiter="$",
-            target_filename="simsetting.csv"
+            target_filename="simsetting.csv",
         ),
     )
 
@@ -580,18 +561,14 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
     )
 
     campaign = uq.Campaign(
-        name=campaign_name,
-        db_location=db_location,
-        work_dir=campaign_work_dir
+        name=campaign_name, db_location=db_location, work_dir=campaign_work_dir
     )
 
     ###############################
     # Add the facs-SA-Sampler app #
     ###############################
     campaign.add_app(
-        name=campaign_name,
-        params=campaign_config["params"],
-        actions=actions
+        name=campaign_name, params=campaign_config["params"], actions=actions
     )
 
     ######################
@@ -599,10 +576,8 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
     ######################
     vary = {}
     for param in campaign_config["selected_vary_parameters"]:
-        lower_value = campaign_config[
-            "vary_parameters_range"][param]["range"][0]
-        upper_value = campaign_config[
-            "vary_parameters_range"][param]["range"][1]
+        lower_value = campaign_config["vary_parameters_range"][param]["range"][0]
+        upper_value = campaign_config["vary_parameters_range"][param]["range"][1]
         if campaign_config["distribution_type"] == "DiscreteUniform":
             vary.update({param: cp.DiscreteUniform(lower_value, upper_value)})
         elif campaign_config["distribution_type"] == "Uniform":
@@ -620,7 +595,7 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
             growth=campaign_config["growth"],
             sparse=campaign_config["sparse"],
             midpoint_level1=campaign_config["midpoint_level1"],
-            dimension_adaptive=campaign_config["dimension_adaptive"]
+            dimension_adaptive=campaign_config["dimension_adaptive"],
         )
     elif sampler_name == "PCESampler":
         sampler = uq.sampling.PCESampler(
@@ -628,7 +603,7 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
             polynomial_order=polynomial_order,
             rule=campaign_config["quadrature_rule"],
             sparse=campaign_config["sparse"],
-            growth=campaign_config["growth"]
+            growth=campaign_config["growth"],
         )
     # TODO: add other sampler here
 
@@ -646,9 +621,7 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
     # extract generated runs id by campaign #
     #########################################
     runs_dir = []
-    for _, run_info in campaign.campaign_db.runs(
-            status=uq.constants.Status.NEW
-    ):
+    for _, run_info in campaign.campaign_db.runs(status=uq.constants.Status.NEW):
         runs_dir.append(run_info["run_name"])
 
     campaign_dir = campaign.campaign_db.campaign_dir()
@@ -670,17 +643,15 @@ def init_facs_VVP_campaign(campaign_name, campaign_config,
 
 def load_VVP_campaign_config(facs_VVP_config_file):
     facs_VVP_campaign_config = yaml.load(
-        open(facs_VVP_config_file),
-        Loader=yaml.SafeLoader
+        open(facs_VVP_config_file), Loader=yaml.SafeLoader
     )
 
     #####################################################
     # load parameter space for the easyvvuq sampler app #
     #####################################################
-    sampler_params_json_PATH = os.path.join(get_plugin_path("FabCovid19"),
-                                            "templates",
-                                            "params.json"
-                                            )
+    sampler_params_json_PATH = os.path.join(
+        get_plugin_path("FabCovid19"), "templates", "params.json"
+    )
     sampler_params = json.load(open(sampler_params_json_PATH))
 
     #########################################################
@@ -733,9 +704,7 @@ def load_QoIs_function(result_dir):
         QoIs_values.update({param: {}})
         for key in sobols_data[param]:
             if key == score_column_name:
-                QoIs_values[param].update({
-                    key: sobols_data[param][key]
-                })
+                QoIs_values[param].update({key: sobols_data[param][key]})
 
     return QoIs_values, polynomial_order, num_runs
 
@@ -816,8 +785,7 @@ def plot_convergence(scores, plot_file_path):
     plt.tight_layout()
     plt.legend(loc="best")
     convergence_plot_file_name = "vvp_QoI_convergence.png"
-    plt.savefig(os.path.join(plot_file_path, convergence_plot_file_name),
-                dpi=400)
+    plt.savefig(os.path.join(plot_file_path, convergence_plot_file_name), dpi=400)
 
     print("=" * 50)
     print("The convergence plot generated ...")
@@ -827,49 +795,64 @@ def plot_convergence(scores, plot_file_path):
 
 def backup_campaign_files(work_dir_SCSampler):
 
-    backup_dir = os.path.join(work_dir_SCSampler, 'backup')
+    backup_dir = os.path.join(work_dir_SCSampler, "backup")
 
     # delete backup folder
     if os.path.exists(backup_dir):
         rmtree(backup_dir)
     os.mkdir(backup_dir)
 
-    with hide('output', 'running', 'warnings'), settings(warn_only=True):
+    with hide("output", "running", "warnings"), settings(warn_only=True):
         local(
             "rsync -av -m -v \
             --include='*.db' \
             --include='*.pickle' \
             --include='*.json' \
             --exclude='*' \
-            {}/  {} ".format(work_dir_SCSampler, backup_dir)
+            {}/  {} ".format(
+                work_dir_SCSampler, backup_dir
+            )
         )
 
 
 def load_campaign_files(work_dir_SCSampler):
 
-    backup_dir = os.path.join(work_dir_SCSampler, 'backup')
+    backup_dir = os.path.join(work_dir_SCSampler, "backup")
 
-    with hide('output', 'running', 'warnings'), settings(warn_only=True):
+    with hide("output", "running", "warnings"), settings(warn_only=True):
         local(
             "rsync -av -m -v \
             --include='*.db' \
             --include='*.pickle' \
             --include='*.json' \
             --exclude='*' \
-            {}/  {} ".format(backup_dir, work_dir_SCSampler)
+            {}/  {} ".format(
+                backup_dir, work_dir_SCSampler
+            )
         )
 
 
 class CustomEncoder(uq.encoders.GenericEncoder):
 
-    def encode(self, params={}, target_dir=''):
+    def encode(self, params={}, target_dir=""):
         # scale default values found in pre param file
 
         params["transition_mode"] = round(params["transition_mode"])
 
-        TS = ["no-measures", "extend-lockdown", "open-all", "open-schools",
-              "open-shopping", "open-leisure", "work50", "work75", "work100",
-              "dynamic-lockdown", "periodic-lockdown", "uk-forecast"]
+        TS = [
+            "no-measures",
+            "extend-lockdown",
+            "open-all",
+            "open-schools",
+            "open-shopping",
+            "open-leisure",
+            "work50",
+            "work75",
+            "work100",
+            "dynamic-lockdown",
+            "periodic-lockdown",
+            "uk-forecast",
+        ]
         index_TS = round(params["transition_scenario_index"])
         params["transition_scenario"] = TS[index_TS]
 
