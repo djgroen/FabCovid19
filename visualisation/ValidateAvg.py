@@ -70,8 +70,6 @@ def facs_postprocess(output_dir,
         cases_csv_fname = str(path)
         break
 
-    print(cases_csv_fname)
-
     adm_csv_fname = ""
     # finding admissions.csv file
     for path in pathlib.Path(results_dir).rglob("admissions.csv"):
@@ -277,9 +275,9 @@ def plot(df, Start_Date, End_Date, adm_csv_fname, cases_csv_fname, title, html_f
     # step1 = datetime.strptime("2020-12-16", "%Y-%m-%d")
     # step2 = datetime.strptime("2020-12-20", "%Y-%m-%d")
 
-    step0 = datetime.strptime("02/12/2020", "%d/%m/%Y")
-    step1 = datetime.strptime("16/12/2020", "%d/%m/%Y")
-    step2 = datetime.strptime("20/12/2020", "%d/%m/%Y")
+    step0 = datetime.strptime("02/1/2024", "%d/%m/%Y")
+    step1 = datetime.strptime("16/1/2024", "%d/%m/%Y")
+    step2 = datetime.strptime("20/1/2024", "%d/%m/%Y")
 
     # Add traces
     fig = make_subplots(
@@ -421,3 +419,4 @@ def plot(df, Start_Date, End_Date, adm_csv_fname, cases_csv_fname, title, html_f
     py.offline.plot(fig, filename=html_file)
 
     # fig.write_image(png_file)
+

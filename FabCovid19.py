@@ -25,13 +25,13 @@ add_local_paths("FabCovid19")
 
 @task
 @load_plugin_env_vars("FabCovid19")
-def covid19(config,
-            measures="measures_uk",
+def measles(config,
+            measures="measures_lt",
             starting_infections="200",
             facs_script="run.py",
             quicktest="false",
             household_size="2.6",
-            disease="covid19",
+            disease="measles",
             **args):
     """
     parameters:
@@ -40,6 +40,41 @@ def covid19(config,
       - starting_infections : number of infections to seed 20 days prior to simulation start
       - quicktest : use larger house sizes to reduce simulation initialisation time
     """
+    print(args)
+    update_environment(args, {"facs_script": facs_script})
+    with_config(config)
+
+    set_facs_args_list(args, {"location": config,
+                              "measures_yml": measures,
+                              "starting_infections": starting_infections,
+                              "quicktest": quicktest,
+                              "household_size": household_size,
+                              "disease_yml": "disease_{}".format(disease)
+                              })
+
+    execute(put_configs, config)
+    job(dict(script='pfacs', wall_time='0:15:0', memory='2G',
+             label=measures), args)
+
+
+@task
+@load_plugin_env_vars("FabCovid19")
+def covid19(config,
+            measures="measures_lt",
+            starting_infections="200",
+            facs_script="run.py",
+            quicktest="false",
+            household_size="2.6",
+            disease="measles",
+            **args):
+    """
+    parameters:
+      - config : [e.g. brent,harrow,ealing,hillingdon]
+      - measures : name of measures input YML file
+      - starting_infections : number of infections to seed 20 days prior to simulation start
+      - quicktest : use larger house sizes to reduce simulation initialisation time
+    """
+    print(args)
     update_environment(args, {"facs_script": facs_script})
     with_config(config)
 
@@ -59,12 +94,12 @@ def covid19(config,
 @task
 @load_plugin_env_vars("FabCovid19")
 def pfacs(config,
-          measures="measures_uk",
+          measures="measures_lt",
           starting_infections="200",
           facs_script="run.py",
           quicktest="false",
           household_size="2.6",
-          disease="covid19",
+          disease="measles",
           **args):
     """
     parameters:
@@ -105,12 +140,12 @@ def covid19_campus(config,
 @task
 @load_plugin_env_vars("FabCovid19")
 def facs_ensemble(config,
-                  measures="measures_uk",
+                  measures="measures_lt",
                   facs_script="run.py",
                   starting_infections=200,
                   household_size="2.6",
                   quicktest="false",
-                  disease="covid19",
+                  disease="measles",
                   ** args):
     # fab localhost facs_validation
     update_environment(args, {"facs_script": facs_script})
@@ -140,7 +175,7 @@ def covid19_ensemble(configs,
                      starting_infections=200,
                      solver="pfacs",
                      household_size="2.6",
-                     disease="covid19",
+                     disease="measles",
                      ** args):
     '''
     run an ensemble of Covid-19 simulation

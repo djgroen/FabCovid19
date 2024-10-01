@@ -541,7 +541,7 @@ def init_facs_VVP_campaign(
             template_fname=get_plugin_path("FabCovid19")
             + "/templates/template_disease_covid19",
             delimiter="$",
-            target_filename="covid_data/disease_covid19.yml",
+            target_filename="covid_data/disease_measles.yml",
         ),
         CustomEncoder(
             template_fname=get_plugin_path("FabCovid19")
