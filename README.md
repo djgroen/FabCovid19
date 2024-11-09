@@ -98,7 +98,7 @@ The current supported arguments for running FACS are listed below. These allow u
 - **--output_dir**: Defines the directory where output files are saved (default: .).
 - **--measures**: Specifies intervention measures for the simulation (left blank if no measures).
 - **--data_dir**: Directory for COVID-related data files (e.g., --data_dir=covid_data).
-- **--starting_infections**: Initial number of infections at the start of the simulation (e.g., - - --starting_infections=10).
+- **--starting_infections**: Initial number of infections at the start of the simulation (e.g., --starting_infections=1).
 - **--start_date**: Start date of the simulation in dd/mm/yyyy format (e.g., --start_date=1/3/2020).
 - **--simulation_period**: Duration of the simulation in days. Use -1 for an indefinite period.
 - **--household_size**: Average household size for the simulation population (e.g., --household_size=2.6).
