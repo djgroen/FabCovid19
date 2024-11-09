@@ -15,7 +15,7 @@ In this tutorial, you will get step-by-step guidance on the usage of FabCovid19 
 
 - [FabSim3](https://fabsim3.readthedocs.io/) - an automation toolkit that features an integrated test infrastructure and a flexible plugin system.
 - [FACS](https://github.com/djgroen/facs/blob/master/README.md) - an agent based simulation framework that models the viral spread at the sub-national level, incorporating geospatial data sources to extract buildings and residential areas within a predefined region.
-- [QCG Pilot Job](https://wiki.vecma.eu/qcg-pilotjobs) - a Pilot Job system that allows to execute many subordinate jobs in a single scheduling system allocation,
+- [QCG Pilot Job](https://wiki.vecma.eu/qcg-pilotjobs) - a Pilot Job system that allows to execute many subordinate jobs in a single scheduling system allocation.
 
 ## Contents
 
@@ -60,7 +60,7 @@ After cloning the required dependencies, a few configuration steps are needed to
 
 To execute FACS in FabSim3 using FabCovid19 plugin, FabSim3 needs the full path to your FACS installation. You can specify this path in two configuration files: `machines_user.yml` and `machines_FabCovid19_user.yml`.
 
-### Adding the FACS Path in machines_user.yml
+#### Adding the FACS Path in machines_user.yml
 
 1. Navigate to `(FabSim3 Home)/deploy`:
 2. Open `machines_user.yml`. If `machines_user.yml` is not present, copy `machines_user_example.yml` to `machines_user.yml`.
@@ -72,7 +72,7 @@ facs_location: "(FACS PATH)"
 
 **Note**: Replace (FACS PATH) with the full path to your FACS installation, such as `/home/fabuser/facs`.
 
-### Adding the FACS Path in machines_FabCovid19_user.yml
+#### Adding the FACS Path in machines_FabCovid19_user.yml
 
 Alternatively, you can add the FACS path directly within FabCovid19:
 
@@ -83,7 +83,7 @@ Alternatively, you can add the FACS path directly within FabCovid19:
 facs_location: "/home/fabuser/facs"
 ```
 
-### Additional Configuration
+#### Additional Configuration
 
 If you would like to customize other FabSim3 or FabCovid19 parameters, you can modify them within `machines_user.yml` and `machines_FabCovid19_user.yml` as needed.
 
@@ -107,14 +107,16 @@ The current supported arguments for running FACS are listed below. These allow u
 ### Example usage in FACS
 
 ```bash
-python run.py --location=test --output_dir=. --measures=measures_uk --data_dir=covid_data --starting_infections=10 --start_date=1/3/2020 --simulation_period=1 --household_size=2.6 --disease_yml=disease_covid19
+python run.py --location=test --output_dir=. --measures=measures_uk --data_dir=covid_data --starting_infections=1 --start_date=1/3/2020 --simulation_period=1 --household_size=2.6 --disease_yml=disease_covid19
 ```
 
 This example sets up a simulation with 10 initial infections, running for one day, with data sourced from covid_data and using the disease_covid19.yml configuration file. The output is generated in form of `covid_out_*.csv` (e.g., `covid_out_deaths_0.csv`) for individual parameters or as `test-measures_uk.csv` in facs home directory.
 
 ### Quick Test using FabCovid19 Plugin
 
-1. To run a quick test, we set a few arguments and run the command below:
+The FabCovid19 command structure is `fabsim <local/remote machine> <function>:<config-file(s)>,<arg1,arg2,arg3,...>`.
+
+We can construct a simple command with two arguments as follow:
 
 ```bash
 fabsim localhost covid19:config=test,cores=1,starting_infections=1
@@ -134,7 +136,7 @@ The output is fetched and stored in `/path/to/FabSim3/results` directory.
   
 ### Simulate More Locations
 
-FACS team have created more than 20 locations as part of collaboration in STAMINA project. These locations are `brent`, `ealing`, `harrow`, `hillingdon` and more. Please see `FabCovid19/config_files` directory.
+FACS team have created more than 20 locations (config files) as part of collaboration in STAMINA project. These locations are `brent`, `ealing`, `harrow`, `hillingdon` and more. Please see `FabCovid19/config_files` directory.
 
 ## Execution
 
@@ -164,7 +166,7 @@ fabsim localhost covid19_ensemble:configs='test;brent',cores=1,starting_infectio
 
 Up to now, we executed our FACS jobs on localhost using FabCovid19 plugin in FabSim3, however, we can submit our jobs to other machines to be executed remotely. FabSim3 provides several remote machines configurations such as [ARCHER2](https://www.archer2.ac.uk/).
 
-The examples we mentioned above can be executed remotely by the command below:
+The examples mentioned above can be executed remotely by replacing the `machine` section of the command:
 
 ```bash
 fabsim archer2 covid19:config=test,cores=1,starting_infections=1
@@ -184,6 +186,18 @@ archer2:
   partition_name: "standard"
   qos_name: "short"
 ```
+
+### Pilot Jobs
+
+FabSim3 currently supports [QCG-PilotJob](https://qcg-pilotjob.readthedocs.io/en/develop/) and [Radical-Pilot](https://radical-cybertools.github.io/radical-pilot/index.html).
+
+All ensemble jobs can be executed in pilot mode by added arguments `PJ` and `PJ_TYPE`:
+
+```bash
+fabsim archer2 covid19_ensemble:configs='test',cores=16,starting_infections=1,PJ=True,PJ_TYPE=QCG
+```
+
+Use `PJ_TYPE=RP` for Radical-Pilot job execution.
 
 ## Acknowledgements
 
