@@ -28,27 +28,57 @@ FabCovid19 is a FACS toolkit plugin for infectious disease simulation which auto
 
 ### Dependencies:
 
+**Suggestion**: To make path configuration easier, we recommend creating a dedicated work directory where you install both FabSim3 and FACS. This will help ensure straightforward path realization and make it easier to manage related path dependencies.
+
+#### Clone FabSim3 and FACS:
+
 1. [FabSim3](https://github.com/djgroen/FabSim3.git)
-To install the Fabsim3 automation toolkit, see the [installation](https://fabsim3.readthedocs.io/en/latest/installation.html#installing-fabsim3) documentation. 
+To install the Fabsim3 automation toolkit, see the [installation](https://fabsim3.readthedocs.io/en/latest/installation.html#installing-fabsim3) documentation or following the installation, go to `(FabSim3 Home)` directory and execute `python configure_fabsim.py`. This script is designed to quicly configure FabSim3.
 2. [FACS: Flu And Coronavirus Simulator](https://github.com/djgroen/facs) 
 To install FACS in your working directory, simply type:
-```
+```bash
 git clone https://github.com/djgroen/facs.git
 ``` 
 
 ### Installation
-To install FabCovid19, simply go to the FabSim3 directory and type 
-```
-fab localhost install_plugin:FabCovid19
+To install FabCovid19, simply go to the FabSim3 directory and type:
+
+```bash
+fabsim localhost install_plugin:FabCovid19
 ```
 
-#### FabSim3 Configuration
-Once you have installed the required dependencies, you will need to take a few small configuration steps:
-1. Go to `(FabSim3 Home)/deploy`
-2. Open `machines_user.yml`
-3. Under the section `default:`, please add the following lines:
-   <br/> `facs_location=(facs PATH)`
-   <br/> NOTE: Please replace `facs PATH` with your actual install directory.
+### FabSim3 Configuration
+After cloning the required dependencies, a few configuration steps are needed to run FACS using FabCovid19 in FabSim3.
+
+To execute FACS in FabSim3 using FabCovid19 plugin, FabSim3 needs the full path to your FACS installation. You can specify this path in two configuration files: `machines_user.yml` and `machines_FabCovid19_user.yml`.
+
+#### Adding the FACS Path in machines_user.yml
+1. Navigate to the deploy directory in your FabSim3 home:
+```bash
+cd (FabSim3 Home)/deploy
+```
+2. Open `machines_user.yml`. If `machines_user.yml` is not present, copy `machines_user_example.yml` to `machines_user.yml`.
+3. Under the `default:` section, add the following line:
+```yaml
+facs_location: "(FACS PATH)"
+```
+**Note**: Replace (FACS PATH) with the full path to your FACS installation, such as `/home/fabuser/facs`.
+
+#### Adding the FACS Path in machines_FabCovid19_user.yml
+Alternatively, you can add the FACS path directly within FabCovid19:
+
+1. In `(FabSim3 Home)/plugins/FabCovid19`, copy `machines_FabCovid19_user_example.yml` to `machines_FabCovid19_user.yml`.
+2. Open `machines_FabCovid19_user.yml` and locate `facs_location: "<..>"`.
+3. Replace `<..>` with the full path to your FACS installation, such as:
+
+```yaml
+facs_location: "/home/fabuser/facs"
+```
+
+### Additional Configuration
+If you would like to customize other FabSim3 or FabCovid19 parameters, you can modify them within `machines_user.yml` and `machines_FabCovid19_user.yml` as needed.
+
+**Note**: If you are installing on MacOS, remember that path conventions may differ (e.g., replace `/home` with `/Users` in paths like `/Users/yourusername/facs`).
 
 ### Quick test
 1. To run a quick test, type `fab localhost covid19_ensemble:configs='test',TS='uk-forecast',TM='0',cores=1,replicas=1,starting_infections=10,job_wall_time=0:15:00`.
