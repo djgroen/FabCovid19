@@ -26,12 +26,12 @@ add_local_paths("FabCovid19")
 @task
 @load_plugin_env_vars("FabCovid19")
 def covid19(config,
-            measures="measures_uk",
+            measures="measures_lt",
             starting_infections="200",
             facs_script="run.py",
             quicktest="false",
             household_size="2.6",
-            disease="covid19",
+            disease="measles",
             **args):
     """
     parameters:
